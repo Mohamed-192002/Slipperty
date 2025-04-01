@@ -1,0 +1,62 @@
+<div class="table-responsive" style="padding: 5px ;padding-top: 10px !important;">
+  <div *ngIf="!this.selectProductId" id="allProductContainer">
+    <div class="mb-3">
+      <input type="text" [(ngModel)]="searchQuery" class="form-control" placeholder="ابحث عن المنتج..." />
+    </div>
+    <div *ngIf="Loading; else productData" [innerHTML]="LoadingSpinner">
+    </div>
+    <ng-template #productData >
+      <table class="table text-center"  *ngIf="filteredProducts.length > 0; else noData">
+        <thead class="table-light">
+        <tr>
+          <th class="text-center" colspan="2"></th>
+          <th class="text-center" colspan="4">الصورة</th>
+          <th class="text-center" colspan="2">اسم المنتج</th>
+          <th class="text-center" colspan="1">السعر</th>
+          <th class="text-center" colspan="1">المخزن</th>
+        </tr>
+        </thead>
+        <tbody id="productTable">
+        <tr *ngFor="let item of filteredProducts" class="product-row">
+          <td class="text-center" colspan="1">
+            <button class="btn btn-primary btn-sm mb-1 w-100" (click)="openProduct(item.id, item.orderDetailId)">
+              <i class="fa-solid fa-check"></i>
+            </button>
+          </td>
+          <td class="search-content text-center" colspan="2">
+            <img [src]="baseUrl+item.mainImageUrl" alt="Product Image" class="img-thumbnail" />
+          </td>
+          <td class="text-center product-name" colspan="4">{{ item.arbName }}</td>
+          <td class="text-center" colspan="2">
+            <p class="d-none orderItemPrice">{{ item.discountPrice }}</p>
+            <p class="mt-2 mt-md-0 mb-0 me-1 DiscountPrice purpleText fw-bold">
+              {{ item.discountPrice }} جنيه
+              <del class="text-muted originalPrice fw-normal">{{ item.price }} جنيه</del>
+            </p>
+          </td>
+          <td class="text-center border-0" colspan="1">
+            <div *ngIf="item.stockCount > 0; else outOfStock" class="alert alert-primary fw-bold" role="alert">
+              متوفر
+            </div>
+            <ng-template #outOfStock>
+              <div [innerHTML]="NotFounded"></div>
+            </ng-template>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="table-responsive p-2">
+          <app-pagination [currentPage]="1" [pageSize]="5" [totalItems]="10" (pageChanged)="console.log($event)"></app-pagination>
+      </div>
+    </ng-template>
+
+    <!-- No Data Template -->
+    <ng-template #noData>
+      <div class="alert alert-warning text-center">لا توجد بيانات</div>
+    </ng-template>
+  </div>
+
+  <div id="selectedProduct" *ngIf="this.selectProductId" >
+    <app-order-detail-product (GetOrderProductData)="AddOrder($event)" (selectProductIdChange)="this.selectProductId = $event" [selectProductId]="this.selectProductId" ></app-order-detail-product>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=El+Messiri:wght@400..700&display=swap');
+
+body {
+    font-family: "El Messiri", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    /*background-color: #6a0dad;*/
+    background-color: #680ee7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.login-container {
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: right;
+}
+
+    .login-container img {
+        max-width: 150px;
+        margin-bottom: 20px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .login-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        color: #333;
+        font-weight: bold;
+    }
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: right;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: right;
+    direction: rtl;
+}
+
+.options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-direction: column;
+}
+
+    .options-row .forgot-password {
+        text-align: left;
+        color: #680ee7;
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .options-row .remember {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #680ee7;
+    border: none;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin: 0 auto;
+    display: block;
+    font-weight: bold;
+}
+
+    button:hover {
+        background-color: #580b9e;
+    }
+
+.text-muted {
+    color: #6c757d; /* Muted text color */
+}
+.ms-3 {
+    margin-left: 0.75rem; /* 12px left margin */
+}

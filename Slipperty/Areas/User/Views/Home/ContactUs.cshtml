@@ -1,0 +1,101 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ContactUsDTO
+@{
+    ViewData["Title"] = "اتصل بنا";
+}
+
+<link rel="stylesheet" href="~/css/User/ContactUs.css" />
+
+
+<section class="promo-section bg-primary py-5 px-5">
+    <div class="container-fluid text-end ">
+        <h2 class="promo-title cairo-extra-bold mb-3 mt-4">اتصل بنا</h2>
+        <h4 class="cairo-extra-bold mb-3 mt-4">مواعيد العمل</h4>
+        <h4 class="cairo-extra-bold mb-3 mt-4">من الأحد إلى الخميس</h4>
+        <h4 class="cairo-extra-bold mb-3 mt-4">08:00AM - 04:00PM</h4>
+    </div>
+</section>
+
+
+<section class="contact-section py-5">
+    <div class="container">
+        <!-- Map Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                @* <div class="map-container">
+                    <iframe src="https://maps.google.com/maps?q=10th%20of%20Ramadan&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                            width="100%" height="300" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false"
+                            tabindex="0" class="rounded"></iframe>
+                </div> *@
+            </div>
+        </div>
+
+        <!-- Form and Contact Details -->
+        <div class="row">
+            <!-- Contact Form -->
+            <div class="col-md-8">
+                <div class="bg-light p-4 rounded">
+                    <h5 class="mb-4">تواصل معنا</h5>
+                    <p>لديك اى سؤال او استفسار يمكنك التواصل معنا من خلال الاستمارة ادناة</p>
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">الاسم</label>
+                            <input type="text" class="form-control" id="name" placeholder="اكتب اسمك بالكامل">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="email" placeholder="example@email.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">رقم الهاتف</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="+20109663474">
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">تفاصيل الرسالة</label>
+                            <textarea class="form-control" id="message" rows="4" placeholder="اكتب رسالتك هنا"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">إرسال</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Contact Details -->
+            <div class="col-md-4">
+                <div class="bg-light p-4 rounded">
+                    <h5 class="mb-4">كن على تواصل معنا</h5>
+                    <p>يمكنك التواصل معنا من خلال الطرق المختلفة الموضحة بالأسفل:</p>
+                    <ul class="list-unstyled">
+                        @if (Model != null && Model.Links != null && Model.Links.Any())
+                        {
+                            @foreach (var link in Model.Links)
+                            {
+                                if(link.LinkType.Name == "phone")
+                                {
+                                    string linkValue = $"tel:{link.Url}";
+                                    <li><a class="text-decoration-none text-black" href="@linkValue"><i class="@link.LinkType?.Icon me-2 text-primary ms-2"></i>@link.Url</a></li>
+
+                                }
+                                else if (link.LinkType.Name == "whatsapp")
+                                {
+
+                                    string linkValue = $"https://wa.me/{link.Url}";
+                                    <li><a class="text-decoration-none text-black" href="@linkValue"><i class="@link.LinkType?.Icon me-2 text-primary ms-2"></i>@link.Url</a></li>
+                                }
+                                else
+                                {
+                                    <li><a class="text-decoration-none text-black" href="@link.Url"><i class="@link.LinkType?.Icon me-2 text-primary ms-2"></i>@link.LinkType?.Name</a></li>
+                                }
+
+                            }
+                        }
+                        @* <li><a class="text-decoration-none text-black" href="tel:+20109663474"><i class="fa-solid fa-phone me-2 text-primary ms-2"></i>20109663474+</a></li>
+                        <li><i class="fa-solid fa-envelope me-2 text-primary ms-2"></i>info@company.com</li>
+                        <li><i class="fa-solid fa-location-dot me-2 text-primary ms-2"></i>جمهورية مصر العربية, محافظة الجيزة</li> *@
+                    </ul>
+                    @* <h6 class="mt-4">ساعات العمل:</h6>
+                    <p>من الأحد إلى الخميس: 08:00 AM - 04:00 PM</p> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

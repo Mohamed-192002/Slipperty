@@ -1,0 +1,48 @@
+<div class="w-6/12">
+  <div class="col pagination-arrow text-start d-flex justify-content-end align-items-center list-none mb-1">
+    <li style="width: 44px; height: 38px; border-radius: 10px">
+      <a class="page-link back-to-table" (click)="back()"> > </a>
+    </li>
+  </div>
+
+  <div>
+      <div class="d-flex justify-content-center">
+          <div class="col-6">
+            <img
+              [src]="product?.mainImageUrl ?  baseUrl + product.mainImageUrl : baseUrl + 'default-image.jpg'"
+              class="d-block w-100 product-image"
+              alt="Product Image">
+          </div>
+
+      </div>
+
+
+    <div id="order-detail-modify-product-modal-data-container-id" class="d-flex flex-wrap gap-2">
+      <div *ngFor="let productVariable of product?.productVariable" class="d-flex align-items-center gap-2">
+        <div class="section-title orange-text productVariableName">{{ productVariable.name }}:</div>
+      <div *ngIf="productVariable.variableValues" class="d-flex justify-content-center combinationValue" [attr.data-variable-name]="productVariable.name">
+          <button
+            class="option-btn"
+            *ngFor="let variable of productVariable.variableValues"
+            (click)="setCombinationValue(productVariable.name, variable.value)"
+            [class.btn-primary]="selectedVariable[productVariable.name] === variable.value"
+            [class.text-white]="selectedVariable[productVariable.name] === variable.value"
+            [class.selected-value]="selectedVariable[productVariable.name] === variable.value">
+            {{ variable.value }}
+          </button>
+        </div>
+      </div>
+
+      <div class="col-sm-6 d-flex align-items-center">
+        <label style="width: 150px">الكمية:</label>
+        <button class="btn btn-outline-primary plusandmins" (click)="decreaseQuantity()">-</button>
+        <input type="number" class="form-control text-center mx-2 quantity-input" [(ngModel)]="quantity" min="1">
+        <button class="btn btn-outline-primary plusandmins" (click)="increaseQuantity()">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center align-items-start p-2">
+    <a class="btn btn-primary order-btn" (click)="OrderProductData()">اضافة</a>
+  </div>
+</div>

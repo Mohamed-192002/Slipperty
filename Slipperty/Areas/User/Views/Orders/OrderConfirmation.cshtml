@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "نأكيد الاوردر";
+}
+
+<link rel="stylesheet" href="~/css/User/OrderConfirmation.css" />
+
+<section class="promo-section py-5 text-center bg-primary">
+    <div class="container">
+        <h2 class="promo-title text-end cairo-extra-bold mb-3 mt-4">شكرا لك</h2>
+    </div>
+</section>
+<!-- New Thank You Section -->
+<section class="thank-you-section d-flex align-items-center justify-content-center">
+    <div class="thank-you-container text-center">
+        <img src="/img/ThankYou.png" alt="Thank you" class="thank-you-image mb-3">
+        <h2 class="thank-you-title">شكرا لاختيارك سيليبريتي</h2>
+        <p class="thank-you-subtitle">جاري تحويلك لصفحة الطلبات...</p>
+    </div>
+</section>
+
+
+<script>
+    setTimeout(function () {
+        window.location.href = '/User/Home/Index';
+    }, 5000);
+</script>

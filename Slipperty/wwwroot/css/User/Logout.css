@@ -1,0 +1,68 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Marhey:wght@300..700&family=Oi&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+body {
+    font-family: "Cairo", serif !important;
+    /*font-weight: 400 !important;*/
+    font-optical-sizing: auto !important;
+}
+
+.cairo-main {
+    font-family: "Cairo", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}
+
+.cairo-light {
+    font-weight: 200;
+}
+
+.cairo-bold {
+    font-weight: 600;
+}
+
+.cairo-extra-bold {
+    font-weight: 800;
+}
+
+/* Signout Section */
+.signout-section {
+    color: #7734C1; /* Default text color */
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-top: 2px solid #f1f1f1;
+    font-weight: 800;
+}
+
+.custom-image {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+}
+
+
+.thank-you-text {
+    font-size: 1.1rem;
+    margin-top: 20px;
+    font-weight: 800;
+}
+
+/* Change color for "الصفحة الرئيسية" text to yellow */
+.signout-section .homepage {
+    color: #ECBA0B;
+}
+
+/* Spinner color */
+.spinner-border {
+    margin-top: 20px;
+    border-color: #7734C1;
+    border-top-color: transparent; /* Make the spinner effect more visible */
+}
+
+/* Responsive styling */
+@media (max-width: 576px) {
+    .thank-you-text {
+        font-size: 1rem;
+    }
+}
+

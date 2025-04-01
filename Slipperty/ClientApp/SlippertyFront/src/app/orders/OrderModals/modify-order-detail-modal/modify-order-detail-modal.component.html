@@ -1,0 +1,115 @@
+<form [formGroup]="shippingForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate dir="rtl">
+  <h6 *ngIf="showError" class="text-danger">أكمل الحقول المطلوبة</h6>
+
+  <div class="mb-3 cairo-bold">
+    <div *ngIf="userAddresses.length > 0">
+      <div *ngFor="let address of userAddresses" class="form-check d-flex align-items-center mb-2">
+        <input class="form-check-input ms-2" type="radio" name="addressOption" (click)="getAddressDetails(address.address)">
+        <label class="form-check-label">{{ address.address }}</label>
+      </div>
+    </div>
+
+    <div class="form-check d-flex align-items-center">
+      <input id="newAddressRadio" class="form-check-input ms-2" type="radio" name="addressOption" (click)="getAddressDetails('')" [checked]="!isAuthenticated">
+      <label class="form-check-label">التوصيل لعنوان جديد</label>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="shipping-form">
+    <div class="row">
+      <div class="col-md-6 mb-3 d-flex flex-column align-items-start">
+        <label for="fullName" class="form-label">الاسم ثلاثي <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="fullName" placeholder="ادخل الاسم ثلاثي" formControlName="fullName" [readonly]="isAuthenticated">
+        <div class="invalid-feedback" *ngIf="isInvalid('fullName')">يجب إدخال الاسم</div>
+      </div>
+
+      <div class="col-md-6 mb-3 d-flex flex-column align-items-start">
+        <label for="phoneNumber" class="form-label">رقم التليفون <span class="text-danger">*</span></label>
+        <input id="phoneNumber" type="text" class="form-control onlyNumbers" placeholder="201096633474+" formControlName="phoneNumber" minlength="11" maxlength="12" [readonly]="isAuthenticated">
+        <div class="invalid-feedback" *ngIf="isInvalid('phoneNumber')">رقم الهاتف غير صحيح</div>
+      </div>
+      <div class="col-md-6 mb-3 d-flex flex-column align-items-start">
+        <label for="phoneNumber2" class="form-label">
+          رقم أخر <span class="text-danger">*</span>
+        </label>
+        <input formControlName="phoneNumber2" type="text" class="form-control onlyNumbers" id="phoneNumber2"
+               placeholder="201096633474+" maxlength="12" >
+      </div>
+
+      <div class="col-12 mb-3 d-flex flex-column align-items-start">
+        <label for="address" class="form-label">العنوان <span class="text-danger">*</span></label>
+        <textarea class="form-control" id="address" rows="2" placeholder="العنوان" formControlName="address"></textarea>
+        <div class="invalid-feedback" *ngIf="isInvalid('address')">يجب إدخال العنوان</div>
+      </div>
+
+      <div class="col-md-6 mb-3 d-flex flex-column align-items-start">
+        <label for="governmentId" class="form-label">المحافظة <span class="text-danger">*</span></label>
+        <select id="governmentId" class="form-select" formControlName="governmentId" (change)="getRegions()">
+          <option selected disabled>-- اختر --</option>
+          <option *ngFor="let gov of governments" [value]="gov.id">{{ gov.name }}</option>
+        </select>
+        <div class="invalid-feedback" *ngIf="isInvalid('governmentId')">يجب اختيار محافظة</div>
+      </div>
+
+      <div class="col-md-6 mb-3 d-flex flex-column align-items-start">
+        <label for="regionId" class="form-label">المنطقة <span class="text-danger">*</span></label>
+        <select id="regionId" class="form-select" formControlName="regionId" (change)="checkRegion()">
+          <option selected>-- اختر --</option>
+          <option *ngFor="let region of regions" [value]="region.id">{{ region.name }}</option>
+        </select>
+        <div class="invalid-feedback" *ngIf="isInvalid('regionId')">يجب اختيار منطقة</div>
+      </div>
+
+      <div class="col-12 mb-3 d-flex flex-column align-items-start">
+        <label for="notes" class="form-label">ملاحظات (اختياري)</label>
+        <textarea class="form-control" id="notes" rows="2" formControlName="notes"></textarea>
+      </div>
+      <div class="col-12 d-flex">
+        <div class="col-md-6 mb-3 d-flex flex-column align-items-start">
+          <label  class="form-label" style="font-size: 0.8rem">
+            موعد الاستلام المفضل (اختياري)
+            من
+          </label>
+          <app-time-input formControlName="deliveryTimeFrom"></app-time-input>
+
+<!--          <div class="d-flex gap-1 justify-content-evenly">-->
+<!--            &lt;!&ndash; Hour input for deliveryTimeFrom &ndash;&gt;-->
+<!--            <input type="number" class="form-control" id="deliveryTimeFromHour" min="1" max="12" placeholder="ساعة">-->
+
+<!--            &lt;!&ndash; Minute input for deliveryTimeFrom &ndash;&gt;-->
+<!--            <input type="number" class="form-control" id="deliveryTimeFromMinute" min="0" max="59" placeholder="دقيقة">-->
+
+<!--            &lt;!&ndash; AM/PM input for deliveryTimeFrom &ndash;&gt;-->
+<!--            <select class="form-control" id="deliveryTimeFromAMPM">-->
+<!--              <option value="ص">ص</option>-->
+<!--              <option value="م">م</option>-->
+<!--            </select>-->
+<!--          </div>-->
+        </div>
+        <div class="col-md-6 mb-3 d-flex flex-column align-items-start">
+          <label  class="form-label" style="font-size: 0.8rem">إلى</label>
+          <app-time-input formControlName="deliveryTimeTo"></app-time-input>
+
+          <!--          <div class="d-flex gap-1 justify-content-evenly">-->
+<!--            &lt;!&ndash; Hour input for deliveryTimeTo &ndash;&gt;-->
+<!--            <input type="number" class="form-control" id="deliveryTimeToHour" min="1" max="12" placeholder="ساعة">-->
+
+<!--            &lt;!&ndash; Minute input for deliveryTimeTo &ndash;&gt;-->
+<!--            <input type="number" class="form-control" id="deliveryTimeToMinute" min="0" max="59" placeholder="دقيقة">-->
+
+<!--            &lt;!&ndash; AM/PM input for deliveryTimeTo &ndash;&gt;-->
+<!--            <select class="form-control" id="deliveryTimeToAMPM">-->
+<!--              <option value="ص">ص</option>-->
+<!--              <option value="م">م</option>-->
+<!--            </select>-->
+<!--          </div>-->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-4">
+  <button class="w-100 btn btn-primary btn-lg" type="submit" [disabled]="shippingForm.invalid">حفظ</button>
+</form>

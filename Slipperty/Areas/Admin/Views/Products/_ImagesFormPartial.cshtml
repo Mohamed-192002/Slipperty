@@ -1,0 +1,23 @@
+﻿@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProductImageDTO
+
+<tr>
+    @using (Html.BeginCollectionItem("ProductImages"))
+    {
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ProductId" />
+        <td class="rowNumber text-center" colspan="1">
+            1
+        </td>
+        <td class="text-center" colspan="10"><input asp-for="ImageUrl" type="text" class="form-control text-center border-0 p-0" style="background-color: transparent;" readonly /></td>
+        <td class="text-center" colspan="1"><input asp-for="DisplayOrder" type="text" class="form-control text-center border-0 p-0 onlyNumbers" style="background-color: transparent;" readonly /></td>
+        
+    }
+</tr>
+
+
+
+
+
+

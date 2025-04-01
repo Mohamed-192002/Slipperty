@@ -1,0 +1,67 @@
+﻿@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model VariableValueDTO
+@{
+    var variableNameValue = Model.VariableName == null ? Model.ProductVariable?.Name : Model.VariableName;
+}
+@* <tr>
+    @using (Html.BeginCollectionItem("ProductVariableValues"))
+    {
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ProductVariableId" />
+        <td class="rowNumber text-center" colspan="1">1</td>
+        <td colspan="5"><input type="text" asp-for="VariableName" value="@(Model.VariableName == null ? Model.ProductVariable?.Name : Model.VariableName)" class="form-control text-center Name" readonly /></td>
+        <td colspan="5"><input type="text" asp-for="Value" class="form-control text-center value" readonly /></td>
+        <td colspan="1" class="text-center">
+            <button type="button" class="btn btn-danger text-white" onclick="deleteVariableValueRow(this);">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </td>
+    }
+</tr>
+ *@
+@* @using (Html.BeginCollectionItem("VariableValues")) *@
+
+@using (Html.BeginCollectionItem("ProductVariableValues"))
+{
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ProductVariableId" />
+    <input type="hidden" asp-for="VariableName" value="@variableNameValue" />
+    @* <input type="hidden" asp-for="ImageUrl" class="colorImageUrl" /> *@
+
+    <div class="row variableValueRow">
+        <div class="col">
+            <div class="col mb-1 mt-2">
+                <label asp-for="Value" class="arabic-direction w-75 Value float-end"></label>
+                <button type="button" class="btn btn-primary" onclick="deleteVariableValueRow(this)" data-variableid="@Model.Id" data-variableName="@variableNameValue">حذف</button>
+            </div>
+            <div class="col">
+                <input type="text" asp-for="Value" class="form-control Name variableValue" data-variablename="@variableNameValue" onchange="updateSelectedVariables(this);" />
+            </div>
+        </div>
+    </div>
+
+    @if (variableNameValue == "اللون" || variableNameValue == "الالوان" || variableNameValue == "لون" || variableNameValue == "الوان" || variableNameValue == "الألوان" || variableNameValue == "ألوان")
+    {
+        <div class="colorImageContainer row">
+            <input type="hidden" asp-for="ImageUrl" class="colorImageUrl" />
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img class="colorImg mx-auto" src="/@Url.Content($"{ImagesPathes.Products}{Model.ImageUrl}")" />
+            }
+            else
+            {
+                <img class="colorImg mx-auto" src="/@Url.Content($"{ImagesPathes.DefaultImage}")" />
+
+            }
+            @* <button type="button" class="btn btn-xs btn-primary d-inline-block" data-bs-toggle="modal" data-bs-target="#ColorImageModal">اختر صورة اللون</button> *@
+            <button type="button" class="btn btn-xs btn-primary d-inline-block"
+                    data-bs-toggle="modal" data-bs-target="#ColorImageModal"
+                    data-partial-value="@Model.Value">
+                اختر صورة اللون
+            </button>
+
+        </div>
+    }
+    
+}

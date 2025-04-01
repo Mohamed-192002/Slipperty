@@ -1,0 +1,24 @@
+﻿@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model RelatedProductDTO
+
+<tr>
+    @using (Html.BeginCollectionItem("RelatedProducts"))
+    {
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ProductId" class="productId" />
+        <input type="hidden" asp-for="RelatedProductId" class="RelatedProductId" />
+        <td class="rowNumber text-center" colspan="1">
+            1
+        </td>
+        <td class="text-center" colspan="9">@Model?.RProduct?.ArbName</td>
+        <td class="text-center" colspan="2"><button class="btn btn-danger text-white py-1 rounded border-0" type="button" onclick="$(this).closest('tr').remove();getRelatedProducts();rowCalc();"><i class="fa-solid fa-trash-can"></i></button></td>
+
+    }
+</tr>
+
+
+
+
+
+

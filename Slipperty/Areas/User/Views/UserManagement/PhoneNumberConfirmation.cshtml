@@ -1,0 +1,139 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model PhoneNumberConfirmationDTO
+@{
+    ViewData["Title"] = "التحقق من رقم الهاتف";
+}
+
+<link rel="stylesheet" href="~/css/User/PhoneNumberConfirmation.css" />
+
+<section class="promo-section bg-primary py-5 px-5">
+    <div class="container-fluid text-end ">
+        <h2 class="promo-title cairo-extra-bold mb-3 mt-4">التحقق من رقم الهاتف</h2>
+    </div>
+</section>
+
+<div class="container d-flex justify-content-center align-items-center mt-5 py-5 form-section">
+    <form id="myForm" method="post" action="PhoneNumberConfirmation">
+        <input type="hidden" asp-for="OTPCode" />
+        <input type="hidden" asp-for="PhoneNumber" />
+        <span asp-validation-for="OTPCode" class="text-danger arabic-direction"></span>
+        <div class="text-center">
+            <!-- WhatsApp Icon -->
+            <img src="/img/WhatsApp.png" alt="WhatsApp" class="img-fluid" style="max-width: 224px; max-height:217px">
+
+            <h2 class="mt-4 form-title">تحقق من الموبايل</h2>
+            <p class="instruction-text">أدخل الرمز المكون من 4 أرقام الذي أرسلناه الى رقمك على الواتساب لاتمام الطلب</p>
+
+            <!-- OTP Form -->
+            <div class="d-flex justify-content-center mt-4">
+                <input type="text" class="form-control text-center mx-2 otp-input onlyNumbers" maxlength="1" asp-for="otp1" autocomplete="off" />
+                <input type="text" class="form-control text-center mx-2 otp-input onlyNumbers" maxlength="1" asp-for="otp2" autocomplete="off" />
+                <input type="text" class="form-control text-center mx-2 otp-input onlyNumbers" maxlength="1" asp-for="otp3" autocomplete="off" />
+                <input type="text" class="form-control text-center mx-2 otp-input onlyNumbers" maxlength="1" asp-for="otp4" autocomplete="off" />
+            </div>
+
+            <p class="resend-option">
+                لم تتلق رمز التحقق؟ <a href="#" class="link disabled" style="pointer-events: none;">إعادة إرسال</a>
+            </p>
+
+
+            <!-- Confirm Button -->
+            <button class="btn btn-primary w-100">تأكيد</button>
+
+        </div>
+
+    </form>
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        $("#otp4").focus();
+        const inputs = document.querySelectorAll(".otp-input");
+        const resendLink = document.querySelector(".resend-option .link");
+        let timerInterval;
+        // Initialize the timer
+        function startTimer(duration) {
+            let timeRemaining = duration;
+            resendLink.textContent = `إعادة إرسال (${timeRemaining})`;
+            resendLink.classList.add("disabled");
+            resendLink.style.pointerEvents = "none";
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                resendLink.textContent = `إعادة إرسال (${timeRemaining})`;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    resendLink.textContent = "إعادة إرسال";
+                    resendLink.classList.remove("disabled");
+                    resendLink.style.pointerEvents = "auto";
+                }
+            }, 1000);
+        }
+        // Start the initial countdown on page load
+        startTimer(60);
+        // Handle "Resend Code" link click
+        resendLink.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            if (!resendLink.classList.contains("disabled")) {
+                const phoneNumber = document.getElementById("PhoneNumber").value;
+                // Restart the timer
+                startTimer(60);
+
+                // Make the AJAX request
+                $.ajax({
+                    url: "@Url.Action("ResendOTPCode")",  // Adjust the URL as needed
+                    type: "GET",
+                    data: { phoneNumber: phoneNumber },
+                    success: function (response) {
+                        // Update the OTP input field with the new OTP
+                        const otpInput = document.getElementById("OTPCode");
+                        otpInput.value = response.newOTP;
+
+                        // // Optionally, show a success message
+                        // alert("تم إرسال الرمز مرة أخرى!");  // "OTP code has been sent again"
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error sending OTP:", error);
+                        // Optionally, handle the error (e.g., show an alert)
+                        alert("There was an issue sending the OTP.");
+                    },
+                    complete: function () {
+                        // Re-enable the resend link after the request is completed
+                        resendLink.classList.remove("disabled");
+                    }
+                });
+            }
+        });
+        inputs.forEach((input, index) => {
+            
+
+            // Focus on the next input if the current input has 1 character
+            if (input.value.length === 1 && index > 0) {
+            if (input.value.length === 1 && index > 0) {
+                inputs[index - 1].focus();
+            }
+
+            input.addEventListener("input", (e) => {
+                if (input.value.length === 1 && index > 0) {
+                    inputs[index - 1].focus();
+                }
+
+                // Check if the input has a value (length === 1) and add/remove the 'bg-purple' class
+                if (input.value.length === 1) {
+                    input.classList.add('bg-purple'); // Add the class if there's 1 character
+                } else {
+                    input.classList.remove('bg-purple'); // Remove the class if there's no character or more than 1
+                }
+
+                if (Array.from(inputs).every((input) => input.value.length === 1)) {
+                    setTimeout(() => {
+                        $("#myForm").submit();
+                    }, 100);
+                }
+            });
+        });
+    });
+</script>

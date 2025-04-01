@@ -1,0 +1,56 @@
+﻿@page
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model LogoutModel
+@{
+    ViewData["Title"] = "تسجيل الخروج";
+}
+<link rel="stylesheet" href="~/css/User/Logout.css" />
+
+
+<!-- Promo Section -->
+<section class="promo-section py-5 text-center bg-primary">
+    <div class="container">
+        <h2 class="promo-title text-end cairo-extra-bold mb-3 mt-4">شكرا لك</h2>
+    </div>
+</section>
+
+<!-- New Section Below Promo -->
+<section class="signout-section py-5 text-center">
+    <div class="container">
+        <div class="d-flex justify-content-center mb-3">
+            <img src="/img/report.png" alt="Success Icon" class="img-fluid custom-image">
+        </div>
+        <h3 class="mb-4">تم تسجيل خروجك بنجاح</h3>
+        <p class="thank-you-text">شكرا لاختيارك سيلبرتي</p>
+        <p>جاري تحويلك الى <span class="homepage">الصفحة الرئيسية</span></p>
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">جاري التحميل...</span>
+        </div>
+    </div>
+    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+        @* <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button> *@
+    </form>
+</section>
+
+<script>
+    setTimeout(function () {
+        document.getElementById('logoutForm').submit();
+    }, 5000);
+</script>
+
+@* <header>
+    <h1>@ViewData["Title"]</h1>
+    @{
+        if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
+            </form>
+        }
+        else
+        {
+            <p>You have successfully logged out of the application.</p>
+        }
+    }
+</header>
+ *@

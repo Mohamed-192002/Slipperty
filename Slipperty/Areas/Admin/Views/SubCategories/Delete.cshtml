@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model SubCategoryDTO
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "حذف التصنيف الفرعي";
+}
+
+<h2 class="text-end mb-3">حذف التصنيف الفرعي</h2>
+<form asp-action="Delete" method="post" enctype="multipart/form-data">
+
+
+    <div asp-validation-summary="ModelOnly" class="text-danger arabic-direction"></div>
+    <span asp-validation-for="Name" class="text-danger d-block arabic-direction"></span>
+    <span asp-validation-for="CategoryId" class="text-danger d-block arabic-direction"></span>
+    <span asp-validation-for="ImageUrl" class="text-danger d-block arabic-direction"></span>
+
+    <input type="hidden" asp-for="ImageUrl" />
+    <input type="hidden" asp-for="RegDate" />
+    <!-- Second row: Labels and inputs -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label asp-for="Name" class="form-label w-100 arabic-direction"></label>
+            <input type="text" asp-for="Name" class="form-control" placeholder="ادخل اسم التصنيف" readonly>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="CategoryId" class="form-label w-100 arabic-direction"></label>
+            <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select" disabled>
+                @* <option selected disabled>-- اختر --</option> *@
+            </select>
+        </div>
+    </div>
+
+    <!-- Third row: Attach button -->
+    <div class="row mb-3">
+        <div class="col text-center">
+            <img id="ImagePreview" src="@((Model?.ImageUrl != null && Model.ImageUrl != "") ? Url.Content($"~/{ImagesPathes.SubCategories}{Model.ImageUrl}") : Url.Content($"~{ImagesPathes.DefaultImage}"))" alt="Image Preview" class="mt-5 formImg">
+        </div>
+    </div>
+
+    <!-- Last row: Save button -->
+    <div class="row">
+        <div class="col text-start">
+            <button type="submit" class="btn btn-danger savebtn">حذف</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

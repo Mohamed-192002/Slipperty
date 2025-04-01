@@ -1,0 +1,18 @@
+﻿@model ReviewDTO
+
+
+<div class="review-card">
+    <div class="review-card-header">
+        <div class="profile-info">
+            <img src="@((Model?.ImageUrl != null && Model.ImageUrl != "") ? Url.Content($"~/{ImagesPathes.Reviews}{Model.ImageUrl}") : Url.Content($"~{ImagesPathes.DefaultUserImage}"))" alt="Profile" class="profile-pic text-start">
+            <div class="profile-text">
+                <span>@Model?.Name</span>
+                <small>@Model?.FormattedDate</small>
+            </div>
+        </div>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+    </div>
+    <div class="review-card-body">
+        @Model?.Comment
+    </div>
+</div>

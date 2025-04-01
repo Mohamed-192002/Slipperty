@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model FAQDTO
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "حذف السؤال";
+}
+
+<h2 class="text-end mb-3">حذف السؤال</h2>
+<form asp-action="Delete" method="post" enctype="multipart/form-data">
+
+
+    <div asp-validation-summary="ModelOnly" class="text-danger arabic-direction"></div>
+    <span asp-validation-for="Question" class="text-danger d-block arabic-direction"></span>
+    <span asp-validation-for="Answer" class="text-danger d-block arabic-direction"></span>
+
+    <input type="hidden" asp-for="RegDate" />
+    <!-- Second row: Labels and inputs -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <label asp-for="Question" class="form-label w-100 text-end"></label>
+            <input type="text" asp-for="Question" class="form-control" placeholder="ادخل السؤال" readonly>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <label asp-for="Answer" class="form-label w-100 text-end"></label>
+            <textarea asp-for="Answer" class="form-control" placeholder="ادخل الاجابة" readonly></textarea>
+        </div>
+    </div>
+
+    <!-- Last row: Save button -->
+    <div class="row">
+        <div class="col text-start">
+            <button type="submit" class="btn btn-danger savebtn">حذف</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

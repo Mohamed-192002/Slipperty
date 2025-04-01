@@ -1,0 +1,81 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\Datasets\BarcodeDataset.Designer.cs" />
+    <Content Remove="wwwroot\Datasets\BarcodeDataset.xsc" />
+    <Content Remove="wwwroot\Datasets\BarcodeDataset.xsd" />
+    <Content Remove="wwwroot\Datasets\BarcodeDataset.xss" />
+    <Content Remove="wwwroot\Reports\Barcode.rdlc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="wwwroot\Datasets\BarcodeDataset.Designer.cs">
+      <DependentUpon>BarcodeDataset.xsd</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
+    <PackageReference Include="BeginCollectionItemCore" Version="1.1.0" />
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.68.0.3658" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration" Version="8.0.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageReference Include="Serilog" Version="4.2.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Data\" />
+    <Folder Include="ClientApp\" />
+    <Folder Include="ClientApp\SlippertyFront\src\app\Pipes\" />
+    <Folder Include="ClientApp\SlippertyFront\src\app\Services\" />
+    <Folder Include="ClientApp\SlippertyFront\src\app\User\" />
+    <Folder Include="Logs\" />
+    <Folder Include="wwwroot\images\categories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Datasets\BarcodeDataset.xsc" />
+    <None Include="wwwroot\Datasets\BarcodeDataset.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>BarcodeDataset.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Include="wwwroot\Datasets\BarcodeDataset.xss" />
+    <None Include="wwwroot\Reports\Barcode.rdlc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Business\Business.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Areas\User\Views\Shared\_TwoProductPartial.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

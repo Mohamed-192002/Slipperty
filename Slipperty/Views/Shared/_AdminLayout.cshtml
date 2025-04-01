@@ -1,0 +1,289 @@
+﻿@using Infrastructure.Contracts.Seeds
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    var isAdmin = User.IsInRole(Roles.Role_Admin);
+    var isUser = User.IsInRole(Roles.Role_Customer);
+}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <base href="~/js/dist/">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Slipperty</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Slipperty.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
+  <link href="~/lib/quill/quill.bubble.css" rel="stylesheet">
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Font Amesome -->
+    <script src="https://kit.fontawesome.com/e47bb7c3b4.js" crossorigin="anonymous"></script>
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <!-- Select2 JavaScript -->
+    <link rel="stylesheet" href="~/css/select2.min.css" asp-append-version="true" />
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.2.1/datatables.min.css" rel="stylesheet">
+    
+
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" href="~/img/WebsiteIcon.jpeg" type="image/x-icon">
+      <link href="~/lib/quill/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    @if (ViewData["Title"].Equals("الطلبات"))
+    {
+        <link  rel="stylesheet" href="~/css/Admin/Orders/Orders.css" asp-append-version="true" />
+        
+    }
+
+    <style>
+        .custom-menu {
+            position: absolute;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+
+
+
+
+</head>
+<body>
+
+<app-general-notification></app-general-notification>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar">
+            <div class="custom-menu">
+                <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <div class="p-4 pt-5">
+                <img src="~/img/Logo_White.png" class="logo">
+                <ul class="list-unstyled components mb-5 text-end">
+                    <li>
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house"></i> @* <img src="/img/icons/homeIcon.png" class="menu-icon" /> *@ الصفحة الرئيسية</a>
+                    </li>
+                    <li>
+                        <a href="#homeSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle d-flex justify-content-between">
+                            <span>
+                                <i class="fa-solid fa-layer-group"></i> @* <img src="/img/icons/productsIcon.png" class="menu-icon" /> *@ المنتجات
+                            </span>
+                            <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                        </a>
+                        <ul class="collapse list-unstyled" id="homeSubmenu">
+                            <li>
+                                <a asp-area="Admin" asp-controller="Products" asp-action="Index"> المنتجات</a>
+                            </li>
+                          
+                            <li>
+                                <a asp-area="Admin" asp-controller="Categories" asp-action="Index"> التصنيفات</a>
+                            </li>
+                            <li>
+                                <a asp-area="Admin" asp-controller="Brands" asp-action="Index"> الماركات</a>
+                            </li>
+                            <li>
+                                <a asp-area="Admin" asp-controller="Materials" asp-action="Index"> الخامات</a>
+                            </li>
+                            <li>
+                                <a asp-area="Admin" asp-controller="SubCategories" asp-action="Index"> التصنيفات الفرعية</a>
+                            </li>
+                            <li>
+                                <a asp-area="Admin" asp-controller="ProductTypes" asp-action="Index"> أنواع الوش</a>
+                            </li>
+                            <li>
+                                <a asp-area="Admin" asp-controller="Manufacturing" asp-action="Index"> التصنيع</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#siteInfoSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle d-flex justify-content-between">
+                            <span>
+                                <i class="fa-solid fa-layer-group"></i> @* <img src="/img/icons/productsIcon.png" class="menu-icon" /> *@ معلومات الموقع
+                            </span>
+                            <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                        </a>
+                        <ul class="collapse list-unstyled" id="siteInfoSubmenu">
+                            <li>
+                                <a asp-area="Admin" asp-controller="FAQs" asp-action="Index"> الأسئلة الشائعة</a>
+                            </li>
+                            <li>
+                                <a asp-area="Admin" asp-controller="Banners" asp-action="Index"> البانرات</a>
+                            </li>
+                            <li>
+                                <a asp-area="Admin" asp-controller="Links" asp-action="Index"> الروابط</a>
+                            </li>
+                            <li>
+                                <a asp-area="Admin" asp-controller="Reviews" asp-action="Index"> الأراء</a>
+                            </li>
+                            <li>
+                                <a asp-area="Admin" asp-controller="PixelSettings" asp-action="Index"> اعدادات البيكسل</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a asp-area="Admin" asp-controller="BlockedNumbers" asp-action="Index"><i class="fa-solid fa-xmark"></i> الأرقام المحظورة</a>
+                    </li>
+                    <li>
+                        @* <a asp-area="Admin" asp-controller="Orders" asp-action="Index"> </a> *@
+                        <a asp-area="Admin" asp-controller="Orders" asp-action="DisplayOrders"><i class="fa-solid fa-truck-ramp-box"></i> الاوردرات</a>
+                    </li>
+
+                    @* <li>
+                    <a asp-area="Admin" asp-controller="FAQs" asp-action="Index"><i class="fa-solid fa-question"></i> الأسئلة الشائعة</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Banners" asp-action="Index"><i class="fa-solid fa-images"></i> البانرات</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Links" asp-action="Index"><i class="fa-solid fa-link"></i> الروابط</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Reviews" asp-action="Index"><i class="fa-solid fa-users-viewfinder"></i> الأراء</a>
+                    </li> *@
+
+                </ul>
+
+
+            </div>
+
+            <div class="logout-container text-center mb-2">
+                <a asp-area="Identity" asp-page="/Account/Logout" class="btn btn-danger w-75 text-end rounded-3">
+                    @* <i class="fa fa-sign-out-alt"></i> *@ <i class="fa-solid fa-arrow-right-from-bracket"></i> تسجيل الخروج
+                </a>
+            </div>
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content" class="p-4 p- pt-5 me-2 me-md-3">
+            <div class="container-fluid">
+                <div class="row mb-5 w-100">
+                    <!-- Left side: profile picture, name, and role -->
+                    <div class="col-6 d-flex align-items-center">
+                        <img src="~/img/Profile.png" alt="Profile Picture" class="profile-picture me-3" width="50" height="50">
+                        <div class="text-end">
+                            <div class="user-name me-3">@User?.Identity?.Name</div>
+                            <div class="user-role text-muted me-3">
+                                @if (isAdmin)
+                                {
+                                    <p>@Roles.Role_Admin</p>
+                                }
+                                else if (isUser)
+                                {
+                                    <p>@Roles.Role_Customer</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right side: logout button -->
+                    <div class="col-6 text-start">
+                        <button href="#" class=" btn  text-muted">
+                            <i class="fa-regular fa-bell"></i>
+                        </button>
+                        <a href="#" class=" btn  text-muted" onclick="location.reload();">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                        </a>
+                    </div>
+                </div>
+                @RenderSection("OrderHeader",false)
+                <div class="container-fluid p-4 shadow rounded mt-2 mainLayout" id="angular-root">
+                    @* <app-root></app-root> *@
+                    @RenderBody()
+                </div>
+                <div id="loader" class="loader-overlay d-none">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @* <header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container-fluid">
+    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Slipperty</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+    <ul class="navbar-nav flex-grow-1">
+    <li class="nav-item">
+    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+    </li>
+    </ul>
+    </div>
+    </div>
+    </nav>
+    </header>
+    <div class="container">
+    <main role="main" class="pb-3">
+    @RenderBody()
+    </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+    <div class="container">
+    &copy; 2024 - Slipperty - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+    </footer> *@
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/sidebar.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/quill/quill.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.2.1/datatables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.1.0/mustache.min.js"></script>
+    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="~/js/dist/runtime.js" type="module"></script>
+    <script src="~/js/dist/polyfills.js" type="module"></script>
+    <script src="~/js/dist/main.js" type="module"></script>
+    @if (TempData["msg"] != null)
+    {
+        <script type="text/javascript">
+            toastr.options = {
+                positionClass: 'toast-top-right'
+            };
+            toastr.success('@TempData["msg"].ToString()');
+        </script>
+    }
+
+    @if (TempData["error"] != null)
+    {
+        <script type="text/javascript">
+            toastr.options = {
+                positionClass: 'toast-top-right'
+            };
+            toastr.error('@TempData["error"]');
+        </script>
+    }
+
+    <script>
+ 
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <!-- Select2 JavaScript -->
+    <script src="~/js/select2.min.js"></script>
+</body>
+</html>

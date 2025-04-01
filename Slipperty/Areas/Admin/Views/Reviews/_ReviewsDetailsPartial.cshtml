@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ReviewDTO
+
+<tr>
+    <td class="rowNumber text-center" colspan="1">1</td>
+    <td class="search-content text-center" colspan="3">
+        <img src="@((Model?.ImageUrl != null && Model.ImageUrl != "") ? Url.Content($"~/{ImagesPathes.Reviews}{Model.ImageUrl}") : Url.Content($"~{ImagesPathes.DefaultImage}"))" alt="Category Image" class="img-thumbnail">
+    </td>
+    <td class="text-center" colspan="4">@Model?.Name</td>
+    <td class="text-center" colspan="3">@Model?.RegDate?.ToShortDateString() <br /> @Model?.TimeAgo</td>
+    <td class="text-center" colspan="1">
+        <a asp-action="Upsert" asp-route-id="@Model?.Id" class="d-block btn btn-primary btn-sm mb-1">تعديل</a>
+        @* <a asp-action="Delete" asp-route-id="@Model?.Id" class="d-block btn btn-danger btn-sm">حذف</a> *@
+        <a href="javascript:void(0);" class="d-block btn btn-danger btn-sm deleteBtn" data-id="@Model?.Id">حذف</a>
+    </td>
+</tr>

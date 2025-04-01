@@ -1,0 +1,28 @@
+﻿@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProductCountsOfferDTO
+
+<tr class="@((Model?.isDeleted == true) ? "d-none" : "")">
+    @using (Html.BeginCollectionItem("ProductCountsOffers"))
+    {
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="isDeleted" />
+        if (!Model.isDeleted)
+        {
+            <td class="rowNumber text-center" colspan="1">
+                1
+            </td>
+        }
+        <td class="text-center" colspan="6"><input asp-for="Count" type="text" class="form-control text-center border-0 p-0 count" style="background-color: transparent;" value="@Model?.Count" readonly /></td>
+        <td class="text-center" colspan="2"><input asp-for="Price" type="text" class="form-control text-center border-0 p-0 price" style="background-color: transparent;" value="@Model?.Price" readonly /></td>
+        <td class="text-center" colspan="2"><input asp-for="Discount" type="text" class="form-control text-center border-0 p-0 discount" style="background-color: transparent;" value="@Model?.Discount" readonly /></td>
+        <td class="text-center" colspan="1"><button class="btn btn-danger text-white py-1 rounded border-0" type="button" onclick="$(this).closest('tr').remove();removeCountOfferFromLocalStorage(@Model.Count);"><i class="fa-solid fa-trash-can"></i></button></td>
+
+    }
+</tr>
+
+
+
+
+
+

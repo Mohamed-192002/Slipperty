@@ -1,0 +1,289 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model UserDTO
+@{
+    ViewData["Title"] = "عناوين الشحن";
+    var isModelStateInvalid = ViewData["ModelStateInvalid"] as bool? ?? false;
+}
+
+<link rel="stylesheet" href="~/css/User/ProfileMenu.css" />
+<link rel="stylesheet" href="~/css/User/UserAddresses.css" />
+
+
+<!-- Confirm Delete Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">تاكيد حذف العنوان</h5>
+                <button type="button" class="close btn" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                هل تريد تأكيد حذف العنوان ؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">حذف</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5 py-5">
+    <section class="row">
+        <!-- Profile Head -->
+        @await Html.PartialAsync("_ProfileMenu", Model)
+
+        <!-- Payment Section -->
+        <div class="col-12 col-md-8">
+            <div class="payment-container">
+
+                <!-- Payment Options -->
+                <ul class="payment-options">
+                    @if (Model.UserAddresses != null)
+                    {
+                        @foreach (var Address in Model.UserAddresses.Select((value, index) => new { value, index }))
+                        {
+                            if (Address.index == 0)
+                            {
+                                <li class="payment-option">
+                                    <label>
+                                        <h6 class="fw-bold me-3">@Address.value?.Name</h6>
+                                        <input type="radio" name="Address" onclick="getAddressDetails(@Address.value?.Id)">
+                                        @Address.value?.Address
+                                    </label>
+
+                                    <span class="bg-primary text-white px-2 py-1 ms-2 rounded-3">
+                                        <i class="@Address.value?.AddressType?.Icon"></i>
+                                        @Address.value?.AddressType?.Name
+                                    </span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="payment-option">
+                                    <label>
+                                        <h6 class="fw-bold me-3">@Address.value?.Name</h6>
+                                        <input type="radio" name="Address" onclick="getAddressDetails(@Address.value?.Id)">
+                                        @Address.value?.Address
+                                    </label>
+                                    <div>
+
+                                        <span class="bg-primary text-white px-2 py-1 ms-2 rounded-3">
+                                            <i class="@Address.value?.AddressType?.Icon"></i>
+                                            @Address.value?.AddressType?.Name
+                                        </span>
+                                        <button type="button" class="btn btn-danger" onclick="DeleteConfirmation(@Address.value?.Id)">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    }
+                </ul>
+
+                <!-- Add New Card Section -->
+                <div class="add-new-card">
+                    <button type="button" onclick="getAddressDetails(0)" class="add-card-link btn">أضف عنوان جديد</button>
+                    @* <h6 class="mt-3">عنوان الشحن</h6> *@
+                    <div id="currentAddress">
+                        @await Html.PartialAsync("_AddNewAddress", new UserAddressDTO
+                   {
+                       UserId = Model.Id
+                   })
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        getRegions();
+
+        $('.savebtn').on('click', function (e) {
+            // Get the values of RegionId, GovernmentId, RegionName, and GovernmentName
+            var regionId = $('#RegionId').val();
+            var regionName = $('#RegionName').val();
+            var governmentId = $('#GovernmentId').val();
+            var governmentName = $('#GovernmentName').val();
+
+            // Flag to track validation
+            var isValid = true;
+
+            // Check if RegionId is -1 and RegionName is empty
+            if (regionId == -1 && regionName.trim() === "") {
+                isValid = false;
+                $("#RegionError").removeClass('d-none');
+            }
+            else {
+                $("#RegionError").addClass('d-none');
+            }
+
+            // Check if GovernmentId is selected and GovernmentName is empty
+            if (governmentId == -1 && governmentName.trim() === "") {
+                $("#GovernmentError").removeClass('d-none');
+                isValid = false;
+            }
+            else {
+                $("#GovernmentError").addClass('d-none');
+            }
+
+            // If validation fails, prevent form submission
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    function checkRegion() {
+        var regionValue = $("#RegionId").val();
+
+        if (regionValue == -1) {
+            $("#newArea").removeClass("d-none");
+            $("#RegionName").removeClass("d-none");
+        }
+        else {
+            $("#newArea").addClass("d-none");
+            $("#RegionName").addClass("d-none");
+        }
+    }
+
+    function getRegions() {
+        if (!$('#GovernmentError').hasClass('d-none')) {
+            // If it doesn't have the class, add it
+            $('#GovernmentError').addClass('d-none');
+        }
+        if (!$('#RegionError').hasClass('d-none')) {
+            // If it doesn't have the class, add it
+            $('#RegionError').addClass('d-none');
+        }
+        var governmentId = $('#GovernmentId').val();
+        var regionsSelect = $('#RegionId'); // Get the RegionId select element
+        // Clear existing options in the RegionId select
+        regionsSelect.empty();
+        regionsSelect.append(
+            $('<option></option>').text('-- اختر --').attr('disabled', 'disabled').attr('selected', 'selected'),
+            $('<option></option>').val(-1).text('-- اخرى --')
+        );
+
+        updateSelect2();
+
+        if (governmentId == -1) {
+            $("#newArea").removeClass("d-none");
+            $("#GovernmentName").removeClass("d-none");
+            $("#RegionName").removeClass("d-none");
+            regionsSelect.val(-1);
+            updateSelect2();
+
+        }
+        else {
+            $("#newArea").addClass("d-none");
+            $("#GovernmentName").addClass("d-none");
+            $("#RegionName").addClass("d-none");
+
+
+            $.ajax({
+                url: '@Url.Action("GetRegions")',
+                type: 'GET',
+                data: { governmentId: governmentId }, // Send governmentId as a parameter
+                traditional: true, // Ensure that jQuery sends the array as multiple parameters
+                success: function (response) {
+
+
+
+                    // Loop through the response data and add each region to the select element
+                    $.each(response.regions, function (index, region) {
+
+                        regionsSelect.append(
+                            $('<option></option>').val(region.id).text(region.text)
+                        );
+                    });
+
+                    // Reinitialize or refresh Select2 (if using Select2)
+                    updateSelect2();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching regions:", error);
+                }
+            });
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+    function getAddressDetails(addressId) {
+        // Make the AJAX call
+        $.ajax({
+            url: '@Url.Action("GetAddressDetails")',
+            type: 'GET',
+            data: { id: addressId },  // Send the ID to the server
+            success: function (response) {
+                $('#currentAddress').html(response);
+                updateSelect2();
+            },
+            error: function () {
+                // Optionally handle errors (e.g., show an error message)
+                alert("An error occurred while loading Address details.");
+            }
+        });
+    }
+
+    // Store the payment method ID globally
+    let addressId;
+
+    // Function to show the confirmation modal and store the ID
+    function DeleteConfirmation(id) {
+        addressId = id;
+
+        // Initialize and show the Bootstrap modal using JavaScript (Bootstrap 5)
+        var myModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        myModal.show();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // Handle the confirmation button click
+        $('#confirmDeleteBtn').click(function () {
+            // Perform the AJAX request to delete the payment method
+            $.ajax({
+                url: '@Url.Action("DeleteAddress")',
+                type: 'POST',
+                data: { id: addressId }, // Send the payment method ID to the server
+                success: function (response) {
+                    // Hide the modal
+                    var myModal = bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal'));
+                    myModal.hide();
+
+                    // Reload the page after successful deletion
+                    location.reload();
+                },
+                error: function () {
+                    // Optionally handle the error (e.g., show an error message)
+                    alert("An error occurred while deleting the address.");
+                }
+            });
+        });
+    });
+</script>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

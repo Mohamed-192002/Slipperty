@@ -1,0 +1,552 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Slipperty</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* <link rel="stylesheet" href="~/Slipperty.styles.css" asp-append-version="true" /> *@
+    <!-- Font Amesome -->
+    <script src="https://kit.fontawesome.com/e47bb7c3b4.js" crossorigin="anonymous"></script>
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <!-- Select2 JavaScript -->
+    <link rel="stylesheet" href="~/css/select2.min.css" asp-append-version="true" />
+    <!-- CSS JavaScript -->
+    <link rel="stylesheet" href="~/css/User/site.css" asp-append-version="true" />
+    <!-- Website Icon -->
+    <link rel="icon" href="~/img/WebsiteIcon.jpeg" type="image/x-icon">
+
+    <!-- Facebook Pixel Base Code (initially empty) -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) }; if (!f._fbq) f._fbq = n;
+            n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
+        }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+
+        // AJAX call to get Facebook Pixel IDs
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Fetch Facebook Pixel IDs using AJAX
+            $.ajax({
+                url: '/Home/Base/GetFacebookPixelIds',
+                method: 'GET',
+                success: function (data) {
+
+                    if (data.pixelIds && data.pixelIds.length > 0) {
+                        // If there are Pixel IDs, initialize the Pixel for each one
+                        data.pixelIds.forEach(function (pixelId) {
+                            fbq('init', pixelId);  // Initialize the Pixel with each ID
+                            fbq('track', 'PageView');  // Track page view by default
+                        });
+                    } else {
+                        console.log('No Pixel IDs found.');
+                    }
+                },
+                error: function () {
+                    console.error('Failed to load Pixel IDs.');
+                }
+            });
+        });
+
+
+    </script>
+    <script>
+        // Function to load multiple Clarity IDs asynchronously using jQuery AJAX
+        function loadClarity() {
+            $.ajax({
+                url: '/Home/Base/GetclaritylIds',  // Ensure this URL matches your API endpoint
+                type: 'GET',
+                success: function (data) {
+                    if (data.clarityIds && data.clarityIds.length > 0) {
+                        // Loop through each Clarity ID and create the tracking script
+                        data.clarityIds.forEach(function (clarityId) {
+                            // Dynamically create a new <script> element for each clarityId
+                            var script = document.createElement("script");
+                            script.type = "text/javascript";
+                            // Create the script content for Clarity tracking
+                            script.innerHTML = `
+                      (function(c,l,a,r,i,t,y){
+                        c[a]=c[a]||function(){
+                          (c[a].q=c[a].q||[]).push(arguments)
+                        };
+                        t=l.createElement(r);
+                        t.async=1;
+                        t.src="https://www.clarity.ms/tag/" + "${clarityId}";
+                        y=l.getElementsByTagName(r)[0];
+                        y.parentNode.insertBefore(t,y);
+                      })(window, document, "clarity", "script", "${clarityId}");
+                    `;
+                            // Append the script to the body of the document
+                            document.body.appendChild(script);
+                        });
+                    } else {
+                        console.error('No Clarity IDs found');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading Clarity IDs:', error);
+                }
+            });
+        }
+
+        // Wait for the DOM to be fully loaded before calling the function
+        document.addEventListener("DOMContentLoaded", function () {
+            loadClarity();
+        });
+    </script>
+
+    <!-- TikTok Pixel Code (initially empty) -->
+    <script>
+        !function (w, d, t) {
+            w.TiktokAnalyticsObject = t;
+            var ttq = w[t] = w[t] || [];
+            ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie", "holdConsent", "revokeConsent", "grantConsent"];
+            ttq.setAndDefer = function (t, e) {
+                t[e] = function () {
+                    t.push([e].concat(Array.prototype.slice.call(arguments, 0)))
+                };
+            };
+            for (var i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]);
+            ttq.instance = function (t) {
+                for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++) ttq.setAndDefer(e, ttq.methods[n]);
+                return e;
+            };
+            ttq.load = function (e, n) {
+                var r = "https://analytics.tiktok.com/i18n/pixel/events.js", o = n && n.partner;
+                ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = r, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {};
+                n = document.createElement("script");
+                n.type = "text/javascript";
+                n.async = !0;
+                n.src = r + "?sdkid=" + e + "&lib=" + t;
+                e = document.getElementsByTagName("script")[0];
+                e.parentNode.insertBefore(n, e);
+            };
+        }(window, document, 'ttq');
+    </script>
+
+    <script>
+        // Fetch TikTok Pixel IDs using AJAX
+        document.addEventListener("DOMContentLoaded", function () {
+
+            $.ajax({
+                url: '/Home/Base/GetTiktokPixelIds',  // URL to fetch TikTok Pixel IDs
+                method: 'GET',
+                success: function (data) {
+                    // console.log(data); // Log data for debugging
+
+                    if (data.pixelIds && data.pixelIds.length > 0) {  // Change to pixelIds (lowercase)
+                        // If Pixel IDs are found, initialize the Pixel for each one
+                        data.pixelIds.forEach(function (pixelId) {  // Change to pixelIds (lowercase)
+                            ttq.load(pixelId);  // Initialize the Pixel with each ID
+                            ttq.page();         // Track page view for each Pixel ID
+                        });
+                    } else {
+                        console.log('No TikTok Pixel IDs found.');
+                    }
+                },
+                error: function () {
+                    console.error('Failed to load TikTok Pixel IDs.');
+                }
+            });
+        });
+    </script>
+
+
+
+
+
+
+    <!-- Facebook Pixel noscript (not needed for empty Pixel IDs, but still included for fallback) -->
+    <noscript>
+        <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=DEFAULT_PIXEL_ID&ev=PageView&noscript=1" />
+    </noscript>
+
+
+</head>
+<body>
+    <header>
+        <!--Side Bar-->
+        <div class="offcanvas offcanvas-end offcanvas-sm" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header">
+                <h5 id="offcanvasRightLabel"></h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body d-flex flex-column">
+                <!-- User Info Section -->
+                <div class="d-flex align-items-center mb-4">
+                    <img src="/img/User-Icon.png" width="50px" height="50px" class="rounded-circle me-3" alt="User Image">
+                    <div>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <h6 class="mb-0">@User.Identity.Name</h6>
+                        }
+                        else
+                        {
+                            <h6 class="mb-0 me-2">زائر</h6>
+                            <small class="text-muted">
+                                <a asp-area="Identity" asp-page="/Account/Login" class="btn" type="button">تسجيل الدخول</a>
+                            </small>
+                        }
+                    </div>
+                </div>
+
+                <!-- Search Input with Icon Inside (Right-Aligned) -->
+                <div class="mb-4">
+                    <div class="position-relative">
+                        <input type="text" class="form-control bg-light text-white border-0 ps-3 pe-5" placeholder="بحث" aria-label="Search">
+                        <i class="fas fa-search position-absolute top-50 end-0 translate-middle-y text-dark pe-3"></i>
+                    </div>
+                </div>
+
+                <!-- Links with Icons -->
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <a asp-area="User" asp-controller="Home" asp-action="Index" class="d-flex align-items-center text-decoration-none text-black">
+                            <i class="fas fa-home ms-3"></i> الرئيسة
+                        </a>
+                    </li>
+                    @* <li class="mb-3">
+                    <a asp-area="User" asp-controller="Products" asp-action="Index" class="d-flex align-items-center text-decoration-none text-black mt-2">
+                    <i class="fa-solid fa-list ms-3"></i>
+                    المنتجات
+                    </a>
+                    </li> *@
+                    <!-- "الاقسام" Section with List Items -->
+                    <div class="mb-3">
+                        <h6 class="text-dark mb-3 d-flex align-items-center" data-bs-toggle="collapse" data-bs-target="#sideCategoriesList" aria-expanded="false" aria-controls="sideCategoriesList">
+                            <i class="fa-solid fa-list ms-3"></i> الاقسام
+                        </h6>
+                        <div id="sideCategoriesList" class="collapse">
+                            <ul id="sideCategories" class="dropdown-menu dropdown-menu-end show-up text-white  " style="list-style: none !important;">
+                                <li><a class="dropdown-item text-dark" href="#">Action</a></li>
+                                <li><a class="dropdown-item text-dark" href="#">Another action</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-dark" href="#">Something else here</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <li class="mb-3">
+                        <a href="#" class="d-flex align-items-center text-decoration-none text-black">
+                            <i class="fa-solid fa-cart-flatbed ms-3"></i> الطلبات
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a asp-area="User" asp-controller="ShoppingCart" asp-action="Index" class="d-flex align-items-center text-decoration-none text-black">
+                            <i class="fa-solid fa-cart-shopping ms-3"></i> العربة
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a asp-area="User" asp-controller="UserManagement" asp-action="UserAddresses" class="d-flex align-items-center text-decoration-none text-black">
+                            <i class="fa-solid fa-location-dot ms-3"></i> عناوين الشحن
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a asp-area="User" asp-controller="UserManagement" asp-action="UserPaymentMethods" class="d-flex align-items-center text-decoration-none text-black">
+                            <i class="fa-solid fa-money-check-dollar ms-3"></i> طرق الدفع
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a asp-area="User" asp-controller="Home" asp-action="AboutUs" class="d-flex align-items-center text-decoration-none text-black">
+                            <i class="fa-solid fa-store ms-3"></i> من نحن
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a asp-area="User" asp-controller="FAQs" asp-action="Index" class="d-flex align-items-center text-decoration-none text-black">
+                            <i class="fa-solid fa-question ms-3"></i> الأسئلة الشائعة
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a asp-area="User" asp-controller="Home" asp-action="ContactUs" class="d-flex align-items-center text-decoration-none text-black">
+                            <i class="fa-solid fa-phone-volume ms-3"></i> اتصل بنا
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a asp-area="Identity" asp-page="/Account/Login" class="d-flex align-items-center text-decoration-none text-black">
+                            <i class="fa-solid fa-right-to-bracket ms-3"></i> تسجيل الدخول
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a asp-area="User" asp-controller="UserManagement" asp-action="RegisterPhoneNumber" class="d-flex align-items-center text-decoration-none text-black">
+                            <i class="fa-solid fa-user-plus ms-3"></i> انشاء حساب
+                        </a>
+                    </li>
+                </ul>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <!-- "تسجيل الخروج" link fixed at the bottom -->
+                    <div class="mt-auto">
+                        <a asp-area="Identity" asp-page="/Account/Logout" class="d-flex align-items-center text-decoration-none text-black me-5">
+                            <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+
+
+
+        <!-- Bottom Navigation Bar -->
+        <div class="d-lg-none fixed-bottom bottomBar">
+            <div class="container-fluid d-flex justify-content-around py-2">
+                <!-- Home Icon -->
+                <a asp-area="User" asp-controller="Home" asp-action="Index" class="text-center text-white">
+                    <i class="fa-solid fa-house fa-lg"></i>
+                    <div>الرئيسية</div>
+                </a>
+                <!-- Categories Icon with Dropdown -->
+                <div class="dropdown" style="margin-top:11px;">
+                    <a asp-area="User" asp-controller="Products" asp-action="Index" class="text-center dropdown-toggle text-white" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-list fa-lg"></i>
+                        <div>الأقسام</div>
+                    </a>
+                    <ul id="bottomCategoris" class="dropdown-menu dropdown-menu-end show-up text-white  " aria-labelledby="categoriesDropdown">
+                        @* <li><a class="dropdown-item text-dark" href="#">Action</a></li>
+                        <li><a class="dropdown-item text-dark" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-dark" href="#">Something else here</a></li> *@
+                    </ul>
+                </div>
+                <!-- Cart Icon -->
+                <a asp-area="User" asp-controller="ShoppingCart" asp-action="Index" class="text-center  text-white">
+                    <i class="fa-solid fa-cart-shopping fa-lg"></i>
+                    <div>العربة</div>
+                </a>
+                <!-- Home Icon -->
+                @* <a href="tel:+201096633474" class="text-center text-white">
+                    <i class="fa-solid fa-phone-volume fa-lg"></i>
+                    <div>الاتصال</div>
+                </a> *@
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <!-- Home Icon -->
+                    <a asp-area="User" asp-controller="Home" asp-action="Index" class="text-center text-white">
+                        @* <i class="fa-solid fa-clock-rotate-left fa-lg"></i> *@
+                        <i class="fa-solid fa-cart-flatbed  fa-lg"></i>
+                        <div>الطلبات</div>
+                    </a>
+                }
+
+                <!-- FAQ Icon -->
+                @* <a asp-area="User" asp-controller="FAQs" asp-action="Index" class="text-center purplecolor">
+                <i class="fa-solid fa-circle-question fa-lg"></i>
+                <div>الأسئلة الشائعة</div>
+                </a> *@
+                <!-- Navbar Toggler -->
+                @* <button class="btn text-white" type="button" data-bs-toggle="collapse" data-bs-target="#bottomNavbar">
+                <i class="fa-solid fa-bars"></i>
+                </button> *@
+                <button class="btn text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fa-solid fa-bars"></i></button>
+            </div>
+            <!-- Collapsible Bottom Navbar -->
+            <div class="collapse" id="bottomNavbar">
+                <div class="bg-light p-3">
+                    <ul class="navbar-nav">
+                        @* <li class="nav-item"><a class="nav-link text-dark" href="#">الصفحة الرئيسية</a></li> *@
+                        @* <li class="nav-item"><a class="nav-link text-dark" href="#">الأسئلة الشائعة</a></li> *@
+                        <li class="nav-item"><a asp-area="User" asp-controller="Home" asp-action="AboutUs" class="nav-link text-dark">من نحن</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark" asp-area="User" asp-controller="Home" asp-action="ContactUs">اتصل بنا</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark" asp-area="User" asp-controller="FAQs" asp-action="Index">الأسئلة الشائعة</a></li>
+                        @* <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        أقسام المنتجات
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item text-dark" href="#">Action</a></li>
+                        <li><a class="dropdown-item text-dark" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-dark" href="#">Something else here</a></li>
+                        </ul>
+                        </li> *@
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top border-0 topNavbar" style="border-radius:0px;">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="User" asp-controller="Home" asp-action="Index">
+                    <img src="/img/Logo_White.png" class="mainLogo" width="200" height="48">
+                </a>
+                <button class="navbar-toggler bg-white d-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    @* <span class="navbar-toggler-icon"></span> *@
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold text-white" asp-area="User" asp-controller="Home" asp-action="Index">الصفحة الرئيسية</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-white dropdown-toggle fw-bold" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                اقسام المنتجات
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="categoriesList">
+                                @* <li><a class="dropdown-item text-end" href="#">Action</a></li>
+                                <li><a class="dropdown-item text-end" href="#">Another action</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-end" href="#">Something else here</a></li> *@
+                            </ul>
+                        </li>
+                        <li class="nav-item fw-bold">
+                            <a class="nav-link text-white" asp-area="User" asp-controller="FAQs" asp-action="Index">الاسئلة الشائعه</a>
+                        </li>
+                        <li class="nav-item fw-bold">
+                            <a class="nav-link text-white" asp-area="User" asp-controller="Home" asp-action="AboutUs" tabindex="-1" aria-disabled="true">من نحن</a>
+                        </li>
+                        <li class="nav-item fw-bold">
+                            <a class="nav-link text-white" asp-area="User" asp-controller="Home" asp-action="ContactUs" tabindex="-1" aria-disabled="true">اتصل بنا</a>
+                        </li>
+                    </ul>
+                    <!-- Centered Search Bar -->
+                    @* <form class="d-flex mx-auto w-50">
+                    <input class="form-control me-2" type="search" placeholder="بحث" aria-label="Search">
+                    <button class="btn btn-outline-primary" type="submit">بحث</button>
+                    </form> *@
+                    <div class="d-flex d-none">
+                        <button class="btn btn-outline-primary border-0 text-white ms-2 bg-white text-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        @* <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary bg-white text-primary" type="button"><i class="fa-solid fa-user"></i></a> *@
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a asp-area="Identity" asp-page="/Account/Logout" class="btn btn-outline-primary bg-white text-primary" type="button">تسجيل الخروج</a>
+                        }
+                        else
+                        {
+                            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary bg-white text-primary" type="button">تسجيل الدخول</a>
+                        }
+                        <a asp-area="User" asp-controller="ShoppingCart" asp-action="Index" class="btn btn-outline-primary text-w me-2 bg-white text-primary"><i class="fa-solid fa-cart-shopping"></i></a>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <a href="#" class="btn btn-outline-primary bg-white text-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-area="User" asp-controller="UserManagement" asp-action="UserAccount" class="btn btn-outline-primary bg-white text-primary me-2" type="button"><i class="fa-solid fa-user"></i></a>
+                        <a asp-area="Identity" asp-page="/Account/Logout" class="btn btn-outline-primary bg-white text-primary d-none d-md-block me-2" type="button">تسجيل الخروج</a>
+                    }
+                    else
+                    {
+                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary bg-white text-primary d-none d-md-block me-2" type="button">تسجيل الدخول</a>
+                    }
+                    @* <input class="form-control me-2" type="search" placeholder="بحث" aria-label="Search"> *@
+                    <a class="btn btn-outline-primary text-w me-2 bg-white text-primary" asp-area="User" asp-controller="ShoppingCart" asp-action="Index"><i class="fa-solid fa-cart-shopping"></i></a>
+                </div>
+            </div>
+        </nav>
+        <!-- end of Navigation Bar -->
+    </header>
+    @* <div class="container">
+    <main role="main" class="pb-3">
+    @RenderBody()
+    </main>
+    </div> *@
+
+
+    <!-- Main Content -->
+    <div class="container-fluid px-0 py-4 bg-light mainBody">
+        @RenderBody()
+    </div>
+
+
+
+    <!-- Footer -->
+    <footer class="text-center text-lg-end bg-primary text-white pt-1" style="background: linear-gradient(to right, #6c4fe1, #7734C1);">
+        <!-- Section: Links  -->
+        <section class="">
+            <div class="container text-center text-md-end mt-5">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <!-- Content -->
+                        <img src="/img/Logo_White.png" alt="" width="300" height="74">
+
+                        <p>
+                            تُعتبر شركة سيلبرتي وجهة عصرية لعشاق الأحذية الذين يبحثون عن أحدث صيحات الموضة. تتميز الشركة بتشكيلة واسعة من الأحذية التي تلبي جميع الأذواق، بدءًا من الأحذية الرياضية الكلاسيكية وحتى الصنادل الأنيقة. وتتعاون سيلبرتي مع أشهر العلامات التجارية العالمية لتقديم تشكيلة حصرية من الأحذية التي تجمع بين الجودة العالية والتصميم المبتكر، مما يجعل كل قطعة تحفة فنية في حد ذاتها.
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            طرق التواصل
+                        </h6>
+                        @* <p>
+                            85 شارع فيصل الرئيسي المريوطية
+                        </p> *@
+                        @* <p>
+                            01096633474
+                        </p> *@
+                        <p>
+                            info@company.com
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            روابط مهمة
+                        </h6>
+                        <p>
+                            <a asp-area="User" asp-controller="Products" asp-action="Index" class="text-reset">المتجر</a>
+                        </p>
+                        <p>
+                            <a asp-area="User" asp-controller="FAQs" asp-action="Index" class="text-reset">الأسئلة الشائعة</a>
+                        </p>
+                        <p>
+                            <a asp-area="User" asp-controller="Home" asp-action="ContactUs" class="text-reset">اتصل بنا</a>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+            </div>
+        </section>
+        <!-- Section: Links  -->
+        <!-- Copyright -->
+        <div class="text-center p-4">
+            © 2024 جميع الحقوق محفوظة شركة سيلبرتي
+        </div>
+        <!-- Copyright -->
+    </footer>
+    <!-- End of Footer -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Make the AJAX call when the page is ready
+            $.ajax({
+                url: '/Home/Base/GetCategories',
+                type: 'GET',
+                success: function (data) {
+                    // Populate the dropdown with the returned partial view
+                    $('#categoriesList').html(data);
+                    $('#bottomCategoris').html(data);
+                    $('#sideCategoriesList').html(data);
+                },
+                error: function () {
+                    console.log('An error occurred while loading the categories.');
+                }
+            });
+
+            updateSelect2();
+        });
+
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <!-- Select2 JavaScript -->
+    <script src="~/js/select2.min.js"></script>
+</body>
+</html>

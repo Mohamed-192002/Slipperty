@@ -1,0 +1,24 @@
+﻿@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProductCategoryDTO
+
+<tr>
+    @using (Html.BeginCollectionItem("Categories"))
+    {
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CategoryId" />
+        @* <input type="hidden" asp-for="ProductId" /> *@
+        <td class="rowNumber text-center" colspan="1">
+            1
+        </td>
+        <td class="text-center" colspan="11"><input type="text" class="form-control text-center border-0 p-0 count" style="background-color: transparent;" value="@Model?.Category?.Name" readonly /></td>
+        
+
+    }
+</tr>
+
+
+
+
+
+

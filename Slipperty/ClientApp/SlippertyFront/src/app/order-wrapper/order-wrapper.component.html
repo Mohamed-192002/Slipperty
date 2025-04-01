@@ -1,0 +1,38 @@
+<ul class="nav table-responsive nav-tabs gap-2 p-3 pt-4 border-0 " id="myTab" role="tablist">
+  <li class="nav-item position-relative" role="presentation">
+    <button class="nav-link tab-color  active tab-active-color " id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" >اوردرات جديده</button>
+    <input class="order-counter new-order-counter" [value]="this.orderCounters.newOrdersCount" id="new-order-counter" [disabled]="true" />
+  </li>
+  <li class="nav-item position-relative" role="presentation">
+  <button class="nav-link tab-color" id="profile-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="profile" aria-selected="false">تم المحاولة</button>
+    <input class="order-counter" [value]="this.orderCounters.triedOrderCount"  [disabled]="true" />
+  </li>
+  <li class="nav-item position-relative" role="presentation">
+    <button class="nav-link tab-color" id="messages-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="messages" aria-selected="false">واتساب</button>
+    <input class="order-counter" [value]="this.orderCounters.whatsappOrdersCount" [disabled]="true" />
+  </li>
+  <li class="nav-item position-relative" role="presentation">
+    <button class="nav-link tab-color" id="settings-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="settings" aria-selected="false">تأجيلات</button>
+    <input class="order-counter" [value]="this.orderCounters.holdOrdersCount" [disabled]="true" />
+  </li>
+
+  <li class="nav-item position-relative" role="presentation">
+    <button class="nav-link tab-color" id="recalling-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="settings" aria-selected="false">اعادة اتصال</button>
+    <input class="order-counter" [value]="this.orderCounters.recallOrdersCount" [disabled]="true" />
+  </li>
+
+  <li class="nav-item position-relative" role="presentation">
+    <button class="nav-link tab-color" id="stop-operation-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="settings" aria-selected="false">وقف التشغيل</button>
+    <input class="order-counter" [value]="this.orderCounters.stoppedOrdersCount" [disabled]="true" />
+  </li>
+
+  <li class="nav-item position-relative" role="presentation">
+    <button class="nav-link tab-color" id="cancel" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="settings" aria-selected="false">الطلبات الملغاة</button>
+    <input class="order-counter" [value]="orderCounters.cancel" [disabled]="true" />
+  </li>
+
+  <li class="nav-item position-relative" role="presentation">
+    <button class="nav-link tab-color" id="confirmed-orders-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="settings" aria-selected="false">طلبات تم التاكيد</button>
+    <input class="order-counter" [value]="this.orderCounters.confirmedOrdersCount" [disabled]="true" />
+  </li>
+</ul>

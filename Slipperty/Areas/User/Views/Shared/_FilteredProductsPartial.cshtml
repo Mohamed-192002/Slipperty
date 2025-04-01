@@ -1,0 +1,9 @@
+﻿@model IEnumerable<ProductDTO>
+
+@if(Model != null && Model.Any())
+{
+    foreach(var product in Model)
+    {
+        @Html.Partial("_ProductPartial", product);
+    }
+}

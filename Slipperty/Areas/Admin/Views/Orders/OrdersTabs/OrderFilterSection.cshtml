@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Slipperty.Areas.Admin.Controllers.OrdersController.OrderFilter
+<div class="d-flex justify-content-end">
+  <button class="btn btn-primary mx-auto mb-3 d-md-none" id="toggleFormBtn">Show Filters</button>
+</div>
+<form id="searchForm" onsubmit="return false;">
+    <div class="row g-2 p-2">
+        <div class="col-md-3">
+            <input type="text" name="ProdName" value="@Model?.ProdName" class="form-control" placeholder="اسم المنتج">
+        </div>
+        <div class="col-md-3">
+            <div class="multi-input-container">
+                <div id="chipsContainer" class="chips">
+                    @if (Model is not null)
+                    {
+                        @foreach (var value in Model?.OrderNos)
+                        {
+                            <span class="chip">
+                                @value <button type="button" class="remove-chip" onclick="removeValue(this)">×</button>
+                            </span>
+
+                        }
+                        
+                    }
+
+                </div>
+
+                <input type="text" id="inputField" placeholder="Type and press Enter..." />
+                
+                <input type="hidden" id="valuesField" name="Values" value="@string.Join(",", Model?.OrderNos??Enumerable.Empty<string>())" />
+            </div>
+            @* <input type="number" name="ShipmentQty" value="@Model?.ShipmentQty" class="form-control" placeholder="كمية الشحنة"> *@
+        </div>
+        <div class="col-md-3">
+            <input type="text"  name="Phone" value="@Model?.Phone" maxlength="11" minlength="11" class="form-control" placeholder="رقم الهاتف">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="Address"  value="@Model?.Address" class="form-control" placeholder="العنوان">
+        </div>
+        <div class="col-md-3">
+            <input id="OrderDate" name="OrderDate" value="@Model?.OrderDate" class="form-control" />
+            <script>
+                
+            </script>
+            @* <input type="date"  class="form-control" placeholder="التاريخ"> *@
+        </div>
+        <div class="col-md-3 text-end">
+            <button type="submit" class="search-btn order-btn">Search</button>
+        </div>
+    </div>
+</form>
+

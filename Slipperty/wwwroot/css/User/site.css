@@ -1,0 +1,195 @@
+﻿body {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 16px !important;
+}
+.btn-primary {
+    background-color: #680ee7 !important;
+    border-color: #680ee7 !important;
+}
+
+.btn-danger {
+    background-color: #B22222 !important;
+    color: #fff !important;
+}
+.btn-outline-primary {
+    color: #7734C1 !important;
+    border-color: #7734C1 !important;
+}
+.bg-primary {
+    /*background: #7734C1 !important;*/
+    background: #680ee7 !important;
+}
+.btn-outline-primary:hover {
+    background: #7734C1 !important;
+    color: #fff !important;
+
+}
+.text-primary {
+    color: #7734C1 !important;
+}
+
+.promo-section {
+    /*background: linear-gradient(180deg, #6700EA 0%, #7734C1 100%);*/
+    /*background: #7734C1;*/
+    color: white;
+    min-height: 40vh;
+    /*border-radius: 8px;*/
+    /*opacity: 60%;*/
+}
+
+    .promo-section .btn {
+        background: #7734c1;
+        color: #FFFFFF;
+        border: 1px solid white;
+        padding: 12px 30px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 8px;
+        gap: 10px;
+    }
+
+.promo-title {
+    font-size: 70px;
+}
+nav {
+    /*background: linear-gradient(to right, #6c4fe1, #a287f4);*/
+    /*background: linear-gradient(to right, #6c4fe1, #7734C1);*/
+    background: #680ee7;
+    border-radius: 12px;
+    padding: 10px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+}
+.nav-link:hover {
+    color: #fff !important;
+    cursor: pointer !important;
+}
+@media (max-width: 576px) {
+    .promo-title {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 840px) {
+    .promo-title {
+        font-size: 35px;
+    }
+}
+@media (max-width: 1024px) {
+    .promo-section {
+        min-height: 25vh;
+    }
+}
+
+.nav-centered-title {
+    position: absolute;
+    left: 40%;
+    top: 10px;
+}
+
+.topNavbar {
+    transition: top 0.3s; /* Smooth transition when showing or hiding */
+}
+
+.navbar-hidden {
+    top: -80px; /* Adjust this value to the height of your navbar */
+}
+
+
+#bottomNavbar .nav-link,
+#bottomNavbar .dropdown-item {
+    color: black !important;
+}
+
+.fixed-bottom a {
+    text-decoration: none;
+    font-size: 12px;
+    margin-top: 13px;
+}
+
+.fixed-bottom i {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.bottomBar{
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    /*border-bottom: 0;*/
+    background: #680ee7;
+}
+
+
+/* Style for purple icons and text */
+.show-up {
+    margin-top: 13px;
+}
+/* Adjust dropdown arrow position */
+.dropdown-toggle::after {
+    display: inline-block;
+    margin-left: auto;
+    vertical-align: middle;
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-left: 0.3em solid transparent;
+    position: absolute;
+    top: 50%;
+    right: -9px;
+    transform: translateY(-50%);
+}
+
+.purplecolor {
+    color: #6700EA;
+}
+
+/*.dropdown {
+    margin-top: 13px;
+}
+*/
+.bg-fire {
+    background: linear-gradient(to right, #EA5A00, #ECBA0B) !important;
+}
+.fireIcon {
+    width: 25px;
+    height: 25px;
+    object-fit: scale-down;
+}
+
+.mainLogo {
+    width: 200px;
+    height: 48px;
+    object-fit: scale-down;
+}
+
+@media(max-width: 450px) {
+    .mainLogo {
+        width: 150px;
+    }
+}
+
+@media(max-width: 400px) {
+    .mainLogo {
+        width: 130px;
+    }
+}
+
+@media(max-width: 375px) {
+    .mainLogo {
+        width: 120px;
+    }
+}
+@media(max-width: 600px) {
+    #offcanvasRight, #filtersOffcanvas {
+        width: 60% !important;
+    }
+}
+
+.carousel-indicators [data-bs-target] {
+    background-color: #680ee7 !important;
+}
+
+.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice {
+    background: #7734C1 !important;
+    color: #fff !important;
+}

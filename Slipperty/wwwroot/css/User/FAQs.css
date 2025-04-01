@@ -1,0 +1,126 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Marhey:wght@300..700&family=Oi&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+body {
+    font-family: "Cairo", serif !important;
+    /*font-weight: 400 !important;*/
+    font-optical-sizing: auto !important;
+}
+
+.cairo-main {
+    font-family: "Cairo", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}
+
+.cairo-light {
+    font-weight: 200;
+}
+
+.cairo-bold {
+    font-weight: 600;
+}
+
+.cairo-extra-bold {
+    font-weight: 800;
+}
+
+.faq-section {
+    padding: 3rem 0;
+    font-family: 'Cairo', sans-serif !important;
+}
+
+.faq-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.accordion-item {
+    border: none;
+    border-bottom: 1px solid #6700ea;
+    position: relative;
+}
+
+.accordion-button {
+    font-weight: 600;
+    color: #4a4a4a;
+    background-color: transparent;
+    padding: 1rem;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    /*width: 18px;*/
+    /*height: 40px;*/
+}
+
+    .accordion-button:not(.collapsed) {
+        color: #4a4a4a;
+        background-color: #fff !important;
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+
+    .accordion-button::after {
+        display: none;
+    }
+
+.accordion-icon {
+    margin-left: 0;
+    margin-right: auto;
+    font-size: 1.25rem;
+    color: #6700ea;
+    background-color: #f3f5f6;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    font-size: 20px;
+    padding: 15px;
+}
+
+/* Ensure that the icon starts un-rotated when collapsed */
+.accordion-button.collapsed .accordion-icon {
+    transform: rotate(0deg); /* No rotation when collapsed */
+    background-color: #f3f5f6;
+    color: #6700ea;
+}
+
+/* Rotate and change color when expanded */
+.accordion-button:not(.collapsed) .accordion-icon {
+    transform: rotate(45deg);
+    background-color: #7734c1;
+    color: #fff;
+}
+
+.accordion-number {
+    font-weight: 800;
+    color: #3C3C4380;
+    margin-left: 0.5rem;
+}
+
+.accordion-body {
+    color: #6700ea;
+    text-align: right;
+    padding-top: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.accordion-header button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #000000;
+}

@@ -1,0 +1,80 @@
+﻿@model   Slipperty.Areas.Admin.Controllers.OrdersController.OrderVm  
+<div>
+
+    <div id="orders-container-wrapper">
+        <div id="dynamicFilterContainer">
+            @await Html.PartialAsync("OrdersTabs/OrderFilterSection" , @Model.Filter)
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                @Html.Partial("OrdersTabs/OrdersHeaderPartial")
+                </thead>
+                <tbody>
+                @if (Model.Orders?.Count() > 0)
+                {
+
+                    @foreach (var item in Model.Orders)
+                    {
+                        @await Html.PartialAsync("OrdersTabs/OrdersPartial", item)
+                    }
+                }
+                else
+                {
+                 @await Html.PartialAsync("_EmptyDataPartial")
+                }
+                </tbody>
+               
+            </table>
+
+            @await Html.PartialAsync("PaginationAjaxPartial", new PaginationDTO
+            {
+                IsPreviousLinkVisible = ViewBag.IsPreviousLinkVisible,
+                IsNextLinkVisible = ViewBag.IsNextLinkVisible,
+                PageNumber = ViewBag.PageNumber,
+                TotalPages = ViewBag.TotalPages,
+                DisplayedItemsCount = ViewBag.DisplayedItemsCount,
+                Controller = "Orders",
+                Action = "GetOrders",
+                Filter = new { OrderStatus = @Model.OrderStatus }
+            })
+
+        </div>
+        <div class="d-flex justify-content-center align-items-center gap-1">
+            <a class="btn btn-primary mt-5 w-50" asp-action="ExportOrders" target="_blank">مشركة اكسيل</a>
+            <a class="btn btn-primary mt-5 w-50" asp-action="ExportOrdersToWhatsApp" target="_blank">مشركة واتساب</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready( function() {
+
+        let GetOrderCardDetail = (OrderId , status) => {
+            let url = `@Url.Action("GetOrderCardDetail", "Orders")?OrderId=${OrderId} &status=${status}`;
+            $("#partial-container").html(`
+                                                <div class="text-center mt-5">
+                                                    <div class="spinner-border" style="color:var(--primary-color)" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </div>
+                                            `);
+            $.get(url, function (data) {
+                $("#partial-container").html(data);
+            }).fail(function () {
+                $("#partial-container").html('<p class="text-center text-danger">حدث خطأ أثناء تحميل البيانات.</p>');
+            });
+        }
+        $(".table").on('click' , function(event){
+            
+            let orderId = event.target.parentElement.getAttribute("order-id") ?? -1;
+            let tabId = $(".tab-active-color").attr("id");
+            let status = getTabStatus(tabId);
+            GetOrderCardDetail(orderId , status);
+        });
+        
+      
+
+    })
+</script>
+

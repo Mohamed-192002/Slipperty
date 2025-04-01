@@ -1,0 +1,736 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Marhey:wght@300..700&family=Oi&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+body {
+    font-family: "Cairo", serif !important;
+    font-weight: 400 !important;
+    font-optical-sizing: auto !important;
+}
+
+.cairo-main {
+    font-family: "Cairo", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}
+
+.cairo-light {
+    font-weight: 200;
+}
+
+.cairo-bold {
+    font-weight: 600;
+}
+
+.cairo-extra-bold {
+    font-weight: 800;
+}
+
+.videosscrollDiv {
+    scroll-behavior: smooth; /* Smooth scrolling */
+    overflow-y: hidden !important; /* Hide vertical overflow */
+    overflow-x: auto; /* Enable horizontal scrolling */
+
+}
+/* Custom Scrollbar for Thumbnail Container */
+    .videosscrollDiv::-webkit-scrollbar {
+        height: 8px; /* Height of the scrollbar */
+    }
+
+    .videosscrollDiv::-webkit-scrollbar-thumb {
+        background: linear-gradient(to right, #a29bfe, #6c5ce7); /* Gradient scrollbar */
+        border-radius: 10px;
+    }
+
+        .videosscrollDiv::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to right, #6c5ce7, #5a2d8a); /* Darker gradient on hover */
+        }
+
+    .videosscrollDiv::-webkit-scrollbar-track {
+        background: #e0e0e0; /* Light background track */
+        border-radius: 10px;
+    }
+#embed-video-container {
+    height:300px !important;
+    overflow: hidden !important;
+}
+/* Thumbnail Container */
+.thumbnail-container {
+    padding: 10px; /* Padding inside the container */
+    border-radius: 8px; /* Rounded corners */
+    background: #f8f9fa; /* Light background color */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    scroll-behavior: smooth; /* Smooth scrolling */
+    overflow-y: hidden; /* Hide vertical overflow */
+    overflow-x: auto; /* Enable horizontal scrolling */
+}
+/* Custom Scrollbar for Thumbnail Container */
+.thumbnail-container::-webkit-scrollbar {
+    height: 8px; /* Height of the scrollbar */
+}
+
+    .thumbnail-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(to right, #a29bfe, #6c5ce7); /* Gradient scrollbar */
+        border-radius: 10px;
+    }
+
+        .thumbnail-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to right, #6c5ce7, #5a2d8a); /* Darker gradient on hover */
+        }
+
+    .thumbnail-container::-webkit-scrollbar-track {
+        background: #e0e0e0; /* Light background track */
+        border-radius: 10px;
+    }
+
+    /* Thumbnail Image Styles */
+    .thumbnail-container img {
+        cursor: pointer; /* Pointer cursor on hover */
+        transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effect */
+    }
+
+        .thumbnail-container img:hover {
+            transform: scale(1.1); /* Slight zoom on hover */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow on hover */
+            border-color: #6a0dad;
+        }
+
+/* Thumbnail Image Size */
+.thumbnail {
+    width: 60px; /* Thumbnail width */
+    height: 60px; /* Thumbnail height */
+    object-fit: cover; /* Ensure image covers the area without stretching */
+    border-radius: 10px; /* Rounded corners */
+}
+/* Reviews Row Styles */
+.reviews-row {
+    display: flex; /* Flexbox for horizontal alignment */
+    gap: 16px; /* Space between cards */
+    overflow-x: auto; /* Horizontal scroll for overflow */
+    padding: 10px; /* Padding around the row */
+    background: #f8f9fa; /* Light background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    scroll-behavior: smooth; /* Smooth scroll behavior */
+}
+
+    /* Custom Scrollbar for reviews-row */
+    .reviews-row::-webkit-scrollbar {
+        height: 8px; /* Height of the scrollbar */
+    }
+
+    .reviews-row::-webkit-scrollbar-thumb {
+        background: linear-gradient(to right, #a29bfe, #6c5ce7); /* Gradient scrollbar */
+        border-radius: 10px;
+    }
+
+        .reviews-row::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to right, #6c5ce7, #5a2d8a); /* Darker gradient on hover */
+        }
+
+    .reviews-row::-webkit-scrollbar-track {
+        background: #e0e0e0; /* Light background track */
+        border-radius: 10px;
+    }
+
+/* Review Card Styles */
+.review-card {
+    flex: 0 0 auto; /* Prevents the card from shrinking or growing */
+    width: 300px; /* Set width of each review card */
+    background: #ffffff; /* White background */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 16px; /* Padding inside each card */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for card depth */
+}
+
+/* Review Card Header */
+.review-card-header {
+    display: flex; /* Flexbox for alignment */
+    justify-content: space-between; /* Space between elements */
+    align-items: center; /* Vertical alignment */
+    margin-bottom: 8px; /* Space below header */
+}
+
+/* Profile Info Styles (inside review card) */
+.profile-info {
+    display: flex; /* Flexbox for profile elements */
+    align-items: center; /* Center items vertically */
+    gap: 8px; /* Space between profile elements */
+}
+
+/* Profile Picture */
+.profile-pic {
+    width: 40px; /* Set width of profile picture */
+    height: 40px; /* Set height of profile picture */
+    border-radius: 50%; /* Circular image */
+    object-fit: cover; /* Ensure image covers the area without stretching */
+}
+
+/* Profile Text Styles */
+.profile-text span {
+    display: block; /* Display name as a block */
+    font-weight: bold; /* Bold for name */
+}
+
+.profile-text small {
+    font-size: 0.8em; /* Smaller text for additional info */
+    color: #888; /* Light gray for small text */
+}
+
+/* Star Ratings */
+.stars {
+    color: #ffc107; /* Yellow stars */
+    font-size: 1.2em; /* Larger star size */
+}
+
+/* Review Card Body Styles */
+.review-card-body {
+    font-size: 0.9em; /* Smaller text for review content */
+    color: #555; /* Dark gray text */
+    line-height: 1.5; /* Spacing between lines of text */
+}
+
+/* Gradient Button */
+.gradientButton {
+    background: linear-gradient(90deg, #EA5A00 0%, #ECBA0B 100%); /* Orange gradient background */
+}
+
+/* Offer Banner */
+.offer-banner {
+    background: linear-gradient(90deg, #EA5A00 0%, #ECBA0B 100%); /* Gradient background */
+    color: white; /* White text */
+    font-weight: bold; /* Bold text */
+    padding: 10px; /* Padding inside the banner */
+    border-radius: 5px; /* Rounded corners */
+    margin-bottom: 20px; /* Space below the banner */
+    text-align: center; /* Center the text */
+    display: flex; /* Flexbox for alignment */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    font-size: 2rem; /* Larger font size */
+}
+
+    /* Fire Icon next to offer banner text */
+    .offer-banner .fire-icon {
+        margin-left: 10px; /* Space between text and icon */
+    }
+
+/* Yellow Container Background */
+.yellowcontainer {
+    background-color: #fff0cc; /* Light yellow background */
+    position: relative;
+}
+.discountValue {
+    position: absolute;
+    top: -10px;
+    background: linear-gradient(90deg, #EA5A00 0%, #ECBA0B 100%);
+}
+/* Product Cards */
+.product-cards .card {
+    background-color: #fff0cc; /* Yellow background for cards */
+    border: none; /* No border */
+    padding: 15px; /* Padding inside the card */
+    border-radius: 8px; /* Rounded corners */
+    margin-bottom: 20px; /* Space below each card */
+}
+
+/* Custom Button for Product Cards */
+.product-cards .btn-custom {
+    background: linear-gradient(90deg, #EA5A00 0%, #ECBA0B 100%); /* Gradient background */
+    color: white; /* White text */
+    font-weight: bold; /* Bold text */
+    border: none; /* No border */
+    width: 100%; /* Full width button */
+    padding: 10px; /* Padding inside the button */
+    border-radius: 5px; /* Rounded corners */
+}
+
+    /* Button Hover State */
+    .product-cards .btn-custom:hover {
+        background: linear-gradient(90deg, #ff6600, #ff8c00); /* Darker gradient on hover */
+    }
+
+/* Option Button for Product Cards */
+.product-cards .option-btn {
+    background-color: #fff; /* White background */
+    border: 1px solid #ccc; /* Light border */
+    color: black; /* Black text */
+    width: 70px; /* Button width */
+    height: 60px; /* Button height */
+    text-align: center; /* Center text */
+    line-height: 30px; /* Center text vertically */
+    border-radius: 4px; /* Rounded corners */
+    margin: 5px; /* Space between buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.product-cards .option-btn:hover {
+    background-color: #6c5ce7; /* White background */
+}
+
+    /* Active State for Option Button */
+    .product-cards .option-btn.active {
+        background-color: #6700EA; /* Purple background when active */
+        color: white; /* White text */
+    }
+
+
+.product-cards .section-title {
+    text-align: right; /* Align text to the right */
+    margin-bottom: 10px; /* Space below the title */
+    font-weight: bold; /* Bold text */
+    color: #6700EA; /* Purple text */
+}
+
+
+@media (max-width: 576px) {
+    .offer-banner,
+    .product-cards .btn-custom,
+    .product-cards .option-btn,
+    .product-cards .section-title {
+        font-size: 1.2rem; 
+    }
+}
+
+
+.plusandmins {
+    color: #5e00cc; 
+}
+
+    
+    .plusandmins:hover {
+        color: white; 
+        background-color: #5e00cc; 
+    }
+
+/* Secondary Custom Button */
+.btn-custom2 {
+    background: #8a2be2; /* Purple background */
+    color: white; /* White text */
+    font-weight: bold; /* Bold text */
+    border: none; /* No border */
+    width: 100%; /* Full width button */
+    padding: 10px; /* Padding inside the button */
+    border-radius: 5px; /* Rounded corners */
+}
+
+/* Product Image */
+.product-image {
+    width: 100%; /* Full width */
+    height: 25rem; /* Fixed height */
+    object-fit: fill; /* Image fits the container */
+}
+
+
+/* General Styles for Breadcrumb */
+.breadcrumb {
+    background-color: transparent; /* Transparent background */
+    padding: 0; /* No padding */
+    margin-bottom: 20px; /* Space below breadcrumb */
+}
+
+/* Purple Section Styling */
+.purple-section {
+    background-color: purple; /* Purple background */
+    color: white; /* White text */
+    padding: 10px; /* Padding */
+    border-radius: 5px; /* Rounded corners */
+    text-align: center; /* Center text */
+}
+
+/* Rating Text */
+.rating .text-warning {
+    font-size: 1.5rem; /* Larger font size for rating text */
+}
+
+/* Quantity Input Field */
+.quantity-input {
+    width: 60px; /* Width for the input field */
+}
+
+/* Custom Warning Button */
+.btn-warning {
+    background-color: orange; /* Orange background */
+    color: white; /* White text */
+    border: none; /* No border */
+}
+
+/* Progress Container */
+.progress-container {
+    display: flex; /* Flexbox for alignment */
+    align-items: center; /* Center items vertically */
+    gap: 10px; /* Space between items */
+}
+
+/* Custom Button Styles */
+.button-custom {
+    background-color: #6f00ff; /* Purple background */
+    color: white; /* White text */
+    font-weight: bold; /* Bold text */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+}
+
+    /* Button Hover Effect */
+    .button-custom:hover {
+        background-color: #5e00cc; /* Darker purple background on hover */
+    }
+
+/* Alert Div */
+.alertdiv {
+    background-color: #6a0dad; /* Purple background */
+    width: fit-content; /* Fit the width to content */
+    border-radius: 8px; /* Rounded corners */
+    padding-bottom: 0px; /* No padding at the bottom */
+    font-size: 1.5rem; /* Larger text */
+}
+
+/* Product Name Styling */
+.productName {
+    font-size: 1.5rem; /* Larger font size for product name */
+}
+.originalPrice {
+    font-size: 1.1rem;
+}
+.DiscountPrice {
+    font-weight: bold;
+    font-size:1.6rem;
+}
+/* Shipping Button */
+.ShippingButton {
+    /*width: 170px;*/ /* Fixed width */
+    /*height: 45px;*/ /* Fixed height */
+    gap: 10px; /* Space between items */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #6a0dad; /* Purple background */
+    opacity: 1; /* Full opacity */
+    /*font-size: 1.3rem;*/ /* Font size */
+    font-size: 1.1rem; /* Font size */
+    margin-right: 20%; /* Space on the right */
+}
+
+/* Mobile Responsive for Shipping Button */
+@media (max-width: 576px) {
+    .ShippingButton {
+        font-size: 0.8rem; /* Smaller font size on mobile */
+    }
+}
+
+/* Active Button Styles */
+.btn.active {
+    background-color: #6a0dad; /* Purple background for active button */
+}
+
+/* Purple Text */
+.purpleText {
+    color: #6a0dad; /* Purple color for text */
+}
+
+/* Timer Section */
+.timer-section {
+    /*background: linear-gradient(90deg, #EA5A00 0%, #ECBA0B 100%);*/ /* Gradient background */
+    background: linear-gradient(90deg, #780ee7 0%, #7734C1 100%); /* Gradient background */
+    padding: 20px; /* Padding inside section */
+    border-radius: 10px; /* Rounded corners */
+    text-align: center; /* Center text */
+    margin-top: 30px; /* Space above */
+}
+
+/* Timer Label Styling */
+.timer-label {
+    font-size: 1.5rem; /* Larger font size */
+    font-weight: bold; /* Bold text */
+    margin-top: 10px; /* Space above label */
+    color: white; /* White text */
+}
+
+/* Timer Styling */
+.timer {
+    font-size: 2rem; /* Larger font size */
+    font-weight: bold; /* Bold text */
+    color: white; /* White text */
+    padding: 10px; /* Padding inside timer */
+    border-radius: 5px; /* Rounded corners */
+    display: inline-block; /* Inline element */
+    width: 60px; /* Fixed width */
+    text-align: center; /* Center text */
+    margin: 0 5px; /* Space between timers */
+}
+
+/* Timer Container */
+.timer-container {
+    display: flex; /* Flexbox for alignment */
+    color: white; /* White text */
+    justify-content: center; /* Center items horizontally */
+    gap: 15px; /* Space between items */
+}
+
+/* Timer Item */
+.timer-item {
+    text-align: center; /* Center the content */
+}
+
+/* Thumbnail Picture */
+.ThumbnailPic {
+    white-space: nowrap; /* Prevent text wrapping */
+    max-width: 100%; /* Ensure image doesn�t exceed width */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* Purple Background for Section */
+.bg-purple {
+    background-color: #6700ea; /* Purple background */
+    border-radius: 12px; /* Rounded corners */
+}
+
+/* Card Title Icon */
+.card-title i {
+    color: #fff; /* White icon */
+    margin-left: 10px; /* Space between title and icon */
+}
+
+/* Why Us Section Images */
+.why-us img {
+    max-width: 100%; /* Ensure image fits container */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 12px; /* Rounded corners */
+}
+
+/* Mobile Responsive for Why Us Section */
+@media (max-width: 768px) {
+    .why-us .col-lg-6 {
+        margin-bottom: 20px; /* Space below each column */
+    }
+    .rating .text-warning {
+        font-size: 1rem;
+    }
+    .DiscountPrice {
+        font-size: 1rem;
+    }
+    .originalPrice {
+        font-size: 0.8rem;
+    }
+}
+
+/* Video Section */
+.video-section {
+    background-color: #f8f9fa; /* Light background */
+}
+
+/* Video Card */
+.video-card {
+    height: 300px; /* Fixed height */
+    display: flex; /* Flexbox for layout */
+    flex-direction: column; /* Column layout */
+    min-width: 22rem; /* Minimum width */
+    height: 100%; /* Full height */
+}
+
+/* Video Card Image */
+.card-img-top {
+    height: 100%; /* Full height */
+    overflow: hidden; /* Hide overflow */
+}
+
+    /* Video Image Fit */
+    .card-img-top img {
+        object-fit: cover; /* Cover the area without stretching */
+        height: 100%; /* Full height */
+        width: 100%; /* Full width */
+    }
+
+/* Video Controls Button */
+.video-controls button {
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+    color: white; /* White icon */
+    border: none; /* No border */
+    border-radius: 50%; /* Circular buttons */
+    width: 40px; /* Width of button */
+    height: 40px; /* Height of button */
+}
+
+/* Card Header Styling */
+.card-header {
+    background-color: transparent; /* No background */
+    border-bottom: 0; /* No bottom border */
+}
+
+    /* Video Control Button Hover Effect */
+    .card-header .btn:hover {
+        background-color: rgba(0, 0, 0, 0.6); /* Darker background on hover */
+    }
+
+    /* Card Header Button */
+    .card-header .btn {
+        background-color: rgba(0, 0, 0, 0.4); /* Darker background */
+        color: white; /* White icon */
+        border: none; /* No border */
+        border-radius: 50%; /* Circular buttons */
+        width: 30px; /* Button width */
+        height: 30px; /* Button height */
+    }
+
+.new-arrivals .card {
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.new-arrivals .btn {
+    background-color: white;
+    color: #6700ea;
+    border: 1px solid #6700ea;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.new-arrivals .card .card-img-top {
+    margin: 10px;
+    border-radius: 15px;
+    /*height: auto;*/
+    height: 290px;
+    object-fit: cover;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+}
+
+.new-arrivals .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.new-arrivals .card .card-body {
+    background-color: #ffffff;
+    border-radius: 15px;
+}
+
+.new-arrivals .card {
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+
+.new-arrivals .card .card-img-top {
+    margin: 10px;
+    border-radius: 15px;
+    height: auto;
+    object-fit: cover;
+    width: calc(100% - 20px);
+}
+
+.new-arrivals .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.new-arrivals .card .card-body {
+    background-color: #ffffff;
+    border-radius: 15px;
+}
+
+.DiscountDiv {
+    padding: 3px 5px !important;
+    border-radius: 5px !important;
+}
+
+@media (max-width: 576px) {
+
+    .DiscountDiv {
+        font-size: 0.8rem !important;
+    }
+}
+.pieceNumber {
+    text-align: center; /* Center the text */
+}
+
+.piece-number-text {
+    color: #b38b00; /* Dark gold color */
+    /*background-color: #6b3f24;*/ /* Brown background */
+    padding: 5px 10px; /* Add some padding to the background */
+    border-radius: 5px; /* Optional: Rounded corners for the background */
+    display: inline-block; /* Make the background only take the width of the text */
+}
+
+@media (max-width: 550px) {
+    .new-arrivals .btn {
+        padding: 10px 15px;
+        font-size:0.6rem;
+    }
+    .stars {
+        font-size: 0.7em;
+    }
+}
+
+.orange-text {
+    color: #b38b00 !important;
+}
+
+/*.horizontal-scroll {
+    display: flex;
+    overflow-x: auto;*/ /* Enables horizontal scrolling */
+    /*padding-bottom: 10px;*/ /* Optional, add padding if needed */
+    /*white-space: nowrap;*/ /* Ensures the list stays in a single line */
+/*}
+
+    .horizontal-scroll .page-item {
+        margin-right: 5px;*/ /* Optional, adds space between list items */
+    /*}*/
+
+.payment-options {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+    .payment-option img {
+        width: 50px;
+    }
+
+    /* Styling the radio buttons as rectangles */
+    .payment-option input[type="radio"] {
+        appearance: none; /* Removes default radio button */
+        width: 25px;
+        height: 20px; /* Adjust height to make it more rectangular */
+        border: 2px solid #ccc;
+        border-radius: 2px; /* Rounded corners */
+        margin-right: 10px;
+        position: relative;
+        cursor: pointer;
+        outline: none;
+        transition: border-color 0.3s, background-color 0.3s;
+    }
+
+        /* When the radio button is selected */
+        .payment-option input[type="radio"]:checked {
+            border-color: #6700EA; /* Active border color */
+            background-color: #6700EA; /* Active background color */
+        }
+
+            /* Show check icon when selected */
+            .payment-option input[type="radio"]:checked::after {
+                content: "\2713"; /* Unicode check mark */
+                font-size: 14px;
+                color: white;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%); /* Center the check mark */
+            }

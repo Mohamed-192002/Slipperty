@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Marhey:wght@300..700&family=Oi&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+body {
+    font-family: "Cairo", serif !important;
+    /*font-weight: 400 !important;*/
+    font-optical-sizing: auto !important;
+}
+
+.cairo-main {
+    font-family: "Cairo", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}
+
+.cairo-light {
+    font-weight: 200;
+}
+
+.cairo-bold {
+    font-weight: 600;
+}
+
+.cairo-extra-bold {
+    font-weight: 800;
+}
+.contact-section {
+    background-color: #f9f9f9;
+}
+
+.map-container iframe {
+    border-radius: 8px;
+    border: none;
+}
+
+.bg-light {
+    background-color: #fff !important;
+}
+
+h5 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #6700ea;
+}
+
+ul.list-unstyled {
+    padding: 0;
+    list-style: none;
+}
+
+    ul.list-unstyled li {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+        ul.list-unstyled li i {
+            font-size: 1.2rem;
+        }
+
+textarea.form-control {
+    resize: none;
+}
+
+button.btn-primary {
+    background-color: #6700ea;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+    button.btn-primary:hover {
+        background-color: #4a00b3;
+        transform: translateY(-2px);
+    }

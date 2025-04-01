@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model PixelSettingDTO
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "اعدادات البيكسل";
+}
+
+<h2 class="text-end mb-3">اعدادات البيكسل</h2>
+
+<form asp-action="Index" method="post" enctype="multipart/form-data">
+
+
+    <div asp-validation-summary="ModelOnly" class="text-danger arabic-direction"></div>
+    <span asp-validation-for="facebook" class="text-danger d-block arabic-direction"></span>
+    <span asp-validation-for="tiktok" class="text-danger d-block arabic-direction"></span>
+
+    <input type="hidden" asp-for="Id" />
+    <!-- Second row: Labels and inputs -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <label asp-for="facebook" class="form-label w-100 text-end"></label>
+            <textarea asp-for="facebook" class="form-control" placeholder="ادخل id الخاص بالفيسبوك بيكسل" rows="7"></textarea>
+        </div>
+    </div>
+    <!-- Second row: Labels and inputs -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <label asp-for="tiktok" class="form-label w-100 text-end"></label>
+            <textarea asp-for="tiktok" class="form-control" placeholder="ادخل id الخاص بالتيك توك بيكسل" rows="7"></textarea>
+        </div>
+    </div>
+    <!-- Second row: Labels and inputs -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <label asp-for="clarity" class="form-label w-100 text-end"></label>
+            <textarea asp-for="clarity" class="form-control" placeholder="ادخل id الخاص بميكروسوفت كلاريتي" rows="7"></textarea>
+        </div>
+    </div>
+
+    <!-- Last row: Save button -->
+    <div class="row">
+        <div class="col text-start">
+            <button type="submit" class="btn btn-primary savebtn">حفظ</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

@@ -1,0 +1,10 @@
+﻿global using Infrastructure.Contracts;
+global using System.ComponentModel.DataAnnotations.Schema;
+global using System.ComponentModel.DataAnnotations;
+global using Infrastructure.Models;
+global using Infrastructure.Repositories.IRepositories;
+global using Infrastructure;
+global using Infrastructure.Repositories;
+global using Microsoft.EntityFrameworkCore;
+global using Infrastructure.Data;
+global using Infrastructure.Helpers;

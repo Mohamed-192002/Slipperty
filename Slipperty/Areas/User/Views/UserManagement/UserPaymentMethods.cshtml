@@ -1,0 +1,167 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model UserDTO
+@{
+    ViewData["Title"] = "طرق الدفع";
+    var isModelStateInvalid = ViewData["ModelStateInvalid"] as bool? ?? false;
+}
+
+<link rel="stylesheet" href="~/css/User/ProfileMenu.css" />
+<link rel="stylesheet" href="~/css/User/UserPaymentMethods.css" />
+
+
+<!-- Confirm Delete Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">تاكيد حذف البطاقة</h5>
+                <button type="button" class="close btn" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                هل تريد تأكيد حذف البطاقة ؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">حذف</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5 py-5">
+    <section class="row">
+        <!-- Profile Head -->
+        @await Html.PartialAsync("_ProfileMenu", Model)
+
+        <!-- Payment Section -->
+        <div class="col-12 col-md-8">
+            <div class="payment-container">
+
+                <!-- Payment Options -->
+                <ul class="payment-options">
+                    @if (Model.UserPaymentMethods != null)
+                    {
+                        foreach (var paymentMthod in Model.UserPaymentMethods)
+                        {
+                            if (paymentMthod.PaymentMethodId == 1)
+                            {
+                                <li class="payment-option">
+                                    <label>
+                                        <input type="radio" onclick="getPaymentDetails(0)" name="paymentMethod" value="fullPayment" checked>
+                                        الدفع كاش
+                                    </label>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="payment-option">
+                                    <label>
+                                        <input type="radio" name="paymentMethod" onclick="getPaymentDetails(@paymentMthod.Id)">
+                                        @* البطاقة المنتهية برقم xxxx-xxxx-xxxx-@paymentMthod?.CardNumber?.Substring(paymentMthod.CardNumber.Length - 4) *@
+                                        البطاقة المنتهية برقم @paymentMthod?.CardNumber?.Substring(paymentMthod.CardNumber.Length - 4)
+                                    </label>
+                                    <div>
+                                        <img src="/img/visa.png" alt="Visa">
+                                        <button type="button" class="btn btn-danger" onclick="DeleteConfirmation(@paymentMthod?.Id)">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    }
+                </ul>
+
+                <!-- Add New Card Section -->
+                <div class="add-new-card">
+                    <button type="button" onclick="getPaymentDetails(0)" class="add-card-link btn">أضف بطاقة جديدة</button>
+                    @* <h6 class="mt-3">عنوان الشحن</h6> *@
+                    <div id="currentPaymentMethod">
+                        @await Html.PartialAsync("_AddNewPaymentMethod", new UserPaymentMethodDTO
+                   {
+                       userId = Model.Id
+                   })
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+
+
+<script>
+    function formatExpiryDate(input) {
+        let value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+        if (value.length >= 3) {
+            // Add '/' after the first 2 digits
+            input.value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        } else {
+            // Allow the user to type in the MM part
+            input.value = value;
+        }
+    }
+    function getPaymentDetails(paymentMethodId) {
+        // Make the AJAX call
+        $.ajax({
+            url: '@Url.Action("GetPaymentDetails")',
+            type: 'GET',
+            data: { id: paymentMethodId },  // Send the ID to the server
+            success: function (response) {
+                // Inject the response (partial view) into the div with id "currentPaymentMethod"
+                $('#currentPaymentMethod').html(response);
+            },
+            error: function () {
+                // Optionally handle errors (e.g., show an error message)
+                alert("An error occurred while loading payment details.");
+            }
+        });
+    }
+
+    // Store the payment method ID globally
+    let paymentMethodId;
+
+    // Function to show the confirmation modal and store the ID
+    function DeleteConfirmation(id) {
+        paymentMethodId = id;
+
+        // Initialize and show the Bootstrap modal using JavaScript (Bootstrap 5)
+        var myModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        myModal.show();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // Handle the confirmation button click
+        $('#confirmDeleteBtn').click(function () {
+            // Perform the AJAX request to delete the payment method
+            $.ajax({
+                url: '@Url.Action("DeletePaymentMethod")', // Replace with your actual controller name
+                type: 'POST',
+                data: { id: paymentMethodId }, // Send the payment method ID to the server
+                success: function (response) {
+                    // Hide the modal
+                    var myModal = bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal'));
+                    myModal.hide();
+
+                    // Reload the page after successful deletion
+                    location.reload();
+                },
+                error: function () {
+                    // Optionally handle the error (e.g., show an error message)
+                    alert("An error occurred while deleting the payment method.");
+                }
+            });
+        });
+    });
+</script>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

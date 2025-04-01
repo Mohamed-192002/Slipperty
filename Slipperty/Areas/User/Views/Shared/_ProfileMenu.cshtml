@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model UserDTO
+<!-- Profile Head -->
+<div class="col-12 col-md-4 text-dark mb-4">
+    <div class="profile-card bg-white p-4 rounded shadow-lg">
+        <div class="text-center my-3">
+            <img src="/img/User-Icon.png" alt="Profile" class="rounded-circle" width="150" height="150">
+        </div>
+        <h6 class="text-center mb-1">@Model.FirstName @Model.LastName</h6>
+        <h6 class="text-center text-muted mb-3">@Model?.PhoneNumber</h6>
+        <hr>
+        <div class="d-flex flex-column align-items-start">
+            <a asp-area="User" asp-controller="" asp-action="" class=" mb-2"><i class="fa-solid fa-box"></i> الطلبات</a>
+            @* <a asp-area="User" asp-controller="" asp-action="" class=" mb-2"><i class="fa-solid fa-wallet"></i> المحفظة</a> *@
+            <a asp-area="User" asp-controller="" asp-action="" class=" mb-2"><i class="fa-solid fa-cart-shopping"></i> عربة التسوق</a>
+            <a asp-area="User" asp-controller="UserManagement" asp-action="UserAddresses" class=" mb-2"><i class="fa-solid fa-location-dot"></i> عناوين الشحن</a>
+            <a asp-area="User" asp-controller="UserManagement" asp-action="UserPaymentMethods" class=" mb-2"><i class="fa-solid fa-money-check-dollar"></i> طرق الدفع</a>
+            <a asp-area="User" asp-controller="" asp-action="" class=" mb-2"><i class="fa-regular fa-comments"></i> الدعم الفني</a>
+            <a asp-area="User" asp-controller="UserManagement" asp-action="UserAccount" class=" mb-2"><i class="fa-regular fa-circle-user"></i> تفاصيل الحساب</a>
+            <a asp-area="Identity" asp-page="/Account/Logout" class=" mb-2"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</a>
+        </div>
+    </div>
+</div>

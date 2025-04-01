@@ -1,0 +1,62 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ReviewDTO
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "حذف الرأي";
+}
+
+<h2 class="text-end mb-3">حذف الرأي</h2>
+<form asp-action="Delete" method="post" enctype="multipart/form-data">
+
+
+    <div asp-validation-summary="ModelOnly" class="text-danger arabic-direction"></div>
+    <span asp-validation-for="Name" class="text-danger d-block arabic-direction"></span>
+    <span asp-validation-for="Date" class="text-danger d-block arabic-direction"></span>
+    <span asp-validation-for="Comment" class="text-danger d-block arabic-direction"></span>
+    <span asp-validation-for="ImageUrl" class="text-danger d-block arabic-direction"></span>
+
+    <input type="hidden" asp-for="ImageUrl" />
+    <input type="hidden" asp-for="RegDate" />
+    <!-- Second row: Labels and inputs -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <label asp-for="Name" class="form-label w-100 text-end"></label>
+            <input type="text" asp-for="Name" class="form-control" placeholder="ادخل الاسم" readonly>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <label asp-for="Date" class="form-label w-100 text-end"></label>
+            <input type="date" asp-for="Date" class="form-control" readonly>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <label asp-for="Comment" class="form-label w-100 text-end"></label>
+            <input type="text" asp-for="Comment" class="form-control" readonly>
+        </div>
+    </div>
+
+    <!-- Third row: Attach button -->
+    <div class="row mb-3">
+        <div class="col text-center">
+            <img id="ImagePreview" src="@((Model?.ImageUrl != null && Model.ImageUrl != "") ? Url.Content($"~/{ImagesPathes.Reviews}{Model.ImageUrl}") : Url.Content($"~{ImagesPathes.DefaultImage}"))" alt="Image Preview" class="mt-5 formImg">
+        </div>
+    </div>
+
+    <!-- Last row: Save button -->
+    <div class="row">
+        <div class="col text-start">
+            <button type="submit" class="btn btn-danger savebtn">حذف</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

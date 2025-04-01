@@ -1,0 +1,21 @@
+﻿@model string? 
+<div class="modal fade" id="EditUserAddressModal" tabindex="-1" role="dialog"  aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered justify-content-center " role="document">
+        <div class="modal-content ActionsModal">
+            <div class="modal-body" style="padding-top:10px !important;">
+                <div id="edit-user-address-modal-data-container-id">
+                    <li class="list-group-item d-flex flex-column align-items-start gap-2 border-0 ">
+                        <label for="address" class="form-label">
+                            العنوان <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" id="address" rows="2" name="OrderUserAddress"
+                                  placeholder="العنوان" >@(Model??string.Empty)</textarea>
+                    </li>
+                </div>
+                <div class="d-flex justify-content-center align-items-start p-2">
+                    <a class="btn btn-primary order-btn" modal-id="EditUserAddressModal" modal-data-container-id="edit-user-address-modal-data-container-id" ActionType="@Convert.ToInt32(ActionType.Modified)">تأكيد</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

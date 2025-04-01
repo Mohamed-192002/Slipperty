@@ -1,0 +1,20 @@
+﻿@model Slipperty.Areas.Admin.Controllers.OrdersController.OrderDetailsVm?
+<div class="modal fade" id="DeleteOrderDetailConfirmation" data-Id="@Model.Id"  tabindex="-1" role="dialog"   >
+    <div class="modal-dialog modal-dialog-centered justify-content-center mainLayout" role="document">
+        <div class="modal-content" style=" 
+                                        width: 250px;
+                                        text-align: right;
+                                        background: whitesmoke;">
+            <div class="modal-header">
+                <button type="button" class="btn-close" (click)="close()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding-top:10px !important;">
+                <p>هل انت متأكد</p>
+                <div class="d-flex justify-content-center align-items-start gap-2 p-2">
+                    <a class="btn  order-btn btn-danger"  modal-id="DeleteOrderDetailConfirmation" modal-data-container-id="*" ActionType="@Convert.ToInt32(ActionType.DeleteOrderDetail)">حذف</a>
+                    <a class="btn btn-primary order-btn " modal-id="DeleteOrderDetailConfirmation" ActionType="@Convert.ToInt32(ActionType.CloseModal)">اغلاق</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+﻿@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProductVideoDTO
+
+<tr>
+    @using (Html.BeginCollectionItem("ProductVideos"))
+    {
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ProductId" class="productId" />
+        <input type="hidden" asp-for="VideoUrl" />
+        <td class="rowNumber text-center" colspan="1">
+            1
+        </td>
+        <td class="text-center videoUrl" colspan="9">@Model?.VideoUrl</td>
+        <td class="text-center" colspan="1"><a class="btn btn-primary text-white py-1 rounded border-0" target="_blank" href="@Model?.VideoUrl"><i class="fa-regular fa-eye"></i></a></td>
+        <td class="text-center" colspan="1"><button class="btn btn-danger text-white py-1 rounded border-0" type="button" onclick="$(this).closest('tr').remove();removeVideoFromLocalStorage('@Model?.VideoUrl')"><i class="fa-solid fa-trash-can"></i></button></td>
+
+    }
+</tr>
+
+
+
+
+
+

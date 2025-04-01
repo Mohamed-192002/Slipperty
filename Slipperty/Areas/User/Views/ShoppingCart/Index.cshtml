@@ -1,0 +1,1085 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ShoppingCartVM
+@{
+    ViewData["Title"] = "عربة التسوق";
+    var isAuthenticated = User.Identity.IsAuthenticated;
+}
+<link rel="stylesheet" href="~/css/User/ShoppingCart.css" />
+
+
+<div class="container my-5 py-5">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="tabs-header d-flex justify-content-start">
+                <button class="btn tab-button active" data-tab="cart">
+                    <i class="fa-solid fa-cart-shopping me-2"></i>محتويات العربة
+                </button>
+                <button class="btn tab-button" data-tab="shipping">
+                    <i class="fa-solid fa-circle-check"
+                       style="color: #7734C1;"></i>
+                    بيانات الشحن
+                </button>
+                <button class="btn tab-button" data-tab="payment">
+                    <i class="fa-solid fa-circle-check"
+                       style="color: #7734C1;"></i>
+                    تفاصيل الدفع
+                </button>
+            </div>
+
+            <div class="tab-content mt-4">
+                <!-- Cart Tab -->
+
+                <div id="cart" class="tab-pane active payment-container">
+                    <div>
+                        <h5 class="rubik">محتويات العربة</h5>
+                        <hr> <!-- Line under the header -->
+                    </div>
+
+                    @if (Model != null && Model.shoppingCartDTOs != null && Model.shoppingCartDTOs?.Count() > 0)
+                    {
+                        foreach (var product in Model.shoppingCartDTOs.Where(c => c.offerId == null))
+                        {
+                            var text = product.Combination.Text;
+                            // Define possible prefixes for the word "color"
+                            var colorPrefixes = new[] { "اللون:", "الالوان:", "لون:", "الوان:", "الألوان:", "ألوان:" };
+                            // Define possible prefixes for the word "size"
+                            var sizePrefixes = new[] { "مقاس:", "مقاسات:", "المقاسات:", "المقاس:" };
+
+
+                            string color = null;
+                            string size = null;
+
+                            // Extract color
+                            foreach (var prefix in colorPrefixes)
+                            {
+                                var startIndex = text.IndexOf(prefix);
+                                if (startIndex >= 0)
+                                {
+                                    startIndex += prefix.Length;
+                                    var endIndex = text.IndexOf(",", startIndex);
+                                    color = endIndex > startIndex
+                                    ? text.Substring(startIndex, endIndex - startIndex).Trim()
+                                    : text.Substring(startIndex).Trim();
+                                    break;
+                                }
+                            }
+
+                            // Extract size
+                            foreach (var prefix in sizePrefixes)
+                            {
+                                var startIndex = text.IndexOf(prefix);
+                                if (startIndex >= 0)
+                                {
+                                    startIndex += prefix.Length;
+                                    var endIndex = text.IndexOf(",", startIndex);
+                                    size = endIndex > startIndex
+                                    ? text.Substring(startIndex, endIndex - startIndex).Trim()
+                                    : text.Substring(startIndex).Trim();
+                                    break;
+                                }
+                            }
+
+
+                            <div class="product-item d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <img src="@Url.Content($" /{ImagesPathes.Products}{product?.Product?.MainImageUrl}")" alt="Product" class="product-img">
+                                    <div class="product-details me-3">
+                                        <p class="product-name cairo-bold">@product?.Product?.ArbName</p>
+                                        <p class="price text-purple cairo-bold">@product?.Product?.DiscountPrice جنية مصري</p>
+                                        <p class="price-original cairo-bold">
+                                            بدلا من <span class="text-strikethrough">@product?.Product?.Price</span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-column align-items-start">
+                                    <input type="hidden" class="cartItemId" value="@product?.Id" />
+                                    <p class="cairo-bold">اللون: @color</p>
+                                    <p class="cairo-bold">المقاس: @size</p>
+                                    <div class="counter d-flex align-items-center mt-2">
+                                        <button class="btn btn-minus">-</button>
+                                        <span class="count mx-2">@product.Qty</span>
+                                        <button class="btn btn-plus">+</button>
+                                    </div>
+                                    <button class="btn btn-danger w-100 mt-3" onclick="deleteCartItem(@product.Id)">حذف</button>
+                                </div>
+                            </div>
+                        }
+
+                        @foreach (var offerGroup in Model.shoppingCartDTOs.Where(c => c.offerId != null).GroupBy(c => c.offerId))
+                        {
+                            <div class="offer-group border p-4 mb-4">
+                                <div class="offer-header mb-3">
+                                    <h3 class="text-center">عرض الـ @offerGroup.First()?.ProductCountsOffer?.Count قطع @Math.Floor((decimal)offerGroup.First()?.ProductCountsOffer?.Price) جنية</h3>
+                                </div>
+
+                                @foreach (var product in offerGroup)
+                                {
+                                    var text = product.Combination.Text;
+                                    // Define possible prefixes for the word "color"
+                                    var colorPrefixes = new[] { "اللون:", "الالوان:", "لون:", "الوان:", "الألوان:", "ألوان:" };
+                                    // Define possible prefixes for the word "size"
+                                    var sizePrefixes = new[] { "مقاس:", "مقاسات:", "المقاسات:", "المقاس:" };
+
+                                    string color = null;
+                                    string size = null;
+
+                                    // Extract color
+                                    foreach (var prefix in colorPrefixes)
+                                    {
+                                        var startIndex = text.IndexOf(prefix);
+                                        if (startIndex >= 0)
+                                        {
+                                            startIndex += prefix.Length;
+                                            var endIndex = text.IndexOf(",", startIndex);
+                                            color = endIndex > startIndex
+                                            ? text.Substring(startIndex, endIndex - startIndex).Trim()
+                                            : text.Substring(startIndex).Trim();
+                                            break;
+                                        }
+                                    }
+
+                                    // Extract size
+                                    foreach (var prefix in sizePrefixes)
+                                    {
+                                        var startIndex = text.IndexOf(prefix);
+                                        if (startIndex >= 0)
+                                        {
+                                            startIndex += prefix.Length;
+                                            var endIndex = text.IndexOf(",", startIndex);
+                                            size = endIndex > startIndex
+                                            ? text.Substring(startIndex, endIndex - startIndex).Trim()
+                                            : text.Substring(startIndex).Trim();
+                                            break;
+                                        }
+                                    }
+
+                                    <div class="product-item d-flex justify-content-between align-items-center mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <img src="@Url.Content($" /{ImagesPathes.Products}{product?.Product?.MainImageUrl}")" alt="Product" class="product-img">
+                                            <div class="product-details me-3">
+                                                <p class="product-name cairo-bold">@product?.Product?.ArbName</p>
+                                                <p class="price text-purple cairo-bold">@product?.Product?.DiscountPrice جنية مصري</p>
+                                                <p class="price-original cairo-bold">
+                                                    بدلا من <span class="text-strikethrough">@product?.Product?.Price</span>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex flex-column align-items-start">
+                                            <p class="cairo-bold">اللون: @color</p>
+                                            <p class="cairo-bold">المقاس: @size</p>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="row mt-3">
+                                    <button class="btn btn-primary" data-offerid="@offerGroup.Key" data-regDate="@offerGroup.First().RegDate" onclick="deleteCartOffer(this)">حذف العرض</button>
+                                </div>
+                            </div>
+                        }
+
+                    }
+                    else
+                    {
+                        <h5>العربة فارغة ، استمر في التسوق و اضف منتجات</h5>
+                    }
+
+
+                </div>
+
+                <!-- Shipping Tab -->
+                <div id="shipping" class="tab-pane payment-container">
+                    <h5 class="rubik">بيانات الشحن</h5>
+                    <hr> <!-- Line under the header -->
+                    <!-- Shipping Tab -->
+                    <div id="shipping" class="tab-pane ">
+                        <h6 id="AllFildsRequiredError" class="text-danger d-none">أكمل الحقول المطلوبة</h6>
+                        <!-- Radio Buttons for Address Selection -->
+                        <div class="mb-3 cairo-bold">
+
+                            @if (Model != null && Model.UserAddressDTOs != null && Model.UserAddressDTOs.Count() > 0)
+                            {
+                                foreach (var address in Model.UserAddressDTOs)
+                                {
+                                    <div class="form-check d-flex align-items-center mb-2">
+                                        <input class="form-check-input ms-2" type="radio" name="addressOption" onclick="getAddressDetails(@address.Id)">
+                                        <label class="form-check-label" for="addressOption">
+                                            @address.Address
+                                        </label>
+                                    </div>
+                                }
+                            }
+
+
+                            <div class="form-check d-flex align-items-center">
+                                <input id="newAddressRadio" class="form-check-input ms-2" type="radio" name="addressOption" onclick="getAddressDetails(0)" @(isAuthenticated ? "" : "checked")>
+                                <label class="form-check-label" for="newAddress">
+                                    التوصيل لعنوان جديد
+                                </label>
+                            </div>
+                        </div>
+
+                        <hr> <!-- Line under the header -->
+                        <!-- Shipping Form -->
+                        <div class="shipping-form">
+                            <div class="row">
+                                <!-- Full Name -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="firstName" class="form-label">
+                                        الاسم ثلاثي <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="firstName"
+                                           placeholder="ادخل الاسم ثلاثي" value="@ViewBag.UserFirstName" @(isAuthenticated ? "readonly" : "")>
+                                </div>
+                                <div class="col-md-6 mb-3 d-none">
+                                    <label for="lastName" class="form-label">
+                                        الاسم الثاني <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="lastName"
+                                           placeholder="الاسم بالكامل" value="@ViewBag.UserLastName" @(isAuthenticated ? "readonly" : "")>
+                                </div>
+                                <!-- Phone Number -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="phoneNumber" class="form-label">
+                                        رقم التليفون <span class="text-danger">*</span>
+                                    </label>
+                                    <input id="phoneNumber" type="text" class="form-control onlyNumbers" placeholder="201096633474+" value="@ViewBag.UserPhoneNumber" oninput="validatePhoneNumber('phoneNumber')" maxlength="12" @(isAuthenticated ? "readonly" : "") />
+                                </div>
+                                <!-- Second Number -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="phoneNumber2" class="form-label">
+                                        رقم أخر @* <span class="text-danger">*</span> *@
+                                    </label>
+                                    <input type="text" class="form-control onlyNumbers" id="phoneNumber2"
+                                           placeholder="201096633474+" maxlength="12" oninput="validatePhoneNumber('phoneNumber2')">
+                                </div>
+                                <!-- Address -->
+                                <div class="col-12 mb-3">
+                                    <label for="address" class="form-label">
+                                        العنوان <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea class="form-control" id="address" rows="2"
+                                              placeholder="العنوان"></textarea>
+                                </div>
+                                <!-- City and Region -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="governmentId" class="form-label">
+                                        المحافظة <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="governmentId" asp-items="ViewBag.Governments" class="form-select select2" onchange="getRegions()">
+                                        <option selected disabled>-- اختر --</option>
+                                        <option value="-1">-- اخرى --</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="regionId" class="form-label">
+                                        المنطقة <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="regionId" asp-items="ViewBag.Regions" class="form-select select2 mt-2" onchange="checkRegion()">
+                                        <option value="" selected>-- اختر --</option>
+                                        <option value="-1">-- اخرى --</option>
+                                    </select>
+                                </div>
+                                <div class="row mb-4 d-none" id="newArea">
+                                    <div class="col-md-6">
+                                        <input id="GovernmentName" class="form-control mt-2  py-3 d-none" type="text" placeholder="ادخل المحافظة">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input id="RegionName" class="form-control mt-2  py-3 d-none" type="text" placeholder="ادخل المنطقة">
+                                    </div>
+                                </div>
+                                <!-- Notes -->
+                                <div class="col-12 mb-3">
+                                    <label for="notes" class="form-label">ملاحظات (اختياري)</label>
+                                    <textarea class="form-control" id="notes" rows="2"
+                                              placeholder="اكتب أي ملاحظات"></textarea>
+                                </div>
+                                <!-- Preferred Delivery Time -->
+                                <div class="col-md-6 mb-3">
+    <label for="deliveryTimeFromHour" class="form-label">
+        موعد الاستلام المفضل (اختياري)
+        من
+    </label>
+    <div class="d-flex">
+        <!-- Hour input for deliveryTimeFrom -->
+        <input type="number" class="form-control" id="deliveryTimeFromHour" min="1" max="12" placeholder="ساعة">
+        
+        <!-- Minute input for deliveryTimeFrom -->
+        <input type="number" class="form-control" id="deliveryTimeFromMinute" min="0" max="59" placeholder="دقيقة">
+        
+        <!-- AM/PM input for deliveryTimeFrom -->
+        <select class="form-control" id="deliveryTimeFromAMPM">
+            <option value="ص">ص</option>
+            <option value="م">م</option>
+        </select>
+    </div>
+</div>
+
+<div class="col-md-6 mb-3">
+    <label for="deliveryTimeToHour" class="form-label">إلى</label>
+    <div class="d-flex">
+        <!-- Hour input for deliveryTimeTo -->
+        <input type="number" class="form-control" id="deliveryTimeToHour" min="1" max="12" placeholder="ساعة">
+        
+        <!-- Minute input for deliveryTimeTo -->
+        <input type="number" class="form-control" id="deliveryTimeToMinute" min="0" max="59" placeholder="دقيقة">
+        
+        <!-- AM/PM input for deliveryTimeTo -->
+        <select class="form-control" id="deliveryTimeToAMPM">
+            <option value="ص">ص</option>
+            <option value="م">م</option>
+        </select>
+    </div>
+</div>
+                                @if (!isAuthenticated)
+                                {
+                                    <div class="col-md-6 mb-3 form-group d-none">
+                                        <label for="Password" class="form-label">
+                                            الباسورد <span class="text-danger">*</span>
+                                        </label>
+                                        <input id="Password" type="password" class="form-control"
+                                               placeholder="ادخل كلمة المرور" onchange="checkPassword()" value="123456">
+                                        <i id="togglePassword" class="fa-regular fa-eye eye-icon"></i>
+                                    </div>
+                                    <div class="col-md-6 mb-3 d-none">
+                                        <label for="ConfirmPassword" class="form-label">
+                                            تأكيد الباسورد <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="password" placeholder="تأكيد كلمة المرور" class="form-control" id="ConfirmPassword" onchange="checkPassword()" value="123456">
+                                    </div>
+                                    <h6 id="passwordMismatch" class="text-danger d-none">
+                                        كلمة المرور غير متطابقة.
+                                    </h6>
+                                }
+
+                            </div>
+                            @* <button type="submit" class="btn btn-purple w-100 mt-4">حفظ بيانات الشحن</button> *@
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Payment Tab -->
+                <div id="payment" class="tab-pane payment-container">
+                    <p>تفاصيل الدفع</p>
+                    <hr> <!-- Line under the header -->
+                    <!-- Payment Options -->
+                    <ul class="payment-options">
+
+                        @if (Model != null && Model.UserPaymentMethodDTOs != null && Model.UserPaymentMethodDTOs.Count() > 0)
+                        {
+                            foreach (var paymentMethod in Model.UserPaymentMethodDTOs)
+                            {
+                                if (paymentMethod.PaymentMethodId == 1)
+                                {
+                                    <li class="payment-option">
+                                        <label>
+                                            <input type="radio" name="paymentMethod" value="@paymentMethod.Id" checked>
+                                            @paymentMethod?.PaymentMethod?.Name
+                                        </label>
+                                        @* <img src="/img/Cash.png" alt="Visa"> *@
+                                    </li>
+                                }
+                                else
+                                {
+
+                                    <li class="payment-option">
+                                        <label>
+                                            <input type="radio" name="paymentMethod" value="@paymentMethod.Id">
+                                            البطاقة المنتهية برقم @paymentMethod?.CardNumber?.Substring(paymentMethod.CardNumber.Length - 4)
+                                        </label>
+                                        <img src="/img/visa.png" alt="Visa">
+
+                                    </li>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //user not registered, just add the cash method
+                            <li class="payment-option">
+                                <label>
+                                    <input type="radio" name="paymentMethod" value="1" checked>
+                                    الدفع كاش
+                                </label>
+                                @* <img src="/img/Cash.png" alt="Visa"> *@
+                            </li>
+                        }
+
+                    </ul>
+
+                    <!-- Add New Card Section -->
+                    <div class="add-new-card d-none">
+                        <a href="#" class="add-card-link">أضف بطاقة جديدة</a>
+                        <form>
+                            <div class="mb-3 mt-3">
+                                <label for="cardNumber" class="form-label">
+                                    رقم البطاقة (14 رقم في وجه
+                                    البطاقة)
+                                </label>
+                                <input type="text" id="cardNumber" class="form-control"
+                                       placeholder="XXXX XXXX XXXX XXXX">
+                            </div>
+                            <div class="mb-3">
+                                <label for="cardHolder" class="form-label">اسم صاحب البطاقة</label>
+                                <input type="text" id="cardHolder" class="form-control">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="expiryDate" class="form-label">تاريخ الانتهاء</label>
+                                    <input type="text" id="expiryDate" class="form-control"
+                                           placeholder="MM/YY">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="cvv" class="form-label">الرقم السري</label>
+                                    <input type="text" id="cvv" class="form-control" placeholder="XXX">
+                                </div>
+                            </div>
+                            <div class="form-footer">
+
+                                <button type="submit" class="btn-save">حفظ</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model != null && Model.shoppingCartDTOs != null && Model.shoppingCartDTOs.Any())
+            {
+                <button class="btn btn-primary text-white w-100 mt-4" onclick="viewNextTab()">متابعة الطلب</button>
+            }
+        </div>
+
+        <!-- Order Details Section -->
+        @{
+            var total = Model?.shoppingCartDTOs?.Sum(c => c.Product?.Price);
+            var discount =
+            // Total regular price of all products
+            Model?.shoppingCartDTOs?.Sum(c => c.Product?.Price ?? 0)
+
+            // Subtracting the discount prices for products without an offer
+            - Model?.shoppingCartDTOs?.Where(c => c.offerId == null)?.Sum(c => c.Product?.DiscountPrice ?? 0)
+
+            // Subtracting the total offer prices, considering each offer once per RegDate
+            - Model?.shoppingCartDTOs?.Where(c => c.offerId != null)
+            .GroupBy(c => new { c.offerId, c?.RegDate })  // Group by both offerId and RegDate
+            .Sum(g => g.Select(c => c.ProductCountsOffer?.Price ?? 0)        // Get the price for each grouped offer
+            .FirstOrDefault());                                      // Sum the offer price only once per offerId and RegDate
+
+            var netAmount = total - discount;
+        }
+
+        <div class="col-md-3">
+            <div class="order-details rubik">
+                <h4 class="text-center mb-4">تفاصيل الطلب</h4>
+                <p class="d-flex justify-content-between">
+                    <span class="text-muted rubik">الإجمالي:</span>
+                    <span><span id="totalValue">@Math.Floor((decimal)total)</span> جنية مصري</span>
+                </p>
+                <p class="d-flex justify-content-between">
+
+                    <span class="text-muted">الخصم:</span>
+                    <span>
+                        <span id="discountValue">
+                            @Math.Floor((decimal)discount) جنية مصري
+                        </span>
+                    </span>
+
+                </p>
+                @* <div class="d-flex align-items-center mb-3">
+                <input type="text" class="form-control rubik" placeholder="إضافة الكود">
+                <button class="btn btn-purple me-3 rubik">تطبيق</button>
+                </div> *@
+                <p class="d-flex justify-content-between">
+                    <span class="text-muted">الإجمالي:</span>
+                    <span><span id="netAmountValue">@Math.Floor((decimal)netAmount)</span> جنية مصري</span>
+                </p>
+                @* @if(Model != null && Model.shoppingCartDTOs != null && Model.shoppingCartDTOs.Any())
+                {
+                <button class="btn btn-primary text-white w-100 mt-4" onclick="viewNextTab()">متابعة الطلب</button>
+                } *@
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // Toggle the password visibility when clicking on the eye icon
+    var passwordToggle = document.getElementById('togglePassword');
+    if(passwordToggle) {
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordField = document.getElementById('Password');
+            const icon = this;
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";  // Show the password
+                icon.classList.remove("fa-eye");  // Remove closed eye icon
+                icon.classList.add("fa-eye-slash");  // Add open eye icon
+            } else {
+                passwordField.type = "password";  // Hide the password
+                icon.classList.remove("fa-eye-slash");  // Remove open eye icon
+                icon.classList.add("fa-eye");  // Add closed eye icon
+            }
+        });
+    }
+
+    // Tab Switching
+    document.querySelectorAll(".tab-button").forEach((tab) => {
+        tab.addEventListener("click", function () {
+            // Remove active class from all tabs
+            document.querySelectorAll(".tab-button").forEach((t) => {
+                t.classList.remove("active");
+            });
+
+            // Add active class to the clicked tab
+            this.classList.add("active");
+
+            // Hide all tab content and show the active tab content
+            document.querySelectorAll(".tab-pane").forEach((pane) => pane.classList.remove("active"));
+            document.getElementById(this.dataset.tab).classList.add("active");
+            updateSelect2();
+        });
+    });
+
+    // Counter Functionality
+    document.querySelectorAll(".btn-plus").forEach((button) => {
+        button.addEventListener("click", function () {
+            const countElement = this.previousElementSibling;
+            let count = parseInt(countElement.textContent);
+            var cartItemIdInput = button.closest('.product-item').querySelector('.cartItemId');
+            var cartItemId = cartItemIdInput.value;
+            count++;
+            countElement.textContent = count;
+            updateProductCount(count, cartItemId);
+        });
+    });
+
+    document.querySelectorAll(".btn-minus").forEach((button) => {
+        button.addEventListener("click", function () {
+            const countElement = this.nextElementSibling;
+            let count = parseInt(countElement.textContent);
+            var cartItemIdInput = button.closest('.product-item').querySelector('.cartItemId');
+            var cartItemId = cartItemIdInput.value;
+
+            if (count > 1) {
+                count--;
+                countElement.textContent = count;
+                updateProductCount(count, cartItemId);
+            }
+        });
+    });
+
+    // Product Deletion
+    document.querySelectorAll(".btn-danger").forEach((button) => {
+        button.addEventListener("click", (e) => {
+            const productItem = e.target.closest('.product-item');
+            if (productItem) {
+                productItem.remove();
+            }
+        });
+    });
+
+    function checkPassword() {
+        var password = document.getElementById("Password").value;
+        var confirmPassword = document.getElementById("ConfirmPassword").value;
+        var passwordMismatchMessage = document.getElementById("passwordMismatch");
+
+        // Check if the passwords match
+        if (password !== confirmPassword) {
+            passwordMismatchMessage.classList.remove("d-none"); // Show the message
+        } else {
+            passwordMismatchMessage.classList.add("d-none"); // Hide the message
+        }
+    }
+
+    function updateProductCount(count, cartItemId) {
+        // Prepare data to send in the AJAX request
+        var data =
+
+            // Make the AJAX call to the 'updateCartItemCount' action
+            $.ajax({
+                url: '@Url.Action("updateCartItemCount")', // Adjust the controller and action name if necessary
+                type: 'POST',
+                data: {
+                    cartItemId: cartItemId,
+                    count: count
+                },
+                success: function (response) {
+                    // On success, reload the page to reflect the updated cart
+                    if (response.success) {
+                        location.reload(); // Reload the page
+                    } else {
+                        alert("حدث خطأ أثناء تحديث الكمية.");
+                    }
+                },
+                error: function () {
+                    console.error('An error occurred while updating the cart item count.');
+                }
+            });
+    }
+
+    function deleteCartItem(cartItemId) {
+        // Make the AJAX call to the 'deleteCartItem' action
+        $.ajax({
+            url: '@Url.Action("deleteCartItem")',
+            type: 'POST',
+            data: {
+                cartItemId: cartItemId
+            },
+            success: function (response) {
+                // On success, check if the deletion was successful
+                if (response.success) {
+                    location.reload(); // Reload the page to reflect the updated cart
+                } else {
+                    alert("حدث خطأ أثناء حذف العنصر.");
+                }
+            },
+            error: function () {
+                console.error('An error occurred while deleting the cart item.');
+            }
+        });
+    }
+
+    function deleteCartOffer(button) {
+        // Get the offerId from the data-offerid attribute of the clicked button
+        var offerId = $(button).data('offerid');
+        var regDate = $(button).data('regDate'); // Getting the regDate for reference, if necessary
+
+        // Make the AJAX call to the 'deleteCartOffer' action in the Cart controller
+        $.ajax({
+            url: '@Url.Action("deleteCartOffer")', // Adjust the controller and action name if necessary
+            type: 'POST',
+            data: {
+                offerId: offerId,
+                regDate: regDate
+            },
+            success: function (response) {
+                if (response.success) {
+                    location.reload(); // Reload the page to reflect the updated cart
+                } else {
+                    alert("حدث خطأ أثناء حذف العرض.");
+                }
+            },
+            error: function () {
+                console.error('An error occurred while deleting the cart offer.');
+            }
+        });
+    }
+
+    // function viewNextTab() {
+    //     // Find the currently active tab
+    //     let activeTab = document.querySelector(".tab-button.active");
+
+    //     if (activeTab) {
+    //         // Get all tab buttons as an array
+    //         let tabs = Array.from(document.querySelectorAll(".tab-button"));
+
+    //         // Get the index of the active tab
+    //         let activeIndex = tabs.indexOf(activeTab);
+
+
+    //         // Get the next tab (next sibling)
+    //         let nextTab = activeTab.nextElementSibling;
+
+    //         if (activeIndex == 2) {
+    //             var AllFildsRequiredError = document.getElementById('AllFildsRequiredError');
+    //             var selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+    //             var governmentId = $("#governmentId").val();
+    //             var regionId = $("#regionId").val();
+    //             var notes = $("#notes").val();
+    //             var firstName = $("#firstName").val();
+    //             var lastName = $("#lastName").val();
+    //             var phoneNumber = $("#phoneNumber").val();
+    //             var deliveryTimeFrom = $("#deliveryTimeFrom").val();
+    //             var deliveryTimeTo = $("#deliveryTimeTo").val();
+    //             var totalValue = document.getElementById('totalValue').innerText;
+    //             var discountValue = document.getElementById('discountValue').innerText;
+    //             var netAmountValue = document.getElementById('netAmountValue').innerText;
+    //             var newGovernmentValue = document.getElementById('GovernmentName').value;
+    //             var newRegionValue = document.getElementById('RegionName').value;
+    //             var addressValue = document.getElementById('address').value;
+    //             var passwordValue = document.getElementById('Password').value;
+    //             var isValid = true;
+    //             // Check if any of the required fields are missing
+    //             if (!selectedPaymentMethod || !governmentId || !regionId || !firstName || !lastName || !phoneNumber || !addressValue) {
+    //                 isValid = false;
+    //                 //return;
+    //             }
+    //             if (governmentId == -1) {
+    //                 if (!newGovernmentValue) {
+    //                     //return;
+    //                     isValid = false;
+    //                 }
+    //             }
+    //             if (regionId == -1) {
+    //                 if (!newRegionValue) {
+    //                     //return;
+    //                     isValid = false;
+    //                 }
+    //             }
+
+    //             var isAuthenticated = @isAuthenticated.ToString().ToLower(); // True or false
+
+    //             // If user is not authenticated, check the radio button
+    //             if (!isAuthenticated) {
+    //                 if (!passwordValue) {
+    //                     isValid = false;
+    //                 }
+    //             }
+
+    //             if (isValid) {
+    //                 if (!AllFildsRequiredError.classList.contains('d-none')) {
+    //                     AllFildsRequiredError.classList.add('d-none');
+    //                 }
+    //                 // If all fields are valid, proceed with the AJAX call
+    //                 $.ajax({
+    //                     url: '@Url.Action("PlaceOrder")', // URL of the action
+    //                     type: 'POST',
+    //                     data: {
+    //                         paymentMethodId: selectedPaymentMethod.value,
+    //                         governmentId: governmentId,
+    //                         regionId: regionId,
+    //                         notes: notes,
+    //                         firstName: firstName,
+    //                         lastName: lastName,
+    //                         phoneNumber: phoneNumber,
+    //                         deliveryTimeFrom: deliveryTimeFrom,
+    //                         deliveryTimeTo: deliveryTimeTo,
+    //                         discountValue: discountValue,
+    //                         netAmountValue: netAmountValue,
+    //                         totalValue: totalValue,
+    //                         newGovernmentValue: newGovernmentValue,
+    //                         newRegionValue: newRegionValue,
+    //                         passwordValue: passwordValue,
+    //                         address: addressValue
+
+    //                     },
+    //                     success: function (response) {
+    //                         // Handle success (e.g., show a confirmation message or redirect)
+    //                         if (response.success) {
+    //                             window.location.href = '/User/Orders/OrderConfirmation';
+    //                             // You can redirect the user or update the UI accordingly
+    //                         } else {
+    //                             alert("Error placing the order. Please try again.");
+    //                         }
+    //                     },
+    //                     error: function () {
+    //                         alert("There was an error processing your request. Please try again.");
+    //                     }
+    //                 });
+    //             }
+    //             else {
+    //                 if (AllFildsRequiredError.classList.contains('d-none')) {
+    //                     AllFildsRequiredError.classList.remove('d-none');
+    //                 }
+    //                 nextTab = activeTab.previousElementSibling;
+    //             }
+
+
+    //         }
+
+
+    //         // If it's the last tab, wrap around to the first tab
+    //         if (!nextTab) {
+    //             nextTab = document.querySelector(".tab-button:first-child");
+    //         }
+
+    //         // Trigger a click event on the next tab to switch to it
+    //         nextTab.click();
+    //     }
+    // }
+
+    function viewNextTab() {
+        // Find the currently active tab
+        var activeTab = $(".tab-button.active");
+
+        if (activeTab.length) {
+            // Get all tab buttons as an array
+            var tabs = $(".tab-button").toArray();
+
+            // Get the index of the active tab
+            var activeIndex = tabs.indexOf(activeTab[0]);
+
+            // Get the next tab (next sibling)
+            var nextTab = activeTab.next(".tab-button");
+
+            if (activeIndex == 2) {
+                var AllFildsRequiredError = $('#AllFildsRequiredError');
+                var selectedPaymentMethod = $('input[name="paymentMethod"]:checked');
+                var governmentId = $("#governmentId").val();
+                var regionId = $("#regionId").val();
+                var notes = $("#notes").val();
+                var firstName = $("#firstName").val();
+                // var lastName = $("#lastName").val();
+                var lastName = firstName;
+                var phoneNumber = $("#phoneNumber").val();
+                var phoneNumber2 = $("#phoneNumber2").val();
+                // var deliveryTimeFrom = $("#deliveryTimeFrom").val();
+                var deliveryTimeFrom = getDeliveryTimeFrom();
+                // var deliveryTimeTo = $("#deliveryTimeTo").val();
+                var deliveryTimeTo = getDeliveryTimeTo();
+                var totalValue = $('#totalValue').text();
+                var discountValue = $('#discountValue').text();
+                var netAmountValue = $('#netAmountValue').text();
+                var newGovernmentValue = $('#GovernmentName').val();
+                var newRegionValue = $('#RegionName').val();
+                var addressValue = $('#address').val();
+                var passwordValue = $('#Password').val();
+                var isValid = true;
+
+                // Check if any of the required fields are missing
+                if (!selectedPaymentMethod.length || !governmentId || !firstName || !lastName || !phoneNumber || !addressValue) {
+                    isValid = false;
+                }
+                if (governmentId == -1) {
+                    if (!newGovernmentValue) {
+                        isValid = false;
+                    }
+                }
+                // if (regionId == -1) {
+                //     if (!newRegionValue) {
+                //         isValid = false;
+                //     }
+                // }
+
+                var isAuthenticated = '@isAuthenticated'.toLowerCase(); // True or false
+
+                // If user is not authenticated, check the radio button
+                if (isAuthenticated === 'false' && !passwordValue) {
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    if (!AllFildsRequiredError.hasClass('d-none')) {
+                        AllFildsRequiredError.addClass('d-none');
+                    }
+                    // If all fields are valid, proceed with the AJAX call
+                    $.ajax({
+                        url: '@Url.Action("PlaceOrder")', // URL of the action
+                        type: 'POST',
+                        data: {
+                            paymentMethodId: selectedPaymentMethod.val(),
+                            governmentId: governmentId,
+                            regionId: regionId,
+                            notes: notes,
+                            firstName: firstName,
+                            lastName: lastName,
+                            phoneNumber: phoneNumber,
+                            phoneNumber2: phoneNumber2,
+                            deliveryTimeFrom: deliveryTimeFrom,
+                            deliveryTimeTo: deliveryTimeTo,
+                            discountValue: discountValue,
+                            netAmountValue: netAmountValue,
+                            totalValue: totalValue,
+                            newGovernmentValue: newGovernmentValue,
+                            newRegionValue: newRegionValue,
+                            passwordValue: passwordValue,
+                            address: addressValue
+                        },
+                        success: function (response) {
+                            // Handle success (e.g., show a confirmation message or redirect)
+                            if (response.success) {
+                                window.location.href = '/User/Orders/OrderConfirmation';
+                                // You can redirect the user or update the UI accordingly
+                            } else {
+                                alert("Error placing the order. Please try again.");
+                            }
+                        },
+                        error: function () {
+                            alert("There was an error processing your request. Please try again.");
+                        }
+                    });
+                } else {
+                    if (AllFildsRequiredError.hasClass('d-none')) {
+                        AllFildsRequiredError.removeClass('d-none');
+                    }
+                    nextTab = activeTab.prev(".tab-button");
+                }
+            }
+
+            // If it's the last tab, wrap around to the first tab
+            if (!nextTab.length) {
+                nextTab = $(".tab-button:first");
+            }
+
+            // Trigger a click event on the next tab to switch to it
+            nextTab.click();
+        }
+    }
+
+
+
+    function getAddressDetails(id) {
+        // If id is null, reset the inputs
+        if (id === null || id === 0) {
+            document.getElementById('address').value = '';        // Reset address input
+            document.getElementById('regionId').value = 0;       // Reset region select
+            document.getElementById('governmentId').value = 0;   // Reset government select
+            return; // Exit the function if id is null or 0
+        }
+
+        // Otherwise, make the AJAX call to get the address details
+        $.ajax({
+            url: '@Url.Action("GetAddressDetails")',  // Update with your actual controller and action
+            type: 'GET',
+            data: { id: id },
+            success: function (response) {
+                // If response is valid
+                if (response && response.address && response.governmentId && response.regions) {
+                    // Set the address
+                    document.getElementById('address').value = response.address;
+
+                    // Set the governmentId
+                    document.getElementById('governmentId').value = response.governmentId;
+
+                    // Update the region dropdown list with the new regions
+                    var regionSelect = document.getElementById('regionId');
+                    regionSelect.innerHTML = ''; // Clear existing options
+                    response.regions.forEach(function (region) {
+                        var option = document.createElement('option');
+                        option.value = region.id;
+                        option.text = region.name;
+                        regionSelect.appendChild(option);
+                    });
+
+                    // Set the regionId as selected
+                    if (response.regionId) {
+                        regionSelect.value = response.regionId;
+                    }
+
+                    updateSelect2();
+                }
+            },
+            error: function () {
+                alert("An error occurred while fetching address details.");
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // setTimeout(function () {
+        //     updateSelect2();  // This will be called after 1.5 seconds
+        // }, 1500);  // 1500 milliseconds = 1.5 seconds
+        // Assuming you passed the authentication status from the backend
+        // var isAuthenticated = @isAuthenticated.ToString().ToLower(); // True or false
+
+        // // If user is not authenticated, check the radio button
+        // if (!isAuthenticated) {
+        //     document.getElementById("newAddressRadio").checked = true;
+        // }
+
+       
+
+        // const phoneNumberInput = document.getElementById("phoneNumber");
+        // const phoneNumberInput2 = document.getElementById("phoneNumber2");
+        // phoneNumberInput.addEventListener("input", validatePhoneNumber('phoneNumber'));
+        // phoneNumberInput2.addEventListener("input", validatePhoneNumber('phoneNumber2'));
+
+        function validatePhoneNumber(id) {
+            let phoneNumber = $('#' + id).val();
+
+            // Remove any non-numeric characters
+            phoneNumber = phoneNumber.replace(/\D/g, "");
+
+            // If the phone number does not start with '0', add '0' to the beginning
+            if (!phoneNumber.startsWith("2") && phoneNumber.length > 0) {
+                phoneNumber = "2" + phoneNumber;
+            }
+            if (!phoneNumber.startsWith("20") && phoneNumber.length > 0) {
+                phoneNumber = "20" + phoneNumber;
+            }
+            // if (!phoneNumber.startsWith("201") && phoneNumber.length > 0) {
+            //     phoneNumber = "201" + phoneNumber;
+            // }
+
+            // Limit the phone number to 11 digits
+            if (phoneNumber.length > 12) {
+                phoneNumber = phoneNumber.slice(0, 12);
+            }
+
+            // Update the input field value
+            phoneNumberInput.value = phoneNumber;
+        }
+    });
+
+    // Function to validate phone number
+
+
+    function getRegions() {
+        if (!$('#GovernmentError').hasClass('d-none')) {
+            // If it doesn't have the class, add it
+            $('#GovernmentError').addClass('d-none');
+        }
+        if (!$('#RegionError').hasClass('d-none')) {
+            // If it doesn't have the class, add it
+            $('#RegionError').addClass('d-none');
+        }
+        var governmentId = $('#governmentId').val();
+        var regionsSelect = $('#regionId'); // Get the RegionId select element
+        // Clear existing options in the RegionId select
+        regionsSelect.empty();
+        regionsSelect.append(
+            $('<option></option>').val(0).text('-- اختر --').attr('disabled', 'disabled').attr('selected', 'selected'),
+            $('<option></option>').val(-1).text('-- اخرى --')
+        );
+
+        updateSelect2();
+
+        if (governmentId == -1) {
+            $("#newArea").removeClass("d-none");
+            $("#GovernmentName").removeClass("d-none");
+            $("#RegionName").removeClass("d-none");
+            regionsSelect.val(-1);
+            updateSelect2();
+
+        }
+        else {
+            $("#newArea").addClass("d-none");
+            $("#GovernmentName").addClass("d-none");
+            $("#RegionName").addClass("d-none");
+
+
+            $.ajax({
+                url: '@Url.Action("GetRegions")',
+                type: 'GET',
+                data: { governmentId: governmentId }, // Send governmentId as a parameter
+                traditional: true, // Ensure that jQuery sends the array as multiple parameters
+                success: function (response) {
+
+
+
+                    // Loop through the response data and add each region to the select element
+                    $.each(response.regions, function (index, region) {
+
+                        regionsSelect.append(
+                            $('<option></option>').val(region.id).text(region.text)
+                        );
+                    });
+
+                    // Reinitialize or refresh Select2 (if using Select2)
+                    updateSelect2();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching regions:", error);
+                }
+            });
+        }
+
+
+    }
+
+    function checkRegion() {
+        var regionValue = $("#regionId").val();
+
+        if (regionValue == -1) {
+            $("#newArea").removeClass("d-none");
+            $("#RegionName").removeClass("d-none");
+        }
+        else {
+            $("#newArea").addClass("d-none");
+            $("#RegionName").addClass("d-none");
+        }
+    }
+
+</script>

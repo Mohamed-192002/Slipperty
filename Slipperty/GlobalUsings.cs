@@ -1,0 +1,12 @@
+﻿global using Business.Managers;
+global using Infrastructure.Repositories;
+global using Infrastructure.Repositories.IRepositories;
+global using Infrastructure.Models;
+global using System.Globalization;
+global using Infrastructure.Helpers;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using InventoryManagement.Controllers;
+global using Business.DTO;
+global using Microsoft.AspNetCore.Identity;
+global using Business.Helpers;

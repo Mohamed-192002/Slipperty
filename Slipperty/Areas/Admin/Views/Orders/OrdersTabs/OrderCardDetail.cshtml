@@ -1,0 +1,501 @@
+﻿@model OrderHeadDTO
+
+<div id="card-pagintation" class="row align-items-center mb-3 " >
+    <h1 class="newOrderHeader d-flex justify-content-between align-items-center">
+        <div class="d-flex gap-2 align-items-center">
+            @ViewBag.PageSize / <span>@ViewBag.PageNumber</span>
+        </div>
+        @if (Model.StatusId != (int)ActionType.New)
+        {
+            <div>
+                <button class="btn btn-secondary dropdown-toggle"  id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="width: 62px; height: 34px; border-radius: 10px ; background-color: white; border: 1px solid var(--primary-color); color:var(--primary-color)">
+                    <p id="HoursSinceLastTransaction">@(
+                                                      Model?.OrderCardFilter?.HoursSinceLastTransaction is not null  
+                                                          ? Model.OrderCardFilter.HoursSinceLastTransaction.Value.ToString() 
+                                                          : "اختر"
+                                                      )
+                        </p><i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="border-radius: 10px; min-width:3rem">
+                    <li><a class="dropdown-item " style="cursor: pointer"  onclick="$('#dropdownMenuButton1 p').html('24')">24</a></li>
+                    <li><a class="dropdown-item " style="cursor: pointer" onclick="$('#dropdownMenuButton1 p').html('48')" >48</a></li>
+                    <li><a class="dropdown-item " style="cursor: pointer" onclick="$('#dropdownMenuButton1 p').html('72')">72</a></li>
+                </ul>
+            </div>
+        }
+    </h1>
+    <div class="col text-end d-flex; gap-4 filterSection">
+        <button class="searchButton" id="searchSectionToggelBtn"  (click)="$('#searchForm').toggel()">بحث</button>
+        <div class="d-flex justify-content-center align-items-center OrderBy" id="OrderBySection">
+            <button class="newButton @(Model?.OrderCardFilter?.SortType?.ToUpper() == "DESC" ? "active" : "")" id="orderDESC">احدث</button>
+            <button class="oldButton @(Model?.OrderCardFilter?.SortType?.ToUpper() == "ASC" ? "active" : "") " id="orderASC" >اقدم</button>
+        </div>
+    </div>
+    <div class="col pagination-arrow text-start d-flex justify-content-end align-items-center list-none">
+        <li  style="width: 44px ; height: 38px ; border-radius: 10px"   >
+            <button class="page-link next-order" @(ViewBag.PageNumber == ViewBag.PageSize ? "disabled" : "")  > < </button>
+        </li>
+
+        <li  style="width: 44px ; height: 38px ; border-radius: 10px"  >
+            <button class="page-link prev-order" @(ViewBag.PageNumber == 1 ? "disabled" : "") > > </button>
+        </li>
+    </div>
+</div>
+@if(Model.IsHaveMoreThanOneOrder){
+ <div class="d-flex align-items-center gap-2 ">
+    <h6 class="text-danger m-0"><svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <rect width="17" height="17" fill="url(#pattern0_7_219)"/>
+            <defs>
+                <pattern id="pattern0_7_219" patternContentUnits="objectBoundingBox" width="1" height="1">
+                    <use xlink:href="#image0_7_219" transform="scale(0.00195312)"/>
+                </pattern>
+                <image id="image0_7_219" width="512" height="512" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAACAASURBVHic7d15lB3lfef/T9Vd+t5e1dp3oR0kISEhLBaxChMDBtuADdjBS8YxBh+f/Ca/zDhncjJLJplMZuZkJr8zvxlnbE/ixCsZ29gYMAazybKEQIAQAiS0S2hp9b5336Xmj0ayJKTue2/fquepqvfrHA7nyN1dX2Hp1qeqnno+jud5ngAAQKy4pgcAAADBIwAAABBDBAAAAGKIAAAAQAwRAAAAiCECAAAAMUQAAAAghggAAADEEAEAAIAYIgAAABBDBAAAAGKIAAAAQAwRAAAAiCECAAAAMUQAAAAghggAAADEEAEAAIAYIgAAABBDBAAAAGKIAAAAQAwRAAAAiCECAAAAMUQAAAAghggAAADEEAEAAIAYIgAAABBDBAAAAGKIAAAAQAwRAAAAiCECAAAAMUQAAAAghggAAADEEAEAAIAYIgAAABBDBAAAAGKIAAAAQAwRAAAAiCECAAAAMUQAAAAghpKmBwBQPUXPU0dnr461dKqjq1+dPX3q6R1UV0+/evsGlS8UNTiUkyQNDA5LkrKZ9Ol/J1xH9XUZNTXUqrE+q6aGWjVPqNOMKU2aOKFejuMY+70BqC7H8zzP9BAAKtPa3qN9h1t04Eirjrd06kRrl3L5gi/HSqUSmjapSdOnTtD82VO0YO4UTWpu8OVYAPxHAABCpH9gSG+9+5527z+ufYda1N07YHSexvqsFsydqqULZuiSRbNUm00bnQdA6QgAgOW6ewe0453D2rn7iPYdblGxaOdfWdd1tGDuVK1YMlsrls5RY33W9EgARkEAACzkeZ72HDyhl17bqzd3H7b2pH8hjuNo0bxpWrd6oZYvma2Ey3pjwDYEAMAiff1D2vTKbm3dvtf47f1qaazPat1lC3X12iWqy9aYHgfA+wgAgAU6uvq0ces7emn7XuVy/iziMy2ZcHX5pQu04ZrlmtBYa3ocIPYIAIBBXT0D+uWLb+jVNw+oUCyaHicQCdfV5ZfO1y3XXco6AcAgAgBgwHAur99s261fbXpLQ8M50+MYkUoldM3lS3XT1cuUqUmZHgeIHQIAECBP0qs79uvJ57dH5hn/eDXWZ3XrDat0+aXzTY8CxAoBAAhIR1effvTkVu3ef9z0KFZaMHeq7rn1Q5o8kc2FgCAQAACfFT1Pm17eradefEPDubzpcayWTif1ketW6pq1S9h2GPAZAQDwUW//oH7w2Bbt3nfM9CihsnDeNN1/51UsEgR8RAAAfLL34Al9/2ebedZfofrajO6740otWTDD9ChAJBEAgCrzJD29cYd+tWmn+Os1Pq7jaMP6Fbp5/QrxQACoLgIAUEX5QlH/9PgWvbbzoOlRIuXSi+fovjuuUiqZMD0KEBkEAKBK+gaG9O3/s1EHjpw0PUrlPClfyJ/xT1FesaB8oSCvWJTneSoWPXnvf/GZC/Vcx5XjOko4rlzXVSKZUDKRUMJNKplMKpEY38l77qzJ+vw916q+NjOunwNgBAEAqIKT7T365g+eU0dXn+lRSudJuXxeufyQhnM5DQ/nlCvkJJ8+EVzXVSqZVCqVVk0qrVQ6XXZJ0MQJ9fr9+27UpOZ6f4YEYoQAAIzTybZu/e33ng3FYr9CoaCh4UENDg1rKDekYsHs9sPJZFI1NRllampUk0qX9OpfQ11GX/r0TZo2uSmACYHoIgAA49DS1q3/ZfnJv1DIa2BoUIMDgxrKDZse54Icx1GmJqPaTEY1NZlRw0B9XUZfuv8mTZ9CCAAqRQAAKnSitUtf/+6v1Nc/ZHqUD/A8T4NDA+rvH9DgsH3zjcVxHNVms6rL1imVOn9PQH1tRg9+hjsBQKUIAEAFunoG9P//wy/V2d1vepSzFAoF9fX3qa+/X0UvGu2C6VRKdbV1ymazcs55GbCpIauvfPYW6oWBChAAgDINDuX0P7/zjI61dJoe5bR8Pq+evl4NDAzI82sVn2GJREL1tfWqq6096/HAtMlNeviBm5XNpA1OB4QPAQAoQz5f0Dd+8Jz2H7bjVb98oaDevh7190f3xH8u13VVX1uv+rq600Fgwdyp+uJ9NyqZKO+tAiDOCABAGR55/CW98sY+02Oo6BXV09Ojvv7+2Jz4z5VIJNXY0KDamqzkSGtWXKT77rjK9FhAaBCXgRJteW2P+ZO/J/X19+nEyRb19vfF9uQvjbzd0NHZodb2VuXyOb365gFt3b7X9FhAaBAAgBIcPdGhx5551egM+XxOJ9tPqrO7S8ViNBb4VcNQblgtbSfV2dOtnzz1io4cazc9EhAKBABgDAODw/r2jzYqly8YOb4nTz29PWppbdVwLmdkBut5Ul9fr44eP6a//d7TGhi0d78DwBYEAGAMP316m7EtfvOFglrbWtXd2xPr2/2lyhcK2nfoiP76m4+ZHgWwHgEAGMVb776nV988YOTYA4MDamlt4aq/Am/tOaCnXnzd9BiA1QgAwAX0DwzpR09uDf7AntTd2632rg7xkk6FPOmHj71o3UZNgE0IAMAF/OyZV9XTNxjoMYvFoto629TT2+tbK19cDA3n9F+/+VPTYwDWSpoeALDRofda9VrAt/4LhbzaOtqVy+er9jOn1PdrwcROzW7q1symPjVnB9SUGVJtKq+EO/ImQcFz1T+cVNdgjToGsjrWXa8jnQ3a196klt66qs1iwt6Dx7R1+x59aNUi06MA1iEAAOfwJP30mVcDvQDP5/NqbW9ToTi+Nw3SyYJWTm/R5bNPaPn0k5pUW1pLYWPNkKY3fHChY3t/RjtPTNG2I9O1/dhUDecT45ovaJ48/d0jz2jtykVyx24aBmKFnQCBc2zbsV8//PmWwI43nMupraNtXO/2L5rUoRsXHdSV844qk6zeHYQzDeUT2nJwlp7bO0/vtjb7cgy/3HHzlbrvjmtMjwFYhQAAnCGXL+g/ff0xdfWUduU87uPlhnWyva3ixX6rZ53QHcve1dIpwW5+s7t1oh7buVivHZ0qz7P/0jqVSup//PlDqqUwCDiNAACc4bnNb+nJ57cHcqzhXE6t7a0VnfznT+zUZ9a8pUumtvowWen2tjXru68u166TE43OUYor11yir37uNtNjANYgAADvGxgc1l99/TH1D/i/i1y+UNDJ9pMqFsq77Z9OFnTXil26/ZK9ch07/up6nqNNB2bpH7etUO+wvVfYCdfVf/vXv6+JzfWmRwGswGuAwPue2/xWICf/QrGotvbWsk/+S6e067/c/qzuWLbHmpO/JDmOp/Xzj+gvb3ve+B2J0RSKRf2vHzxtegzAGgQAQFJ374A2bdvt+3E8r6i2jjblC6Wv9nccT3cs26M/uXmTJtUFszahEhNrB/WvNmzWx5fvlmNRQDnTzl37dfhYm+kxACsQAABJT2/coVzO57IfT+ro6lKujK19k25RD175uu677C0lLD2pnsl1PH1y1Tv66jXblE6YKU8aTdHz9I3vcRcAkAgAgE629+jlN/b5fpyevl4NDJZ+BZ9OFvRHN7yka+cf9nEqf6ybe1T/4oaXVJO0LwTsPfye3tpzxPQYgHEEAMTeL17YrmLR36vroeFhdfd1l/z16WRBf3TdS7p0+kkfp/LXsmmt+toNm33bl6BinvR3j/zK9BSAcQQAxNqRY+168x1/r7A9z1NHV2fJe/u7jqevXLVNy6fbu6CuVEuntusPr9uqpFv5Jkd+OHqiVVtee9f0GIBRBADE2pPPb/d9y9+Ork4VCqVfBX9+7Q6tnXPcx4mCtXx6q37vijdMj/EB3330edMjAEYRABBb7+4/rncP+Hui7R/oL+u5//r5R7Rh8QH/BjLk+oWHrPt9tXd265lN9gUTICgEAMSSJ+mpF/398C8Wi+ruKf25/+wJPfrih173cSKzHrj8TV3U3GV6jLP80+O/ls/LPwBrEQAQS2+8fUiHjvr7PnhXT5cKJRb8JBxPD657TamEXc/KqynlFvXw1a9a9Xvs7RvQT36x2fQYgBHUASN2ip6npzfu8PUYQ0ND6h8o/db/7cv2aMGkTh8nqoAjKZGWkumRfydSkpsY+cdxJceRPG/kH3lSMT/yTyEv5Yel/KB0zoZHs5p6dMeyd/XjHUuN/JbO54nnXtGdH/6QUslwVR0D48UdAMTO1tf3qqWt9FvzlejqLf3nN2WGdOeyPT5OUwbXlTL1UsMUaeJcacJMqX6ylG2U0tmRMOAmRk7+0si/XXfk15I1UrpOyjaNfH/zHGninJHvT9ee/p47lu3RlLp+g7/Jsw0ODeu7P3nR9BhA4AgAiJVcvqBfbdrp6zH6B/rL2u3v3lVvK5sq/et9kc7+9qRdP1mqqRu5yh8vNzESKBqnvh8GJimddvWpVW+P/2dX0fMvvRFIDwRgEwIAYuXXL+9SV49/V5+eV1R3b0/JXz+zsVfrF5ja6c8ZOdFPmCk1Tnv/pO/4eDhXyjRIzbN09cqCPjTfnn0Ocrm8vvXIM6bHAAJFAEBsDAwO64WX/L3y7O3vV6GMoh9je/ynM1LzzJGr/qSBCt90Rv/sRru2OH759V1q7+g1PQYQGAIAYsPvut9isaje3tJPIAsndWjNrBO+zXNebnLkpN84fWRRn0H19Ql9dJU9e/JTF4y4IQAgFoKo++3t61XRK/0Vt/suezvY2tx07chVf01dcMccw13rTsq1aJvgnbv269BRex5NAH4iACAW/K77LRQK6u0vfW3BZTNPaNm0AE80dc0jC/GqsbCvimoyCd33oUOmxzit6Hn65vdZC4B4sOvTAPBBEHW/3b098kq8+nccT59c9Y6v8/z2YO7IiT/bFMzxKvA7qzuUtmhzIOqCERcEAESe33W/+XxeA2Vs+nP1vPeC2RLXff/kn671/1jjkEwl9HvX+RvQykJdMGKCAIBIC6Lut7u3W16JnYIJt6i7VwZw9e+4Iwv9Uhn/j1UF1yzrUX3G8F4IZ6AuGHFAAECk+V33m8sNa2BosOSv37DooKbV+70LniM1TDXzel+F3ERCD91kyW6I76MuGFFHAEBkBVH329XTo1ITRk2yoI8t9/dNBElSw+SR9/xDZtWCIU1pKD1M+a29s1u/3Ljd9BiAbwgAiKQg6n4Hh4c0NDxU8tffdvEeTciW/vUVyTZa9ZpfORzX1Vc27DU9xll+9OQm6oIRWQQARJLvdb+e1N1TeuFPQ82wbr/E54VuyRqpttnfY/hs8Zy8FkyxZzc+6oIRZQQARE4Qdb8DQwNlFf58bPm7/hb+OM7IrX8/9/IPguPoyzdZ9EaARuqCh/N502MAVUcAQOT4XffrySur8Gdy3YBuXrLft3kkjbznb3hr32qZNVVaNbvD9BinDQ4N63s/2Wh6DKDqCACIlEDqfvsHlC/jivDuS3cp5ed2t25SqrV3o5+yOdI/u/Gg6SnOQl0woogAgEjxv+7XU09feXW/18z3ufWurllSyG/9n2NSs6v1i1tMj3EadcGIIgIAIiOYut8+u+p+kzWhXfU/lgfWHzU9wlmoC0bUEAAQGbGs+w35qv/R1De41AUDPiIAIBJiWfebyoRyw59yUBcM+IcAgEiIZd1vXXSv/k+pySR03xV21QV/i7sAiAgCAEIvlnW/6dqR5/8x8DtrOpS26C7AnkNHqQtGJBAAEHqxq/t1FIur/1OSqYR+73qLtgimLhgRQQBAqMWy7remITKb/pTqmmW9qs/asxsfdcGIAgIAQi12db+OE61Nf0rkJhJ66Aa7TrjUBSPsCAAILdvqfjPJvP91v9nGkZ3/YmjVwiFNbaQuGKgWAgBCycq630v2+Vv367hSptG/n285x3X18E0WrQUQdcEINwIAQsnGut/bLvb55JRtktyEv8ew3OI5ec2fbM9ufNQFI8wIAAidWNb9ugkp2+Dfzw8Lx9FDG6gLBqqBAIDQiWXdb+2EkUcA0Kyp0so5nabHOI26YIQVnygIlVjW/SZSUqbev58fNo70xRsOmJ7iLNQFI4wIAAiVWNb91k5Q1Op+x2tSs6trF/tctFQG6oIRRgQAhAZ1vzjT764/ZnqEs1AXjLAhACA0qPvFmeobXN2+6j3TY5xGXTDChgCAUKDuF+dz97oW6oKBChEAEArU/eJ8qAsGKkcAgPWCqPvt6aPuN6yoCwYqQwCA9YKo++3vp+43rKgLBipDAIDVqPtFKagLBspHAIDVqPtFKagLBspHAIC1qPtFOagLBspDAICVqPtFuUbqgveYHuMs1AXDZgQAWIm6X1Ri8ZwCdcFAiQgAsA51v6iY4+jLN1EXDJSCAADrUPeL8Zg9nbpgoBR84sAq1P2iGqgLBsZGAIBVqPtFNVAXDIyNAABrUPeLaqIuGBgdAQDWoO4X1URdMDA6AgCsQN0v/EBdMHBhBABYgbpf+IG6YODCCAAwjrpf+Im6YOD8CAAwjrpf+Im6YOD8CAAwirpfBIG6YOCDCAAwyra635sXHaDuN4KoCwY+iAAAY2ys+71zuc8nCep+jaEuGDgbAQBGUPeLoFEXDJyNAAAjqPuFCdQFA79FAEDgqPuFMdQFA6cRABA46n5hEnXBwAg+kRAo6n5hA+qCAQIAAkbdL2wwqdnVNYtaTI9xGnXBMIEAgMBQ9wubPHCdPU2BEnXBCB4BAIF5bvPb1P3CGg31Cevqgr9BURACRABAIEbqfnf5egzqflEu2+qC36QuGAEiACAQ1P3CRjWZhO79kM9rQMpAXTCCRACA76j7hc0+srqdumDEEgEAvqPuFzZLphL6vess2hzIk/6eumAEgAAAX1H3izC4ZnmPVXXB71EXjAAQAOAr6n4RBm4ioS9TF4yYIQDAN9T9Ikwuoy4YMUMAgC+o+0XYUBeMuCEAwBfU/SKMqAtGnBAAUHXU/SK0qAtGjBAAUHXU/SLMqAtGXPCJhaqi7hdRQF0w4oAAgKqi7hdRQF0w4oAAgKqh7hdRQl0woo4XllE11P3aqX/I1TtH67XraJ3ea8/oRFdaXf1JDQ2P5P+adFFNtXlNaxrSrIlDWjqzT5fM6lM27V95Uxicqgt+fPss06NI+m1d8Nce+oTpURARBABUBXW/dskXHb2yt0kb356gNw41qFi88COK/GBCfYMJHW2v0Wv7pZ9vm6KE4+nSeT269pJOrV3YpaQbz5fR7153Qk/umKFi0Y6bpafqgufOnGx6FESA43lePP9mo6p+9ORWvfS6f+/ZFwoFnWg9WXLj32UzT+hf3PCSb/NIkibMsK7xL1dw9Oybk/T4tilq661OH8Gk+pw+urZFNy5vVyoRv4+Ln29t0ve3zDM9xmmL5s3Uv/vD+02PgQiwI9Yi1Kj7tcM7R+v0J99brH94YWbVTv6S1Nab0refn6WvfWeJdhyK314H1AUjqggAGDfqfs0qFB3948aZ+vMfLdB7Hf49kjjRVaO/+ulF+s6LM1UY5ZFC1FAXjKgiAGBcqPs1q3cwoT//8UL94rXJ8jz/T8qe5+jJ1yfrL368QL2D8dn2mLpgRBEBAONC3a85Xf0p/cWPF2r30drAj73raJ3+7J8WqqMvHuuIqQtGFBEAUDHqfs3pH0roP/x4vg61mnsL4b2OjP7jTxaofygeHyPUBSNq4vE3F1VH3a85haKj//bEPB1pN/8K4pH2jP6/J+epEMDjB9Mc19VD1AUjQggAqAh1v+b8+KWp2nnYnu6BHYca9OjWqabHCMQS6oIRIQQAlI26X3P2nKjVY6/Yd7L96dap2ns8+LUIgaMuGBFCAEDZqPs1w/Mcffv5WVbebi94jr794sxA3kQwbfZ06dLZ1AUj/AgAKAt1v+Zs3t2kfSeypse4oL3Ha/XSHjvekPDbF284aHqEs1AXjEoQAFAW6n7NeezVKaZHGNPPXrbv8YQfJk90qAtG6BEAUDLqfs3Z9V6dDp209+r/lIOtGe06av6/VxCoC0bYEQBQMup+zdn4jh1zlGLTrgmmRwjEqbpgW5yqCwZKRQBASaj7NcfzpNcOmN9/oFSv7G1UXDpG7153Qq5FRUGn6oKBUhAAUJKnN+5QLlf6rflyFQoF9faXvrbgspkntGyazx90lhT+HGrLqDNEW+529ad0pM18cApCTSape684ZHqM04qep29xFwAlIgBgTPGs+62zpu5334nwvV8fxpkr9ZE1HdQFI5QIABiTbXW/18w7EkDdrz3PsQ8b3O+/Ugfb7F+wWC3JVEJfuM7nXSjLQV0wSkQAwKhsrPu9a6W/axFsqvuVpLYee2YpVXtveB5ZVMP65b3UBSN0CAAYFXW/5nX2hy8AdIVozUI1uImEvny9XUVB1AVjLAQAXBB1v3bIF8xvQlSufDF8M4/XZYsGNaWBumCEBwEA50XdL8YjDp0A53JcVw9vsOsuAHXBGA0BAOdF3a89UonwfYIn3fDNXA1L5hQ0f5I9u/FRF4zREADwAdT92iWT9m//Bb9k0va8Fhcox9GXN1AXjHAgAOADqPu1SxhPptkQhpZqmT3d0/KZ1AXDfnZ+4sEY6n7tk0mFLwCE8a5F9Tj60k3UBcN+BACchbpf+2RDGADCOHM1UReMMCAA4DTqfu0UxkcANal4LgI8E3XBsB0BAKdR92unMN5Oz6ZZdNZQn9DtK+3Zk5+6YJyLAABJ1P3aLJxrAMI3sx/uvrKFumBYiwAASdT92iyMz9PDOLMfqAuGzQgAoO7XcmF8BFBDADjtI6upC4adCACg7tdyYbydHud9AM6VTFMXDDsRAGKOul/7sQYg/KgLho0IADFH3a/9sqnwXU2zBuBs1AXDRgSAGKPuNxzCeDUdxrsWfqMuGLYhAMQUdb/hEcbn6WFcuOi3kbpgi9YCiLrguCMAxBR1v+ERxhX1YbxrEYQlc/LUBcMaBIAYou43XFIJT0k3PJdpSTdc8wbKcfTlm6kLhh0IADFE3W/4hOmKOkyzmjB7GnXBsEN4PxFREep+wylMz9TDuGYhWI6+dNMB00OchbrgeCIAxAx1v+EUplX13AEY2+SJLnXBMI4AECPU/YZXmN6rzyTDM6tJD1xLXTDMIgDECHW/4RWmRwDcAShNQwN1wTCLABAT1P2GW5hOqqwBKB11wTCJABATT29806q639WzqPstR7jWABAASkVdMEwiAMTAyfYevWJZ3e89K6n7LUeY1gCEaVYbUBcMUwgAMfCLF7arUPTvA4a6X/+F6RFATYpNgMoxUhds0eZA1AXHBgEg4qj7jYYw3VbPptlVrlzrl/eoPuPjTphloi44HggAEUfdbzSEaw1AeGa1hZtI6Ms32FUX/D3qgiOPABBh1P1GR5ieq4dpVptctmjIqrrgNuqCI48AEFHU/UZLmB4BhLG90AbUBSNoBICIou43WsJ0W519ACq3ZE5e8yb1mR7jNOqCo40AEEHU/UYPawBiwnH08M123QWgLji6CAARRN1v9GRT4bmqZg3A+FAXjKBE9xMzpqj7jaYwXVWH6W6FnagLRjAIABFD3W80hem5epgWLNpq8kRXVy+kLhj+IgBECHW/0RWmlfVhulths89eR10w/EUAiBDqfqMrlfCUdO1/HyvphmPOMKAuGH4jAEQEdb/RF4Yr6zDMGCZ3rztJXTB8QwCICOp+oy8Mz9bDtFYhDGqyCeqC4RsCQARQ9xsPYVhdzx2A6qMuGH4hAEQAdb/xEIb36zNJ+2cMG+qC4RcCQMhR9xsfYXgEwB0Af1AXDD8QAEKOut/4CMPJlTUA/qAuGH4gAIQYdb/xEo41AAQAv1AXjGojAIRUEHW/Q0OD1P1aJAxrAMIwY1g5rquHb7LrLgB1weFGAAipIOp+u8oo/KHu139heARQk+Js4KclcwvUBaNqCAAhRN1vPIXh9no2TW2srxxHD22gLhjVQQAIIep+4ykcawDsnzHs5kynLhjVEe9P1BCi7je+wvB8PQwzhh91wagOAkDIUPcbX2F4BBCm1sIwoy4Y1UAACJF41v2mpZpa/35+iITh9jr7AASHumCMFwEgROJZ9ztRXP2PYA0AzkRdMMaLABAS1P0im7L/6po1AMGiLhjjQQAICep+EYar6zDcpYiSmmxCn1pLXTAqQwAIAep+IYXj+XoYFipGza1rqAtGZQgAIUDdL6RwrLAPw12KqEmmE/o8dcGoAAHAcvGs+62PZd3vWFIJT0nX3q12k67d80XZtdQFowIEAMvFs+6Xq/8LsfkK2+bZos5NJPTg9XZtEUxdsP0IABaj7hfnsvkZexjWKETZ6sWD1AWjLAQAS1H3i/OxeZU9dwDMoi4Y5SIAWIq6X5yPze/ZZ5L2zhYX1AWjHAQAC1H3iwux+REAdwAsQF0wykAAsBB1v7gQm0+yrAGwA3XBKBWfuJah7hejsXsNAAHADtQFozQEAMtQ94vR2LwGwObZ4oa6YJSCAGARG+t+719N3a9NbH4EUJNiubdNqAvGWAgAFrGx7nf1TOp+bWLzbfZsmoVeNqEuGGMhAFiCul+Uwu41APbOFlfUBWM0BABLUPeLUtj8nN3m2eKKumCMhgBgAep+USqbHwGEoa0wjqgLxoUQACzw1AtvUPeLkth8m519AOxEXTAuhABg2JFj7drxjr+36Kj7jQ7WAKAS1AXjfAgAhlH3i3JkU/ZeZbMGwF7UBeN8CAAGUfeLctl8lW3z3QmM1AVPrvexzbNM1AWbRwAwhLpfVMLm5+w2L1DESF3wVzbYddudumCzCACGUPeLSti80t7muxMYYWNd8KNPbTE9RmwRAAyg7heVSiU8JV37LpmSrp1z4RwW1gU//uzL1AUbQgAwgLpfjIeNV9o2zoTzmzPd07IZ1AWDABA46n4xXjY+a7d5bQLO5ejBDQdMD3EW6oLNIAAEjLpfjJeNq+25AxAuI3XBJ02PcRp1wWYQAAJE3S+qwcb37TNJ+2bC6D57nV3b8VIXHDwCQICo+0U12PgIgDsA4dPQkNBtK98zPcZp1AUHjwAQEOp+US02nmxZAxBO96xroS44xggAAaHuF9Vi5xoAtTTWMwAAGxRJREFUAkAYURccbwSAAFD3i2qycQ2AjTOhNNQFxxcBIADU/aKabHwEUJNiE6Cwoi44vggAPqPuF9Vm4+32bJqd3MKMuuB4IgD4jLpfVJudawDsmwmloy44nggAPqLuF36w8Xm7jTOhPNQFxw8BwCfU/cIvNj4CsLmlEKVxXFcPb9hjeoyzUBfsLwKAT6j7hV9svN3OPgDRsHRunrrgGCEA+IC6X/iJNQDwDXXBsUIA8AF1v/BTNmXf1TZrAKKDuuD44BO7ymys+73n0neo+40QG6+2bbwrgUo5evCmA6aHOAt1wf4gAFSZjXW/V8/3eVct6n4DZePzdhsXJqJykyc51AXHAAGgiqj7RRBsXHFv410JjIdDXXAMEACqiLpfBCGV8JR07Xk3KunaNQ+qg7rg6CMAVAl1vwiSTVfcNs2C6qIuONoIAFVC3S+CZNMzdxvXJKA6qAuONgJAFVD3i6DZtOqeOwDRRl1wdBEAqoC6XwTNpvfuM0l7ZkH1JdMJff5a6oKjiAAwTtT9wgSbHgFwByD6rl1BXXAUEQDGibpfmGDTSZc1ANFHXXA0EQDGIZZ1v5kG6n4tYNcaAAJAHKxePKhJ1AVHCgGgQrGt+802+ffzUTKb1gDYNAv847iuvkJdcKQQACpE3S9MsukRQE2KT+C4oC44WggAFaDuF6bZdNs9m6aqNTaoC44UAkAFqPuFaXatAbBnFviPuuDo4BO9TNT9wgY2PXe3aRYEgbrgqCAAlIm6X9jApkcANrYTwl/UBUcDAaAM1P3CFjbddmcfgDiiLjgKCABloO4XtmANAEyjLjj8CAAlou4XNsmm7LnqZg1AfFEXHG4EgBJR9wub2HTVbdPdCASLuuBwIwCUgLpf2Mam5+42LUhE8KgLDi8CQAmo+4VtbFp5b9PdCASPuuDwIgCMgbpf2CiV8JR0zW/Bm3TtmANmXbu8V7U19uzGR11waQgAY6DuF7ay4crbhhlgnpt09dANdhUFfe+nL5gewXoEgFHsPdRC3S+sZcOzd5vWIsAs6+qCO7qoCx4DAeACPElPPve6r8eg7hfjYcPqe+4A4BTqgsOHAHAB1P3Cdg0Z889c62u4A4Dfoi44XAgA50HdL8JgQp35ANBc7+OfSYQPdcGhQgA4D+p+EQZzJpe+eNQvcyeV/voq4sHKuuBHXzQ9hpX4xD8Hdb8IiyUzzN9qXTzTxzdSEFKOvrThgOkhzvL8lh3UBZ8HAeAc1P0iLJbM6Fddxtwz+PpMQYtnEADwQVMmUhccBgSAM1D3izBJuJ6uXtJh7PjrL+7w988mQszRA9fatR0vdcEfRAA4A3W/CJvfWdUm18BOfEnX0y2rfHxLBqHX2EhdsO0IAO+j7hdhNKN5SNdeEvxdgFvXtGpakz2bvsBO1AXbjQDwPup+EVafvuaYmmqDex1vQl1eH1vbEtjxEF412YQ+eflh02OcRl3w2QgAou4X4VafKeirtx5WKuH/o4Ck6+nhWw6xBTBKdtvl7dQFW4oAIOp+EX6XzOrVgx8+7OsjI8fx9Ps3H9HyOSykQumoC7ZX7AMAdb+IiquWdOqz1x/1ZWV+wvH0ueuPaf3F5t46QHhRF2yn2AcA6n4RJbesbNOf3LWvqtsEN2Ty+trH9+vDK1k8hcq4SVcP3WjXCZe64JgHAOp+EUVLZ/Xp39/7rtYuHP921h9a1KW//My73PbHuK1eNERdsGViGwCo+0WUTazP6Z/ffkD/5p49WrugS4ky9gpIuJ7WLuzWv/3UHv3BbQfVXEfhD8aPumD7xPZSkLpfxMGSmf1aMvOgegaTem1fo94+WqsjbRm1dqfVN5SQI6m2pqDJjcOaPWlQy2b1afX8btUb3GIY0bV0bl5zJ/bqULsd3SOn6oLv+siVpkcxwvE8L3b5p+h5+utvPOFr49/A4IDaO0tfMPXAmjf1kYt9XCnrJqTmWTT+ATDq8HHpjx9ZaXqM0zI1af3P//CQ0sn4XQ/H8mxgY93vhiUHfJtHEnW/AKxAXbA9YndGCKbut5+6XwA4L+qCbRG7ABBM3W/pK6ap+wUQN1MmOrpqAXXBpsUqAFD3CwA2cPTZ6+zajjeOdcGxCgDU/QKAHRobE7rt0qOmxzgtjnXBsQkA1P0CgF3uueoEdcEGxSYAUPcLAHapyVAXbFIsAgB1vwBgJ+qCzYlFAKDuFwDsRF2wOZEPANT9AoDdqAs2I/IBgLpfALAbdcFmRDoAUPcLAOFAXXDwIhsAqPsFgPBwXFdfucmuuwBRrwuObACg7hcAwmXpvILmTrRnN75TdcFRFckAUPQ8Pb1xh6/HGBgaUC6XK/nrP758t7Kp0r++bG5Cyjb49/MBwG+Oo4c3WPRGgKTHn31Zw2WUu4VJJAMAdb8AEE5zZoi64IBE7oxB3S8AhBt1wcGIXACg7hcAwo264GBEKgBQ9wsAUUBdcBAiFQCo+wWAaKAu2H+RCQDU/QJAtFAX7K/IBADqfgEgWkbqgv3tcilH1OqCIxEAqPsFgGi67fIOpRL23AWIUl1wJAIAdb8AEE3JdEKfX2/R5kARqgsOfQCg7hcAou066oJ9EfoAQN0vAESbm3T15Rv2mB7jLFGoCw51AKDuFwDiYc3iQeqCqyy0AYC6XwCID+qCqy+0AYC6XwCIF+qCqyuUAYC6XwCIIeqCqyqUAYC6XwCIp5G6YB9fsy5TmOuCQ7eajLpfoHwDwwm9tr9Bbx2p18HWrFq7U+obGnmcVFdT0OTGnOZNHtDyOb1aPb9bmZQ9G68A5/rShv36f75zmekxTnt+yw596vb1qs2mTY9SltAFAOp+gdId66jRY69O0ebdzRrOnf/PUPdAUt0DSe07kdVzOycqnfJ09eIO3bG2RdMnRK8DHeF3qi54874ppkeR9Nu64K9+7jbTo5QlVPeUqfsFSjOcd/XdjTP0te8s0Qs7J17w5H/e7805ev6tifqX31mq72+aoVye8AnbUBdcDaEKANT9AmM73pnWn/5wkZ54bYoKXuV/dgpFRz/fNkV//uOF6uxj50nYhbrg8QtNAKDuFxjbgZNZ/bt/WqQjbdX7c7PneK3+9IeLdKiVP4uwC3XB4xOaAEDdLzC6451p/dWj89U9UP2lPe29Kf3nn81XZ1/olg0hwqgLHp9QBADqfoHR5fKO/ubJeb6c/E9p703pvzw2X8P5UHxsICaoC65cKP4mU/cLjO6RzdN16GTW9+Psb8nqsW12rLwGJOqCx8P6AEDdLzC6Yx01eur1yYEd74lXJ/MoAFahLrgy1gcA6n6B0T326vhW+5drMJfQT16eFtjxgLFQF1wZqwMAdb/A6AaGE9q8O/jFohvfatZgzuqPD8QMdcHls/ZvMHW/wNhe299Q1iY/1TKUd/X6gcbAjwtcCHXB5bM2AOx4h7pfYCxvHTHXEbHzMP0UsIuNdcE/feol02NckJUBoOh5+uWL1P0CYznY6v/K/wthYyBYx3H0kGV1wT9/dqu1dcFWBgDqfoHSnOwy97ZIS3e4ms8QD3OpCy6ZdWcc6n6B0g0Mm3tkNDDE4yrY6Usb9pse4SzPb9nha49NpawLANT9AgDG41RdsC1yubz+9yP2bRFsVQCg7hcoTzbtXz/GmMeuMXdsYHT21QVvfX23dXXBVgUA6n6B8kxp8nFh6himNtp3SxM4hbrgsVkTAKj7Bco3b3LpHRZVP/YUc8cGSnH3lcf9/Qwvk211wdYEAOp+gfItn2PuluLyOX3Gjg2UIpNN6lNrD5oe4zTb6oKtCADU/QKVWT2/RzXJ4KtQa5JFrZpX+qu0gCnUBV+YFQGAul+gMplUQVct6Qz8uFcv7VQmxSJA2I+64AszHgCo+wXG5461LUq4wT3nTLqe7ryiJbDjAeNFXfD5GQ8A1P0C4zN9wrBuXR3cwqLb1pzkDQCECnXB52c0AFD3C1THPeuOa9F0H4Pr+xZP79dd63x+NRbwAXXBH2QsAFD3C1RPKunpn99+QJPq/dsXoLkurz+4/aBSCXteqwJKRV3wBxkLADt3HabuF6iiCXV5/dGd+zXRhxAwqT6nr31sn5rrzG08BIyXjXXBP3t6q7HjGwkAnqSnf/2mr8eg7hdxNHfyoP7i/nd18czqvaO/eHq//uzedzVnculraQArWVgX/MSzrxi7C2AkAOzcdVjHWvx7dYm6X8RZYzavP/7EPt217sS49ghIup7uXHtSf3L3Xk2os2cFNTAettUF9w0M6PFnXzFybCNnpF/9xu+63wHqfhFrqYSnu9ed0F9/7h3dvLKtrCBQkyzqphXt+s+f3aV7rz7GM39Ezpdusqsu2FQACHw5+v7DJ/Xe8Q7ffv5I3W/pV//U/SLKJtTl9YUb3tP91xzX6wca9NaROh1syaqlJ63+wZH1KLWZgqY2DGve1AEtm92ryy7qZZMfRNqUSSN1wZv3TTE9iiSpp7dPm7bt0jWXLw30uIEHgN9s2+3rz+/t66XuFzhHJlXQlYs7deXi4HcNBOzj6LPXH7EmAEjSY8+8HHgACPQRQE/foN7c7d/VdrFYVG9f6YufqPsFgHhqbLCrLvjIsRadaAt2bUKgAeD1nQdVKPj3rL2Hul8AQIlsqgv2PE+P/iLYVwKDDQBvHfDtZxcKBfVR9wsAKFEmm9Qnr/C3i6Ycr7/t81405wgsALR19OrIsXbffj51vwCAct2+pl3JAMu0RtPd06d9h/zdHv9MgQWAHbsO+1b6ky9Q9wsAKF8yndAX1gd75T2aJ1/wd4v8MwUWAHbtO+bbz+7uoe4XAFCZ61bYUxe8a8/hwI4VSAAYzuV18MhJX342db8AgPGwqS64vatHff3BtBYGEgD2HWpR3qfV/+XW/X5sBXW/AICz2VIX7Hmefv2Kz2vU3hdIADh4xJ/V9oPDQ2XX/TZlqPsFAJzNcV09vMGOuwBvvB3MVsXBBICjPgQAb+TZf6lq0zn/635rG6n7BYCQunhuTtMbfXxEXKLDx3x+Rf19vgcAz/N8ef2v3Lrfmxcf8L/uN9Po388HAPjLcfWF6w6YnkKd3b3yPP9fTfQ9AHR09WlwqMonXk/q6e0t+csTblEfXuzzLRXqfgEg9JZfNKTalNk3AgqFgg6+58/C+TP5fsZqaSu9ma9Ug0MDyuVLDxXr5h7TxNrS3xQoG3W/ABAJjpvQvesOmh5Du/b531PgewA42Vb6c/pSdfeWXvgjSVfM9m8PAknU/QJAhKxZUP3zVrkicQegrbO6dwCGhoeVyw+X/PUJt6gV01uqOsNZqPsFgEiZ2OSqNm32MUBLq//V3b4HgO7e6t567x8o7+p/6ZR2f/+PrGsWV/8AECGOow2XBLcn//l0dpd3rquE7wGgp6/0PfrHUiwWNTBYXqDwdc//VEZKZf37+QAAIy6eUf31a+UYGPR/UyLfA0BvX/V+E30D/WW/GjG7ycf/E6n7BYBImt5sdlfAoWH/H0H4HgAGh0p/Xj+WgYHyHyfM9CsA1FD3CwBRNaHebEVwLh+BAFCoUgdAvlAoa/HfKY2Z6gWQ0xxR+AMAEZYyXOniFf3pzzmT7wEgly9U5ecMDFS2liCdqM7xz0LdLwBEmuOaXdwdxP0H/7cCLlbntzE4XNnbBFUPANT9AkDkGd/YNQpbAaeqcB+l6HkazlV2Kz9frPJvMdNI3S8ARJ3/d+BH5QXwernvAaAmPf6TZW54qOL7Id2DVVyo57hSlsIfAIi6fN7sIkA3EYUAUDP+Z+WDw5Uv5OsaTI/7+Kdlm6j7BYAYCOAtvFElXf+fQfgfAKrwCGC4jNrfc7X2VWmbXjchZRuq87MAAFbr6Te7CCCZ9P9Rs/2PADwpX0bz37n2tE4c3/FPyTRYsCoEABCEvcfN7vKaDuA9RN/PaLW143sGny/mVRzH+5B72qqwYp9n/wAQK68cqNLFY4Xqa/0PIL4HgCkTx3fizOXG9yDmSFeDeofHuQ6gpparfwCICa9Y1KsHJxmdYVKz/4+cAwgA4/tNFArjCwCe5+ilgzPH9TOUpu4XAOLi2ElH+aLZjYCmT/H/DoT/AWDS+O4AFArj38hn04HZlX+z49D4BwAx8vSbU0yPoPlz/J/B+jsA+SoEgN2tzTrRW1fZN6cyIyEAABB5hVxez7w93ewQjrR8yVzfD+N7AMhm0qqvy1T8/YXi+AOA5zl69M3FlX0zjX8AEBub3m5Qsdo7yJYplUypuanCi9YyBPK7nDOj8mcZ1eoS+PX+OXqvu4K7EUlKfwAgDgq5vP5+4wLTY2jihGD2nAkkACycO63i7y1WaUPmoufo/2xfWv43ugQAAIiDX21v0lDB/G6viy8a58L1EgUTAOZVHgCqdQdAkrYenqkth2aV901s/QsAkdfZVdC3f7PQ9BiSpCvXLAnkOIEEgJnTJqguW8GzdE/yqlyJ+K2tK9XeX8aaBBYAAkCkecWC/uLRCu4Q+yCRSGjVJRcFcqxAAoDjOJW90uC8/08V9Q+n9PUta0qvCWYDIACItB9snKqjXXbs9zJ10gS5AV14BnZ2Wzy/stcqHB86kXcen6yvb14tzyvhZ3uGS6EBAL557rVa/Xx7mY+GfbRmRXCPIQILAKsumatEwp6r6c0HZ+kfX10xdgggAABAJL3yTlrf3LjI9BinOY6jW29YE9jxAjsj12ZrtHTBjLK/z89bIU/tmq//vuly5Qqj/GcoGi6FBgBUl+fpxe1Z/ddfXmx6krNMnTQhkPf/Twn0kvzyFfPL/h7X9XfELYdm6i+fu1o9QxcoDBpHFTEAwC5esahvPztVf/tChZvD+Wj9FcsDPV6gAWDZ4lmqLfNtAMfnACBJu1om6muP36ith87z7mV+2PfjAwD819Vd0L/+wSL9cmf5d6P9lkgk9NGbLg/0mIEGgETC1cqL55T3PQEEAEnqGqzR3/x6rf7m12vV2ndG+U9uKJDjAwD8UcwX9IuXG/Tw36/WvtZ60+Oc1+L5s5ROJwM9ZrBHk7T+iqV66fW9Jb/fnwh4I56th2Zq25Hpunree/rY8nc1o7F3ZB2AG/h/KgDAOBTyBb26p1Z/+/wiDQxbvKmbI9370fWBHzbws9rUSY26dOkcvfHOoZK+PpEM/sRbKLrauH+ONh2YreXTW/WJtUe1eE5BbtLiP0AAAHnFoo63Odr49kQ9sWPW6Iu8LTFr2mQtmR/8Ywkjl7UbrlmuHe8cUin3AFIGAsApRc/RjmNTtOOxKUq4RV1xUavWXNSpBVP7NaG+qHTakeu6clx2CwSA4Hjyip6KBU+5gtTZ4+pAS1Y7jzRq094pGsqH62Lt3o9ea+S4Rs6uM6ZO0MWLZurtPUfH/Npkwo5b74Wiqy37pmrLvqmmRwEARMSUiRN0+aVmGgiN3Ru56erSXndIJBKBLQQEACBI93/sOmPHNnZmnTdrslZdMrekr02lLvCOPgAAITVv1nStu8zcfgRGL63v/PDlytSkxvy6NAEAABAhjuPowd/9HaMzGA0ADXUZ3bx+xZhfl04TAAAA0XHl6os1b+ZkozMYf7i+fu1SzZzWPOrXpNMpOQHVIwIA4KdsNqMHP2326l+yIAC4rqNP3LJ21NIfR44y6fK2EAYAwDaOHH3x3g8rlTL/qqLxACBJ82ZP1oYxHgVkMgQAAEC4rbl0ka5cvcT0GJIsCQCSdPM1y7V4/vQL/u+ZmqzEUwAAQEg1NzXoD77wUdNjnGZNAHAcR/ffeZUa67Pn/d9d11UmxV0AAED4JBOuvvbQ3UokrDnt2hMAJKm+NqP77rjqggv+srW1AU8EAMA4OdIDd23QnBmTTE9yFqsCgCQtumiaPn7L+TuRszWZURcLAgBgmxuvXKWb1680PcYHWBcAJOmqNYu14TxbBTuOo2z2/I8IAACwzYql8/XF+242PcZ5WRkAJOmW61fqQ6sWfuDX6+vqDUwDAEB55s6cqj9+6BOmx7ggawOAI+muW6/QpUvnnPXryURSmRoWAwIA7DV1crP+7P/9tNWb2FkbACTJff/NgOVLZp/16/V1DYYmAgBgdFMnNes//ssHlEqa3+xnNI7neZ7pIcZS9Dw9+tQr2vLantO/1trepqHhIYNTAQBwtjkzp+rf/+GnrdjpbyyhCACnPL/lLT3x3HZJ0nAup5PtJ6XQTA8AiLKlC+fqT7/6SVl81/8soQoAkvSbbbv1s6dfVdHz1N7ZroHBQdMjAQDizJFuWLdKv3+/nav9LyR0AUCS9h1q0fd++hu1d/WopfWkQvhbAABEQDLh6jMfv0m3XLfK9ChlC2UAkKS+/iF9/7HN2vbGbnX39pgeBwAQM00Ndfrjh+/R3JmTTY9SkdAGAGnk8f+LL72tv3vkl8rl86bHAQDEgCNHq5Yt0B9+8U6r9vYvV6gDwCmbt+3Wt374lAaGhk2PAgCIsGy2Rl+89xZrKn3HIxIBQJJyuYK+8YOntfnVt1QsRuK3BACwhOO6unzFIn3ls7cqnUqaHqcqIhMATtl/+IT++z88qeMn23hFEAAwbrOmT9ZXP3e75oT0Wf+FRC4AnLJ1+x794Gcv6kRrh+lRAAAhNKm5SZ/5+PVad9li06P4IrIB4JTN23bpkSc2qYUgAAAYiyNNnzxR991xra5Ytcj0NL6KfAA45a13D+uHP/+N9h16jzUCAICzJFxXCy6apd/9+HVaNG+66XECEZsAcEpf/6B+/qtXtPm1XTrZ3sk6AQCIKUeOJk1s0vq1l+iOm69QpiZleqRAxS4AnKmlrUs/e/oV7Xz3oFrbO7kzAAARl3BdTZ3crFXL5uu2G9ZoUnN822VjHQDOlC8W9cr2Pdry+rs6cOi4Orp7lWdzIQAItWQioYnNTVp80QytvXSh1ly6UMkQb95TTQSAUbR2dGvHOwe173CLWlq71NHZo97+AQ0N51QoFFUoFiXPU5H/hAAQKMdx5LquXNdVMuGqpiat+kyNmprqNXPqJC2aN1WXLJ4T6yv8sRAAAACIIe6DAAAQQwQAAABiiAAAAEAMEQAAAIghAgAAADFEAAAAIIYIAAAAxBABAACAGCIAAAAQQwQAAABiiAAAAEAMEQAAAIghAgAAADFEAAAAIIYIAAAAxBABAACAGCIAAAAQQwQAAABiiAAAAEAMEQAAAIghAgAAADFEAAAAIIYIAAAAxBABAACAGCIAAAAQQwQAAABiiAAAAEAMEQAAAIghAgAAADFEAAAAIIYIAAAAxBABAACAGCIAAAAQQwQAAABiiAAAAEAMEQAAAIghAgAAADFEAAAAIIYIAAAAxND/BcxE8XHf6QutAAAAAElFTkSuQmCC"/>
+            </defs>
+        </svg>
+        هذا العميل قام بالطلب اكثر من مره</h6>
+    <button style="    width: 51px;
+    height: 22px;
+    border-radius: 6px;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    border: none;" id="user-orders">الطلبات</button>
+</div>
+}
+<div>
+  @await Html.PartialAsync("OrdersTabs/OrderCardFilterSection", Model.OrderCardFilter)
+</div>
+<div class="card shadow-md col-lg-12 col-md-12 col-sm-12 position-relative order-card"
+     style="background-color: #FFFFFF; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25); border-radius: 10px;" order-id="@Model.Id">
+    <div class="card-body text-end">
+        @if (@Model.StatusId != (int)ActionType.New && @Model?.FollowUpDetails?.Count() > 0)
+        {
+                    <div>
+                        <div class="d-flex align-items-center gap-4">
+                            <h2 style="color: var(--primary-color);
+                           font-weight: bolder;
+                           margin: 0px;">عدد المحاولات</h2>
+                            <span style="
+                width: 39px;
+                height: 37px;
+                color: #FFFFFF;
+                background-color: rgba(93, 36, 225, 1);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 16px;
+                padding: 4px;
+                font-size: 20px;
+                font-weight: 700;">@Model?.FollowUpDetails?.Count()</span>
+                        </div>
+                    @foreach (var followup in Model.FollowUpDetails)
+                    {
+                        
+                        <div>
+                            <p class="mb-0">
+                                @await Html.PartialAsync("OrdersTabs/Modal/FolloUpStatus", followup.ContactStatusId??0)
+                                @{
+                                    var createdDate = (DateTime)followup.CreatedOn;
+                                    var now = DateTime.Now;
+                                    var timeSpan = now - createdDate;
+                                    var days = timeSpan.Days;
+                                    var hours = timeSpan.Hours;
+                                }
+                                <span>منذ @($"{days} يوم و {hours} ساعة")</span>
+                            </p>
+                            <div class="alert alert-primary" style="
+                                                                width: fit-content;
+                                                                height: 22px;
+                                                                border-radius: 6px;
+                                                                display: flex;
+                                                                justify-content: center;
+                                                                align-items: center;
+                                                                color: white;
+                                                                background: rgba(93, 36, 225, 0.7);
+                                                                margin-bottom: 0;" role="alert">
+                                @ContactStatusHelper.GetContactStatus(followup.ContactStatusId??0)
+                            </div>
+                            <div class="alert alert-primary" style="color:black;background-color: rgba(93, 36, 225, 0.3)" role="alert">
+                                @followup.Notes
+                            </div>
+                        </div>
+                    }    
+                    </div>            
+        }
+
+
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title d-flex align-items-center gap-2">
+                <span id="orderNoCopiedValue">@Model?.orderNo</span> <i class="fa-regular fa-copy" id="copy-orderNo" style="color: var(--primary-color)" aria-hidden="true"></i>
+                <span id="tooltip" class="tooltip-text">تم نسخ رقم الطلب بنجاح.</span>
+
+            </h5>
+            <div>
+            @if (@Model?.StatusId == (int?)ActionType.Confirmed && @Model?.OrderUrgentDetails != null)
+            {
+                
+                   <h6>طلب مستعجل <img src="~/img/hot.png"/></h6>
+                    
+              
+            }
+            @if (Model?.StatusId == (int?)ActionType.Holding && Model.OrderHoldingDetails != null)
+            {
+                var holdingDate = Model.OrderHoldingDetails.Last().HoldingDate;
+                var now = DateTime.Now;
+                var timeSpan = holdingDate  - now  ;
+
+                var days = timeSpan.Days;
+                var hours = timeSpan.Hours;
+                <div>
+
+                    <h6>باقي @($"{days} يوم و {hours} ساعة")</h6>
+                </div>
+
+
+            }
+            @if (Model?.StatusId != (int)ActionType.New && Model?.OrderModificationDeclined != null)
+            {
+                <h6>قام هذا العميل برفض التعديل على الطلب</h6>
+
+            }
+            </div>
+        </div>
+        <h6 class="card-subtitle mb-2">
+            @{
+                if (Model?.RegDate != null)
+                {
+                    var regDate = Model.RegDate.Date;
+                    var now = DateTime.Now;
+                    var timeSpan = now - regDate;
+
+                    var days = timeSpan.Days;
+                    var hours = timeSpan.Hours;
+
+                    @($"{regDate:dd/MM/yyyy} - منذ {days} يوم و {hours} ساعة")
+                }
+            }
+        </h6>
+        <div class="row flex-wrap-reverse">
+            <div class="col-md-6 text-end">
+                <h6>@Model?.fullName</h6>
+                <h6>@Model?.Government?.Name</h6>
+                <h6>@Model?.Region?.Name</h6>
+                <div class="d-flex align-items-baseline gap-2">
+                    <p class="m-0">@Model?.Address</p>
+                    <div class="icons d-flex align-items-center gap-2" style="color:var(--primary-color)">
+                        @* <i class="fa-regular fa-square-plus cursor-pointer" ></i> *@
+                        <i class="fa-regular fa-pen-to-square cursor-pointer" id="modify-order-detail-modal"></i>
+                    </div>
+                </div>
+                @if (!string.IsNullOrEmpty(Model?.phoneNumber))
+                {
+                    <a class="card-text d-flex align-items-center gap-2 cursor-pointer" style="color: var(--primary-color); width : fit-content; " href="tel:@Model.phoneNumber">
+                        <i class="fa-solid fa-phone-flip"></i> @(Model.phoneNumber?.StartsWith("2") == true ? Model.phoneNumber.Substring(1) : Model.phoneNumber)
+                    </a>
+                }
+                @if (!string.IsNullOrEmpty(Model?.phoneNumber2))
+                {
+                    <a class="card-text d-flex align-items-center gap-2 cursor-pointer" style="color: var(--primary-color); width : fit-content; " href="tel:@Model.phoneNumber2">
+                        <i class="fa-solid fa-phone-flip"></i> @(Model.phoneNumber2?.StartsWith("2") == true ? Model.phoneNumber2.Substring(1) : Model.phoneNumber2)
+                    </a>
+                }
+                <p class="card-text">
+                    @{
+                        string fromTime = Model?.deliveryTimeFrom?.Replace("ص", "صباحآ").Replace("م", "مساءآ");
+                        string toTime = Model?.deliveryTimeTo?.Replace("ص", "صباحآ").Replace("م", "مساءآ");
+                    }
+                    @(fromTime) | @(toTime)
+                </p>
+
+                <p class="d-flex gap-2">
+                    <span class="text-muted">الإجمالي:</span>
+                    <span>
+                        <span id="netAmountValue">
+                            @if ((int)ActionType.Confirmed == Model.StatusId)
+                            {
+                                @Math.Floor((double)(Model.NetAmount + ((decimal?)Model.OrderUrgentDetails?.AdditionalPrice ?? 0m)))
+                            }
+                            else if ((int)ActionType.Holding == Model.StatusId)
+                            {
+                                @Math.Floor((double)(Model.NetAmount + ((decimal?)Model.OrderHoldingDetails?.Last().AdditionalPrice ?? 0m)))
+                            }
+                            else
+                            {
+                                @Math.Floor((double)(Model.NetAmount))
+                            }
+                        </span> جنية مصري</span>
+                </p>
+
+                <p class="card-text">
+                    <span style="color: var(--primary-color)">الملاحظات</span>: @Model?.Notes
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <div style="color: var(--primary-color)">
+                    <i class="fa-solid fa-square-plus" data-bs-toggle="tooltip" title="اضافة منتج" id="add-product-icon"></i>
+                </div>
+                <div class="p-2 order-product-wrapper">
+                    @foreach (var detail in Model?.OrderDetails)
+                    {
+                        <div class="card mt-2 position-relative"
+                             style="background-color: var(--primary-color); color: white; border-radius: 10px;">
+                            <i class="position-absolute start-0 top-0 p-3 btn-group dropend">
+                                <img src="~/images/icons/0c5c711b01d1606177f38c367cc76918.png" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" id="orderDetail-@detail.Id" alt="Icon" style="width: 16px; height: 16px"/>
+                                <ul class="dropdown-menu dropdown-menu-lg-end text-end">
+                                    <li><button class="dropdown-item border-bottom order-detail-product" type="button" data-action-url="Admin/Orders/GetOrdersDetailProduct?ActionMod=Edit&orderDetailId=@detail.Id">تعديل المنتج</button></li>
+                                    <li><button class="dropdown-item order-detail-product" type="button" data-action-url="Admin/Orders/GetOrdersDetailProduct?ActionMod=Change&orderDetailId=@detail.Id">تغير المنتج</button></li>
+                                    <li><button class="dropdown-item order-detail-product" type="button" data-action-url="Admin/Orders/GetOrdersDetailProduct?ActionMod=Delete&orderDetailId=@detail.Id">حذف المنتج</button></li>
+                                </ul>
+                            </i>
+                            <div class="card-body row text-white">
+                                <div class="col-6 text-end">
+                                    <h5>@detail?.Product?.EngName</h5>
+                                    <div>
+                                        @detail?.Product?.EngName.Split(" ")[0]  
+                                        @foreach (var res in detail?.Combination?.Text?.Split(","))
+                                        {
+                                            @res.Split(":")[1] 
+                                            <span> </span>
+                                        }
+                                    </div>
+                                    <h5>@(detail?.Qty) الكمية</h5>
+                                    <h5>@Math.Floor((detail?.Product?.DiscountPrice ?? 0) != 0
+                                            ? detail?.Product?.DiscountPrice ?? 0
+                                            : detail?.Product?.Price ?? 0) جنيه</h5>
+                                </div>
+                                <div class="col-6 text-center d-flex justify-content-center align-items-center">
+                                    <img src="@Url.Content($"~/{ImagesPathes.Products}{detail?.Product?.MainImageUrl}")" alt="Product Image"
+                                         class="img-fluid rounded-3"
+                                         style="max-width: 100px; height: auto;">
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Html.PartialAsync("OrdersTabs/Modal/ActionsModel", Model?.StatusId)
+    @await Html.PartialAsync("OrdersTabs/Modal/UrgentModal")
+    @await Html.PartialAsync("OrdersTabs/Modal/PostponementModal")
+    @await Html.PartialAsync("OrdersTabs/Modal/CancelModal")
+    @await Html.PartialAsync("OrdersTabs/Modal/FolloUpModal")
+    @await Html.PartialAsync("OrdersTabs/Modal/AddUserPhoneModal")
+    @await Html.PartialAsync("OrdersTabs/Modal/EditUserAddressModal" , Model?.Address)
+    
+</div>
+
+@{
+
+        <div class="d-flex justify-content-center align-items-center gap-1">
+            <a class="btn btn-primary mt-5 order-btn" ActionType="@Convert.ToInt32(ActionType.Confirmed)">تأكيد</a>
+            <button type="button" class="btn btn-primary mt-5 order-btn" data-toggle="modal" data-target="#exampleModalCenter" onclick="$('#ActionModal').modal('show')">متابعة</button>
+        </div>
+}
+
+
+<script>
+    
+    var TransfareData = {
+            OrderId : @Model.Id, 
+            status : getTabStatus($(".tab-color.active").attr("id"))
+        }
+    
+    
+    function GetOrderCardDetail (){
+        let OrderId = @Model.Id;
+        let status = getTabStatus($(".tab-color.active").attr("id"));
+        let url = `@Url.Action("GetOrderCardDetail", "Orders")?OrderId=${OrderId} &status=${status}`;
+        $("#partial-container").html(`
+                                                <div class="text-center mt-5">
+                                                    <div class="spinner-border" style="color:var(--primary-color)" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </div>
+                                            `);
+        $.get(url, function (data) {
+            $("#partial-container").html(data);
+        }).fail(function () {
+            $("#partial-container").html('<p class="text-center text-danger">حدث خطأ أثناء تحميل البيانات.</p>');
+        });
+    }
+     $(document).ready(() => {
+  
+
+         
+         $(".order-detail-product").on("click" , (event) => {
+             openOrderDetailModifiedProductModal($(event.target).data('action-url')); 
+         }); 
+           
+         $("a").on("click" , (event) => {
+             let ActionType  = parseInt(event.currentTarget.getAttribute("ActionType"));
+             let modalId = event.currentTarget.getAttribute("modal-id");
+             let modalDataContainerId = event.currentTarget.getAttribute("modal-data-container-id");
+              switch (ActionType){
+                 case @Convert.ToInt32(ActionType.Confirmed):
+                       sendOrderAction(@Model.Id , ActionType ,  null , modalId, loadTabContent)
+                      break;
+                  case @Convert.ToInt32(ActionType.FollowUps):
+                       sendOrderAction(@Model.Id , ActionType ,  FolloUp(modalDataContainerId) , modalId, loadTabContent)
+                       break;
+                  case @Convert.ToInt32(ActionType.Cancel) :
+                       sendOrderAction(@Model.Id , ActionType ,  CancelModal(modalDataContainerId), modalId, loadTabContent)
+                       break;
+                  case @Convert.ToInt32(ActionType.Holding):
+                       sendOrderAction(@Model.Id , ActionType ,  Postponement(modalDataContainerId), modalId, loadTabContent)
+                       break;
+                  case @Convert.ToInt32(ActionType.Urgent):
+                      sendOrderAction(@Model.Id , ActionType ,  Urget(modalDataContainerId), modalId, loadTabContent)
+                       break;
+                  case @Convert.ToInt32(ActionType.Modified):
+                      sendOrderAction(@Model.Id , ActionType ,  OrderModificationData(modalDataContainerId), modalId, GetOrderCardDetail)
+                      break;
+                  case @Convert.ToInt32(ActionType.StoppedConfirmed):
+                        sendOrderAction(@Model.Id , ActionType , {} , modalId , loadTabContent);
+                        break;
+                   default : 
+                        console.log("error not impelmeneted method");     
+               }
+         })
+
+        function sendOrderAction(orderId, actionType, requestData, modalId, loadCallBackFunction = () => {}) {
+        
+            $.ajax({
+                url: `/OrderAction/${orderId}/${actionType}`, 
+                type: 'POST',                                
+                contentType: 'application/json',             
+                data: JSON.stringify(requestData),           
+                success: function(response) {
+              
+                    toastr.options = {
+                        positionClass: 'toast-top-right',
+                    };
+                    toastr.success("تمت العملية بنحاج");
+                  
+                    $(`#${modalId}`).modal('hide') ;
+                    loadCallBackFunction();
+                },
+                error: function(xhr, status, error) {
+                    toastr.options = {
+                        positionClass: 'toast-top-right'
+                    };
+                    toastr.error("حاول مرة اخري");
+                    console.error("Error:", xhr.responseText); 
+                }
+            });
+        }
+
+
+
+         function loadTabContent() {
+             let status = getTabStatus($(".tab-color.active").attr("id"))
+             let url = `@Url.Action("GetOrders", "Orders")?status=${status}`;
+             $("#partial-container").html(`
+                                                <div class="text-center mt-5">
+                                                    <div class="spinner-border" style="color:var(--primary-color)" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </div>
+                                            `);
+             $.get(url, function (data) {
+                 $("#partial-container").html(data);
+             }).fail(function () {
+                 $("#partial-container").html('<p class="text-center text-danger fs-3 fw-bolder">حدث خطأ أثناء تحميل البيانات.</p>');
+             });
+         }
+               
+         
+         function Urget(modalId){
+            let inputs = $(`#${modalId} li input`);
+            return {
+                UrgentDate : inputs[0].value,
+                UrgentAdditionalPrice : inputs[1].value
+            }
+         }
+
+         function Postponement(modalId){
+             let inputs = $(`#${modalId} li input`); 
+             return {
+                 PostponementDate : inputs[0].value,
+                 ShipmentPrice : inputs[1].value
+             }
+         }
+
+
+         function CancelModal(modalId) {
+                let activeItem = $(`#${modalId} li.active`);
+                if (activeItem.length === 0) {
+                    console.log("No active item selected");
+                    return;
+                }
+                let index = activeItem.index();
+                let notes = activeItem.find('input').val(); 
+                return {
+                    Notes: notes,
+                    Id: index + 1
+                };
+            }
+         
+
+         function FolloUp(modalId){
+             if (modalId[0] === "*"){
+              let obj =  
+                 {
+                     ContactMethodId : 2, 
+                     OrderId : @Model.Id , 
+                     ContactStatusId :  1, 
+                     FollowUpNote : ""
+                 };  
+                 return obj; 
+             } 
+            
+            let activeItem = $("#"+modalId + " li.active");
+            if (activeItem.length === 0) {
+                return;
+            }
+            let index = activeItem.index();
+            let notes = activeItem.find('input').val(); 
+            return {
+                FollowUpNote: notes,
+                Id: index + 1
+            };
+         }
+         
+         function OrderModificationData(modalId){
+             let modifiedObj = {};
+             $(`#${modalId} li [name]`).each((index, element) => {
+                 modifiedObj[$(element).attr("name")] =  $(element).val();
+             });
+            // console.log(modifiedObj); 
+             return modifiedObj;
+         }
+         
+         function openOrderDetailModifiedProductModal(ActionUrl)
+         {
+            
+             $("#loader").removeClass("d-none");
+             $("#ajaxModal").html();
+             $.get(ActionUrl, function (data) {
+                 $("#ajaxModal").html(data);
+                 $("#OrderDetailModifyProductModal").modal('show');
+                 $("#loader").addClass("d-none");
+             }).fail(function (error) {
+                 toastr.options = {
+                     positionClass: 'toast-top-right'
+                 };
+                 toastr.error("حاول مرة اخري");
+                 console.error("Error:", error);
+                 $("#ajaxModal").html('');
+                 $("#loader").addClass("d-none");
+             });
+         }
+         
+
+
+     })
+
+</script>

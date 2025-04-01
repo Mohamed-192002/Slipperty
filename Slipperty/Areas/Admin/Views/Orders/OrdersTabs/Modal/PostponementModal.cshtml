@@ -1,0 +1,47 @@
+﻿<div class="modal fade" id="PostponementModal" tabindex="-1" role="dialog"  aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered justify-content-center " role="document">
+        <div class="modal-content ActionsModal">
+            @* remove the rounded from the list-group in the Order.css and set padding on the model-body *@
+            <div class="modal-body" style="padding-top:10px !important;">
+                <ul class="list-group rounded-0">
+                    <li class="list-group-item border-0 border-bottom date-option" data-days="2">يومين</li>
+                    <li class="list-group-item border-0 border-bottom date-option" data-days="7">اسبوع</li>
+                </ul>
+                <div id="postponement-data-container-Id">
+                    <li class="list-group-item d-flex align-items-center gap-2 border-0 border-bottom">تاريخ : <input id="datepicker2" class="datepickerInput" width="149"/>
+                        <script>
+                            $('#datepicker2').datepicker();
+                        </script>
+                    </li>
+@*                     <li class="list-group-item d-flex align-items-center gap-2 border-0 ">مصاريف شحن<input type="text" class="ShipmentInput " pattern="[0-9]+"/></li>
+ *@
+                </div>
+               
+                
+                <div class="d-flex justify-content-center align-items-start p-2">
+                    <a class="btn btn-primary order-btn" modal-id="PostponementModal" modal-data-container-id="postponement-data-container-Id" ActionType="@Convert.ToInt32(ActionType.Holding)">تأكيد</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#datepicker2').datepicker();
+
+        $(".date-option").on("click", function () {
+            let daysToAdd = $(this).data("days"); 
+            let currentDate = new Date(); 
+            currentDate.setDate(currentDate.getDate() + (daysToAdd ) );
+            const formattedDate = currentDate
+                .toISOString()
+                .split('T')[0]
+                .split('-')
+                .reverse()
+                .join('/');
+            $("#datepicker2").val(formattedDate);
+        });
+    });
+</script>

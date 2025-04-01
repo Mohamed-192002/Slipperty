@@ -1,0 +1,57 @@
+<div id="orders-container-wrapper">
+<!--  <div id="dynamicFilterContainer">-->
+<!--    <app-order-filter [filter]="model.filter"></app-order-filter>-->
+<!--  </div>-->
+  <div *ngIf="Loading; else userOrders" [innerHTML]="LoadingSpinner">
+  </div>
+
+  <ng-template #userOrders>
+    <div class="table-responsive" >
+
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th class="text-center" >رقم الاوردر</th>
+            <th class="text-center" >اسم العميل</th>
+            <th class="text-center" >رقم العميل</th>
+            <th class="text-center" >تاريخ الاوردر</th>
+            <th class="text-center" >العنوان</th>
+  <!--          <th class="text-center" >السعر الكلي</th>-->
+  <!--          <th class="text-center" >الملاحظات</th>-->
+  <!--          <th colspan="2">حالة الطلب</th>-->
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngIf="orders.length > 0; else emptyData">
+            <tr *ngFor="let order of orders">
+              <td>{{order.orderNo}}</td>
+              <td>{{order.fullName}}</td>
+              <td>{{order.phoneNumber}}</td>
+              <td>{{order.regDate | date:'dd-MM-yyyy' }}</td>
+              <td>{{order.address}}</td>
+  <!--            <td></td>-->
+  <!--            <td><a>ملاحظات</a></td>-->
+  <!--            <td colspan="2">-->
+  <!--              <select>-->
+  <!--                <option>اختر</option>-->
+  <!--              </select>-->
+  <!--              <select>-->
+  <!--                <option>اختر</option>-->
+  <!--              </select>-->
+  <!--            </td>-->
+            </tr>
+          </ng-container>
+          <ng-template #emptyData>
+              <div [innerHTML]="NotFounded"></div>
+          </ng-template>
+          </tbody>
+        </table>
+
+
+  <!--    <app-pagination [currentPage]="1" [pageSize]="5" [totalItems]="6" (pageChanged)="paginate($event)">-->
+  <!--    </app-pagination>-->
+    </div>
+
+  </ng-template>
+
+</div>

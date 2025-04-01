@@ -1,0 +1,41 @@
+﻿@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProductImageOrderDTO
+
+<tr data-index="@Model.Id">
+    @using (Html.BeginCollectionItem("ProductImagesOrder"))
+    {
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ImageUrl" class="imageName" />
+        <input type="hidden" asp-for="DisplayOrder" class="displayOrder" />
+        <td class="rowNumber text-center" colspan="1">
+            1
+        </td>
+        if(Model.Id > 0)
+        {
+            <td class="text-center" colspan="10"><img class="orderImg" src="@Url.Content($" /{ImagesPathes.Products}{Model.ImageUrl}")" /></td>
+
+        }
+        else
+        {
+            <td class="text-center" colspan="10"><img class="orderImg" src="@Url.Content($" /{ImagesPathes.DefaultImage}")" /></td>
+
+        }
+        @* <td class="text-center" colspan="1"><input asp-for="DisplayOrder" type="text" class="form-control text-center border-0 p-0 onlyNumbers displayOrder" style="background-color: transparent;" readonly /></td> *@
+        <td class="text-center" colspan="1">
+            <button type="button" class="btn btn-primary" onclick="moveRowUp($(this).closest('tr'))">
+                <i class="fa-solid fa-arrow-up"></i>
+            </button>
+            <button type="button" class="btn btn-primary" onclick="moveRowDown($(this).closest('tr'))">
+                <i class="fa-solid fa-arrow-down"></i>
+            </button>
+        </td>
+
+    }
+</tr>
+
+
+
+
+
+

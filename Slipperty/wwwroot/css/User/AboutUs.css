@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Marhey:wght@300..700&family=Oi&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+body {
+    font-family: "Cairo", serif !important;
+    /*font-weight: 400 !important;*/
+    font-optical-sizing: auto !important;
+}
+
+.cairo-main {
+    font-family: "Cairo", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}
+
+.cairo-light {
+    font-weight: 200;
+}
+
+.cairo-bold {
+    font-weight: 600;
+}
+
+.cairo-extra-bold {
+    font-weight: 800;
+}
+
+.about-section {
+    direction: rtl;
+}
+
+    .about-section h2 {
+        font-weight: 800;
+    }
+
+    .about-section p {
+        font-size: 1rem;
+        line-height: 1.8;
+    }
+
+.image-container {
+    width: 100%;
+    height: auto;
+    position: relative;
+}
+
+    .image-container img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+.stats-box {
+    background: linear-gradient(90deg, #5e19e8, #9327f0);
+    color: #fff;
+}
+
+    .stats-box h3 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .stats-box p {
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+.team-member {
+    position: relative;
+    overflow: hidden;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    border-radius: 50%;
+    text-align: center;
+}
+
+    .team-member img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+        .team-member img:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+    .team-member .social-icons {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .team-member:hover .social-icons {
+        opacity: 1;
+    }
+
+.social-icons a {
+    margin: 0 10px;
+    font-size: 1.5rem;
+    color: white;
+    transition: transform 0.2s, color 0.3s;
+}
+
+    .social-icons a:hover {
+        transform: scale(1.2);
+        color: #9327f0;
+    }
+
+.team-member h5 {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #5f5f5f;
+}
+
+.team-member p {
+    font-size: 1rem;
+    color: #9c9c9c;
+}
+
+@media (max-width: 768px) {
+    .team-member {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (min-width: 769px) {
+    .team-member {
+        width: 200px;
+        height: 200px;
+    }
+}
+
+.teammembersword {
+    color: #9327f0;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.btn-purple-1 {
+    background-color: #6700ea;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(103, 0, 234, 0.3);
+}
+
+    .btn-purple-1:hover {
+        background-color: #4a00b3;
+        color: white;
+        box-shadow: 0px 6px 15px rgba(103, 0, 234, 0.5);
+        transform: translateY(-3px);
+    }
+
+.bg-purple {
+    background-color: #6700ea;
+}
+
+.left-container,
+.right-container {
+    padding: 20px;
+    color: white;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+    .left-container h3,
+    .right-container h3 {
+        margin-bottom: 15px;
+    }
+
+    .left-container p,
+    .right-container p {
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+
+@media (max-width: 768px) {
+    .left-container,
+    .right-container {
+        margin-bottom: 20px;
+    }
+
+        .left-container h3,
+        .right-container h3 {
+            font-size: 1.2rem;
+        }
+
+        .left-container p,
+        .right-container p {
+            font-size: 0.9rem;
+        }
+}
+
+.contacttitle {
+    font-size: 2rem;
+    width: 100%;
+}
+
+.bg-purple {
+    background-color: #6700ea; /* Purple color for both the container and cards */
+    border-radius: 12px; /* Consistent rounded edges */
+}
+
+.card-title i {
+    color: #fff;
+    margin-left: 10px;
+}
+
+.why-us img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+    .why-us .col-lg-6 {
+        margin-bottom: 20px;
+    }
+}

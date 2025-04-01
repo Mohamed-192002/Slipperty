@@ -1,0 +1,242 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model UserDTO
+@{
+    ViewData["Title"] = "انشاء حساب";
+    var isModelStateInvalid = ViewData["ModelStateInvalid"] as bool? ?? false;
+}
+
+<link rel="stylesheet" href="~/css/User/SignUp.css" />
+
+<section class="promo-section bg-primary py-5 px-5">
+    <div class="container-fluid text-end ">
+        <h2 class="promo-title cairo-extra-bold mb-3 mt-4">تسجيل بياناتك</h2>
+    </div>
+</section>
+
+<div class="container mt-5 pt-5 form-section">
+    <h2 class="mt-3 mb-4 text-primary fw-bold">بياناتك الشخصية</h2>
+
+    <form asp-action="SignUp">
+        <span asp-validation-for="FirstName" class="text-danger arabic-direction"></span>
+        <span asp-validation-for="LastName" class="text-danger arabic-direction"></span>
+        <span asp-validation-for="GovernmentId" class="text-danger arabic-direction"></span>
+        <span asp-validation-for="RegionId" class="text-danger arabic-direction"></span>
+        <span asp-validation-for="PhoneNumber" class="text-danger arabic-direction"></span>
+        <span asp-validation-for="Address" class="text-danger arabic-direction"></span>
+        <span asp-validation-for="Password" class="text-danger arabic-direction"></span>
+        <span asp-validation-for="ConfirmPassword" class="text-danger arabic-direction"></span>
+        <span id="GovernmentError" class="text-danger arabic-direction d-none">ادخل المحافظة</span>
+        <span id="RegionError" class="text-danger arabic-direction d-none">ادخل المنطقة</span>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="mb-2 text-primary fw-bold" asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control mt-2  py-3" type="text" placeholder="برجاء اضافة اسمك">
+            </div>
+            <div class="col-md-6">
+                <label class="mb-2 text-primary fw-bold" asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control mt-2  py-3" type="text" placeholder="برجاء اضافة اسمك">
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <label class="mb-2 text-primary fw-bold" asp-for="GovernmentId"></label>
+                <select asp-for="GovernmentId" asp-items="ViewBag.Governments" class="form-select select2" onchange="getRegions()">
+                    <option selected disabled>-- اختر --</option>
+                    <option value="-1">-- اخرى --</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="mb-2 text-primary fw-bold" asp-for="RegionId"></label>
+                <select asp-for="RegionId" asp-items="ViewBag.Regions" class="form-select select2 mt-2" onchange="checkRegion()">
+                    <option selected disabled>-- اختر --</option>
+                    <option value="-1">-- اخرى --</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-4 d-none" id="newArea">
+            <div class="col-md-6">
+                <input asp-for="GovernmentName" class="form-control mt-2  py-3 d-none" type="text" placeholder="ادخل المحافظة">
+            </div>
+            <div class="col-md-6">
+                <input asp-for="RegionName" class="form-control mt-2  py-3 d-none" type="text" placeholder="ادخل المنطقة">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6 d-none">
+                <label class="mb-2 text-primary fw-bold" asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" class="form-control mt-2  py-3 onlyNumbers" type="text" placeholder="ادخل رقم الهاتف">
+            </div>
+            <div class="col-12">
+                <label class="mb-2 text-primary fw-bold" asp-for="Address"></label>
+                <input asp-for="Address" class="form-control mt-2  py-3" type="text" placeholder="ادخل عنوانك">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6 form-group">
+                <label class="mb-2 text-primary fw-bold" asp-for="Password"></label>
+                <input asp-for="Password" class="form-control mt-2  py-3" type="password" placeholder="ادخل الباسورد">
+                <i id="togglePassword" class="fa-regular fa-eye eye-icon"></i>
+            </div>
+            <div class="col-md-6">
+                <label class="mb-2 text-primary fw-bold" asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword" class="form-control mt-2  py-3" type="password" placeholder="اعد ادخال الباسورد">
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col text-start">
+                <button type="submit" class="btn btn-primary savebtn">تسجيل</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    @{
+                <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+
+@if (isModelStateInvalid)
+{
+    <script>
+        getRegions();
+    </script>
+}
+
+<script>
+
+    // Toggle the password visibility when clicking on the eye icon
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordField = document.getElementById('Password');
+        const icon = this;
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";  // Show the password
+            icon.classList.remove("fa-eye");  // Remove closed eye icon
+            icon.classList.add("fa-eye-slash");  // Add open eye icon
+        } else {
+            passwordField.type = "password";  // Hide the password
+            icon.classList.remove("fa-eye-slash");  // Remove open eye icon
+            icon.classList.add("fa-eye");  // Add closed eye icon
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        getRegions();
+
+        $('.savebtn').on('click', function (e) {
+            // Get the values of RegionId, GovernmentId, RegionName, and GovernmentName
+            var regionId = $('#RegionId').val();
+            var regionName = $('#RegionName').val();
+            var governmentId = $('#GovernmentId').val();
+            var governmentName = $('#GovernmentName').val();
+
+            // Flag to track validation
+            var isValid = true;
+
+            // Check if RegionId is -1 and RegionName is empty
+            if (regionId == -1 && regionName.trim() === "") {
+                isValid = false;
+                $("#RegionError").removeClass('d-none');
+            }
+            else {
+                $("#RegionError").addClass('d-none');
+            }
+
+            // Check if GovernmentId is selected and GovernmentName is empty
+            if (governmentId == -1 && governmentName.trim() === "") {
+                $("#GovernmentError").removeClass('d-none');
+                isValid = false;
+            }
+            else {
+                $("#GovernmentError").addClass('d-none');
+            }
+
+            // If validation fails, prevent form submission
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    function checkRegion() {
+        var regionValue = $("#RegionId").val();
+
+        if (regionValue == -1) {
+            $("#newArea").removeClass("d-none");
+            $("#RegionName").removeClass("d-none");
+        }
+        else {
+            $("#newArea").addClass("d-none");
+            $("#RegionName").addClass("d-none");
+        }
+    }
+
+    function getRegions() {
+        if (!$('#GovernmentError').hasClass('d-none')) {
+            // If it doesn't have the class, add it
+            $('#GovernmentError').addClass('d-none');
+        }
+        if (!$('#RegionError').hasClass('d-none')) {
+            // If it doesn't have the class, add it
+            $('#RegionError').addClass('d-none');
+        }
+        var governmentId = $('#GovernmentId').val();
+        var regionsSelect = $('#RegionId'); // Get the RegionId select element
+        // Clear existing options in the RegionId select
+        regionsSelect.empty();
+        regionsSelect.append(
+            $('<option></option>').text('-- اختر --').attr('disabled', 'disabled').attr('selected', 'selected'),
+            $('<option></option>').val(-1).text('-- اخرى --')
+        );
+
+        updateSelect2();
+
+        if (governmentId == -1) {
+            $("#newArea").removeClass("d-none");
+            $("#GovernmentName").removeClass("d-none");
+            $("#RegionName").removeClass("d-none");
+            regionsSelect.val(-1);
+            updateSelect2();
+
+        }
+        else {
+            $("#newArea").addClass("d-none");
+            $("#GovernmentName").addClass("d-none");
+            $("#RegionName").addClass("d-none");
+
+
+            $.ajax({
+                url: '@Url.Action("GetRegions")',
+                type: 'GET',
+                data: { governmentId: governmentId }, // Send governmentId as a parameter
+                traditional: true, // Ensure that jQuery sends the array as multiple parameters
+                success: function (response) {
+
+
+
+                    // Loop through the response data and add each region to the select element
+                    $.each(response.regions, function (index, region) {
+
+                        regionsSelect.append(
+                            $('<option></option>').val(region.id).text(region.text)
+                        );
+                    });
+
+                    // Reinitialize or refresh Select2 (if using Select2)
+                    updateSelect2();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching regions:", error);
+                }
+            });
+        }
+
+
+    }
+
+</script>

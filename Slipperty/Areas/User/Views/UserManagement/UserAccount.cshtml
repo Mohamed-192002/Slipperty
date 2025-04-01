@@ -1,0 +1,102 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model UserDTO
+@{
+    ViewData["Title"] = "بيانات الحساب";
+    var isModelStateInvalid = ViewData["ModelStateInvalid"] as bool? ?? false;
+}
+
+<link rel="stylesheet" href="~/css/User/ProfileMenu.css" />
+<link rel="stylesheet" href="~/css/User/UserAccount.css" />
+
+<div class="container my-5 py-5">
+    <section class="row">
+        <!-- Profile Head -->
+        @await Html.PartialAsync("_ProfileMenu", Model)
+
+        <!-- Payment Section -->
+        <div class="col-12 col-md-8">
+            <div class="payment-container">
+                <div class="row mb-4">
+                    <a asp-area="User" asp-controller="UserManagement" asp-action="UserAddresses" class="col-md-6 mb-3 mb-md-0 text-decoration-none"><div class="card text-white bg-primary rounded-3 p-3"><h4>عناوين التوصيل</h4><p>التحكم بعناوين الشحن</p></div></a>
+                    <a href="$" class="col-md-6 text-decoration-none"><div class="card text-white bg-primary rounded-3 bg p-3"><h4>تتبع الطلبات</h4><p>تتبع طلباتك</p></div></a>
+                </div>
+
+
+                <!-- Add New Card Section -->
+                <div class="add-new-card">
+                    <h6 class="mt-3 title-with-line">بيانات الحساب</h6>
+                    <form id="myForm" asp-action="UserAccount">
+                        <input type="hidden" asp-for="RegionId" />
+                        <input type="hidden" asp-for="GovernmentId" />
+                        <input type="hidden" asp-for="Address" />
+                        <input type="hidden" asp-for="AutoRegistered" />
+                        <input type="hidden" asp-for="Id" />
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="FirstName"></label>
+                                <input type="text" class="form-control" asp-for="FirstName" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="LastName" class="form-label"></label>
+                                <input type="text" asp-for="LastName" class="form-control">
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PhoneNumber" class="form-label"></label>
+                                <input type="text" asp-for="PhoneNumber" class="form-control" readonly />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label asp-for="Password" class="form-label"></label>
+                                <input type="password" asp-for="Password" class="form-control" placeholder="ادخل الباسورد" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                                <i id="togglePassword" class="fa-regular fa-eye eye-icon"></i>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ConfirmPassword" class="form-label"></label>
+                                <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="تأكيد كلمة المرور" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-footer">
+                            <button type="submit" class="btn-save submitBtn">حفظ</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+
+
+<script>
+    // Toggle the password visibility when clicking on the eye icon
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordField = document.getElementById('Password');
+        const icon = this;
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";  // Show the password
+            icon.classList.remove("fa-eye");  // Remove closed eye icon
+            icon.classList.add("fa-eye-slash");  // Add open eye icon
+        } else {
+            passwordField.type = "password";  // Hide the password
+            icon.classList.remove("fa-eye-slash");  // Remove open eye icon
+            icon.classList.add("fa-eye");  // Add closed eye icon
+        }
+    });
+</script>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

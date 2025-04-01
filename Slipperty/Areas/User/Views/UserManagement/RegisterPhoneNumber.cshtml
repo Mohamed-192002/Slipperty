@@ -1,0 +1,170 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model RegisterPhoneNumberDTO
+@{
+    ViewData["Title"] = "انشاء حساب";
+}
+
+<link rel="stylesheet" href="~/css/User/RegisterPhoneNumbe.css" />
+
+<section class="promo-section bg-primary py-5 px-5">
+    <div class="container-fluid text-end ">
+        <h2 class="promo-title cairo-extra-bold mb-3 mt-4">التسجيل</h2>
+    </div>
+</section>
+
+<div class="container mt-5 pt-5 form-section">
+    
+    <form id="myForm" asp-action="RegisterPhoneNumber">
+        <span asp-validation-for="PhoneNumber" class="text-danger arabic-direction"></span>
+        <!-- Icon -->
+        <div class="icon-container mb-4">
+            <img src="/img/Door.png" alt="Icon" class="icon">
+        </div>
+
+        <!-- Title -->
+        <h2 class="form-title mb-3 text-center">التسجيل فى سيلبرتي </h2>
+
+        <!-- Phone Number Input -->
+        <div class="input-container mx-auto mb-4">
+            <label for="phoneNumber" class="form-label">رقم الهاتف</label>
+            <div class="input-group">
+                <!-- Dropdown for country code -->
+                <div class="dropdown-container">
+                    <div class="selected-flag" id="selected-flag">
+                        <img src="/img/egyptflag.png" class="flag-img" alt="Egypt Flag">
+                        <span>02+</span>
+                    </div>
+                    <ul class="dropdown-menu d-none" id="dropdown-menu">
+                        <li data-code="+20" data-flag="img/egyptflag.png">
+                            <img src="/img/egyptflag.png" class="flag-img" alt="Egypt Flag"> +20
+                        </li>
+                        @* <li data-code="+1" data-flag="img/usflag.png">
+                            <img src="img/usflag.png" class="flag-img" alt="US Flag"> +1
+                        </li>
+                        <li data-code="+44" data-flag="img/ukflag.png">
+                            <img src="img/ukflag.png" class="flag-img" alt="UK Flag"> +44
+                        </li>
+                        <li data-code="+91" data-flag="img/indiaflag.png">
+                            <img src="img/indiaflag.png" class="flag-img" alt="India Flag"> +91
+                        </li> *@
+                    </ul>
+                </div>
+                <!-- Phone Number Input -->
+                <input type="text" asp-for="PhoneNumber" class="form-control onlyNumbers" autocomplete="off" placeholder="رقم الهاتف">
+            </div>
+            <!-- Error Message -->
+            <small id="errorMessage" style="color: red; display: none;">Please enter a valid 11-digit phone number.</small>
+        </div>
+
+        <!-- Button -->
+        <button class="btn btn-primary w-100">التالي</button>
+
+        <!-- Footer -->
+        <p class="form-footer mt-3 text-center">
+            لديك حساب بالفعل؟ <a asp-area="Identity" asp-page="/Account/Login" class="link">تسجيل الدخول</a>
+        </p>
+    </form>
+</div>
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const phoneNumberInput = document.getElementById("PhoneNumber");
+        const formSection = document.querySelector(".input-container");
+
+        // Create an error message element
+        const errorMessage = document.createElement("small");
+        errorMessage.style.color = "red";
+        errorMessage.style.display = "none"; // Hide it initially
+        errorMessage.textContent = "Please enter a valid 11-digit phone number.";
+        formSection.appendChild(errorMessage);
+
+        // Function to validate phone number
+        function validatePhoneNumber() {
+            let phoneNumber = phoneNumberInput.value;
+
+            // Remove any non-numeric characters
+            phoneNumber = phoneNumber.replace(/\D/g, "");
+
+            // If the phone number does not start with '0', add '0' to the beginning
+            if (!phoneNumber.startsWith("0") && phoneNumber.length > 0) {
+                phoneNumber = "0" + phoneNumber;
+            }
+            if (!phoneNumber.startsWith("01") && phoneNumber.length > 0) {
+                phoneNumber = "01" + phoneNumber;
+            }
+
+            // Limit the phone number to 11 digits
+            if (phoneNumber.length > 11) {
+                phoneNumber = phoneNumber.slice(0, 11);
+            }
+
+            // Update the input field value
+            phoneNumberInput.value = phoneNumber;
+        }
+
+        // Event listener to validate on every input
+        phoneNumberInput.addEventListener("input", validatePhoneNumber);
+
+        // Button click event to show the error or success
+        const nextButton = document.querySelector(".btn-primary");
+        nextButton.addEventListener("click", (e) => {
+            e.preventDefault(); // Prevent default form submission if any
+
+            const phoneNumber = phoneNumberInput.value;
+
+            if (phoneNumber.length === 11) {
+                // const formattedNumber = "2" + phoneNumber;
+                // errorMessage.style.display = "none"; // Hide the error message
+                // alert(`The formatted phone number is: ${formattedNumber}`);
+                $("#myForm").submit();
+            } else {
+                errorMessage.style.display = "block"; // Show the error message
+            }
+        });
+
+
+        // Dropdown functionality
+        const selectedFlag = document.getElementById("selected-flag");
+        const dropdownMenu = document.getElementById("dropdown-menu");
+
+        // Toggle dropdown visibility
+        selectedFlag.addEventListener("click", () => {
+            dropdownMenu.classList.toggle("d-none");
+        });
+
+        // Update selected flag and code
+        dropdownMenu.addEventListener("click", (e) => {
+            if (e.target.closest("li")) {
+                const selectedOption = e.target.closest("li");
+                const flagSrc = selectedOption.dataset.flag;
+                const code = selectedOption.dataset.code;
+
+                selectedFlag.innerHTML = `
+                    <img src="${flagSrc}" class="flag-img" alt="Flag">
+                    <span>${code}</span>
+                `;
+                dropdownMenu.classList.add("d-none");
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", (e) => {
+            if (!dropdownMenu.contains(e.target) && !selectedFlag.contains(e.target)) {
+                dropdownMenu.classList.add("d-none");
+            }
+        });
+    });
+
+
+
+
+</script>

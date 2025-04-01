@@ -1,0 +1,40 @@
+@model OrderHeadDTO
+<tr order-id="@Model?.Id">
+    
+    <td class="order-no" style="cursor: pointer">@Model.orderNo</td>
+    <td>@Model?.fullName</td>
+    <td>@Model?.phoneNumber</td>
+    <td>@Model?.RegDate.Date.ToString("dd-MM-yyyy")</td>
+    <td>
+        <div class="AddressDiv position-relative" style="border: none;
+                                                               background: none;
+                                                               color: black;">
+            @Model?.Government?.Name , @Model?.Region?.Name
+            <span class="customAddressTooltip">@Model?.Address</span>
+        </div>
+    </td>
+    <td>@Math.Floor(Model?.NetAmount??0)</td>
+    @if (Model?.StatusId == (int?)ActionType.Holding && Model.OrderHoldingDetails != null)
+    {
+        var holdingDate = Model.OrderHoldingDetails.Last().HoldingDate;
+        var now = DateTime.Now;
+        var timeSpan = holdingDate - now;
+
+        var days = timeSpan.Days;
+        var hours = timeSpan.Hours;
+        <td><a> باقي@($"{days} يوم و {hours} ساعة")</a></td>
+    }
+    else
+    {
+
+        <td><a>@Model.Notes</a></td>
+    }
+    <td colspan="2">
+        <select>
+            <option>اختر</option>
+        </select>
+        <select>
+            <option>اختر</option>
+        </select>
+    </td>
+</tr>

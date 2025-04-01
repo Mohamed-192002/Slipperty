@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model BannerDTO
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "حذف البانر";
+}
+
+<h2 class="text-end mb-3">حذف البانر</h2>
+<form asp-action="Delete" method="post" enctype="multipart/form-data">
+
+
+    <div asp-validation-summary="ModelOnly" class="text-danger arabic-direction"></div>
+    <span asp-validation-for="ImageUrl" class="text-danger d-block arabic-direction"></span>
+
+    <input type="hidden" asp-for="ImageUrl" />
+    <input type="hidden" asp-for="RegDate" />
+
+    <!-- Third row: Attach button -->
+    <div class="row mb-3">
+        <div class="col text-center">
+            <img id="ImagePreview" src="@((Model?.ImageUrl != null && Model.ImageUrl != "") ? Url.Content($"~/{ImagesPathes.Banners}{Model.ImageUrl}") : Url.Content($"~{ImagesPathes.DefaultImage}"))" alt="Image Preview" class="mt-5 formImg">
+        </div>
+    </div>
+
+    <!-- Last row: Save button -->
+    <div class="row">
+        <div class="col text-start">
+            <button type="submit" class="btn btn-danger savebtn">حذف</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

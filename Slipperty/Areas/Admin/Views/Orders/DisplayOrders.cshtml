@@ -1,0 +1,78 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "الطلبات";
+    Layout = "_AdminLayout";
+}
+
+@section OrderHeader{
+    <app-order-wrapper></app-order-wrapper>
+}
+<app-orders></app-orders>
+
+@section Scripts{
+      <script>
+
+        function getTabStatus(tabId) {
+            let statuses = {
+                "home-tab": @Convert.ToInt32(ActionType.New),
+                "profile-tab": @Convert.ToInt32(ActionType.FollowUps),
+                "messages-tab": @Convert.ToInt32(ActionType.FollowUps),
+                "settings-tab": @Convert.ToInt32(ActionType.Holding),
+                "recalling-tab": @Convert.ToInt32(ActionType.FollowUps),
+                "stop-operation-tab": @Convert.ToInt32(ActionType.StoppedConfirmed),
+                "no-attempt-yesterday-tab": @Convert.ToInt32(ActionType.NoAttamptYeasterday),
+                "confirmed-orders-tab": @Convert.ToInt32(ActionType.Confirmed),
+                "prepared-orders-tab": @Convert.ToInt32(ActionType.Prepared),
+                "shipping-orders-tab": @Convert.ToInt32(ActionType.Shipped),
+                "cancel" : @Convert.ToInt32(ActionType.Cancel)
+            };
+            return statuses[tabId] || null;
+        }
+     </script>
+}
+
+
+
+@* $(document).ready(function () { *@
+@* $(".tab-color").on("click", function (event) { *@
+@* let tabId = event.target.id; *@
+@* $(".tab-active-color").removeClass("tab-active-color"); *@
+@* $(event.target).addClass("tab-active-color"); *@
+@* let status = getTabStatus(tabId); *@
+@* $('#card-pagintation').hide(); *@
+@* if (status) { *@
+@* loadTabContent(status); *@
+@* } *@
+@* }); *@
+@* *@
+@* *@
+@* *@
+@* function loadTabContent(status) { *@
+@* let url = `@Url.Action("GetOrders", "Orders")?status=${status}`; *@
+@* $("#partial-container").html(` *@
+@* <div class="text-center mt-5"> *@
+@*     <div class="spinner-border" style="color:var(--primary-color)" role="status"> *@
+@*         <span class="visually-hidden">Loading...</span> *@
+@*     </div> *@
+@* </div> *@
+@* `); *@
+@* $.get(url, function (data) { *@
+@* *@
+@* $("#partial-container").html(data); *@
+@* }).fail(function () { *@
+@* $("#partial-container").html('<p class="text-center text-danger">حدث خطأ أثناء تحميل البيانات.</p>'); *@
+@* }); *@
+@* } *@
+@* *@
+@* let activeTab = $(".tab-color.active").attr("id"); *@
+@* if (activeTab) { *@
+@* $(`#${activeTab}`).addClass("tab-active-color"); *@
+@* let initialStatus = getTabStatus(activeTab); *@
+@* if (initialStatus) { *@
+@* loadTabContent(initialStatus); *@
+@* } *@
+@* } *@
+@* }); *@
+
+
+

@@ -1,0 +1,88 @@
+﻿@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProductVariableDTO
+
+@* <tr>
+    using (Html.BeginCollectionItem("ProductVariables"))
+    {
+        <td class="rowNumber text-center" colspan="1">
+            1
+        </td>
+        <td class="text-center" colspan="9"><input asp-for="Name" type="text" class="form-control text-center border-0 p-0 Name" style="background-color: transparent;" value="@Model?.Name" readonly /></td>
+        <td class="text-center" colspan="2"><button class="btn btn-danger text-white py-1 rounded border-0" type="button" onclick="deleteVariableRow(this);"><i class="fa-solid fa-trash-can"></i></button></td>
+
+    }
+</tr>
+ *@
+
+@if(Model?.Id > 0)
+{
+
+    @using (Html.BeginCollectionItem("ProductVariables"))
+    {
+        <div class="row">
+            <div class="col">
+                <div class="col mb-1">
+                    <label asp-for="Name" class="arabic-direction w-75 Name float-end"></label>
+                    <input type="hidden" asp-for="Id" class="ProductVariableId" />
+
+                </div>
+                <div class="col">
+                    <input type="text" asp-for="Name" class="form-control variableName" data-originalvalue="@Model.Name" onchange="updateSelectVariableName(this);" />
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    @using (Html.BeginCollectionItem("ProductVariables"))
+    {
+        <div class="bordered-div my-2">
+            <div class="productVariable" data-variableName="@Model.Name">
+                <div class="row">
+                    <div class="col">
+                        <div class="col mb-1">
+                            <label asp-for="Name" class="arabic-direction w-75 Name float-end"></label>
+                            <input type="hidden" asp-for="Id" class="ProductVariableId" />
+
+                        </div>
+                        <div class="col">
+                            <input type="text" asp-for="Name" class="form-control variableName" data-originalvalue="@Model.Name" onchange="updateSelectVariableName(this);" />
+                        </div>
+                    </div>
+                </div>
+                @if (Model != null && Model.VariableValues != null && Model.VariableValues.Any())
+                {
+
+                    @foreach (var variableValue in Model?.VariableValues)
+                    {
+                        @await Html.PartialAsync("_VariableValuesFormPartial", variableValue)
+                    }
+                }
+
+
+                <div class="row mt-2 buttonsRow">
+                    <button type="button" class="btn btn-primary mt-2" data-variableid="@Model.Id" data-variablename="@Model.Name" onclick="AddVariableValueRow(this)">اضافة عنصر للمتغير</button>
+                    <button type="button" class="btn btn-primary mt-2" data-variableid="@Model.Id" data-variablename="@Model.Name" onclick="deleteVariableRow(this)">حذف للمتغير</button>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+            @* @if (Model != null && Model.VariableValues != null && Model.VariableValues.Any())
+            {
+
+                @foreach (var variableValue in Model?.VariableValues)
+                {
+                    @await Html.PartialAsync("_VariableValuesFormPartial", variableValue)
+                }
+            } *@
+
+
+          
+
+
+
+

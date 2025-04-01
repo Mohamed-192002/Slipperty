@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model MaterialDTO
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "حذف خامة";
+}
+
+<h2 class="text-end mb-3">حذف خامة</h2>
+<form asp-action="Delete" method="post" enctype="multipart/form-data">
+
+
+    <div asp-validation-summary="ModelOnly" class="text-danger arabic-direction"></div>
+    <span asp-validation-for="Name" class="text-danger d-block arabic-direction"></span>
+
+    <input type="hidden" asp-for="RegDate" />
+    <!-- Second row: Labels and inputs -->
+    <div class="row mb-3">
+        <!-- اسم التصنيف -->
+        <div class="col-12">
+            <label asp-for="Name" class="form-label w-100 text-end"></label>
+            <input type="text" asp-for="Name" class="form-control" placeholder="ادخل اسم التصنيف" readonly>
+        </div>
+    </div>
+
+    <!-- Last row: Save button -->
+    <div class="row">
+        <div class="col text-start">
+            <button type="submit" class="btn btn-danger savebtn">حذف</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

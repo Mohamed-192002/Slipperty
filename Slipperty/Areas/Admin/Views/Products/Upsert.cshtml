@@ -1,0 +1,2952 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProductDTO
+@{
+    Layout = "_AdminLayout";
+    var isModelStateInvalid = ViewData["ModelStateInvalid"] as bool? ?? false;
+    // var isSaved = ViewData["isSaved"] as bool? ?? false;
+}
+@if (Model?.Id > 0)
+{
+    ViewData["Title"] = "تعديل منتج";
+    <h2 class="text-end mb-3">تعديل المنتج</h2>
+
+}
+else
+{
+    ViewData["Title"] = "اضافة منتج";
+    <h2 class="text-end mb-3">إضافة منتج جديد</h2>
+}
+
+<!-- Add Brand Modal -->
+<div class="modal fade" id="AddBrandModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="AddBrandModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">اضافة ماركة</h5>
+                <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label asp-for="NewBrandValue" class="form-label w-100 arabic-direction"></label>
+                <input type="text" asp-for="NewBrandValue" class="form-control requiredToSubmit" placeholder="ادخل الاسم">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+                <button type="button" onclick="AddBrand()" class="btn btn-primary">اضافة</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Material Modal -->
+<div class="modal fade" id="AddMaterialModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="AddMaterialModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">اضافة خامة</h5>
+                <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label asp-for="NewMaterialValue" class="form-label w-100 arabic-direction"></label>
+                <input type="text" asp-for="NewMaterialValue" class="form-control requiredToSubmit" placeholder="ادخل الاسم">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+                <button type="button" onclick="AddMaterial()" class="btn btn-primary">اضافة</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add Product Type Modal -->
+<div class="modal fade" id="AddProductTypeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="AddProductTypeModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">اضافة نوع</h5>
+                <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label asp-for="NewProductTypeValue" class="form-label w-100 arabic-direction"></label>
+                <input type="text" asp-for="NewProductTypeValue" class="form-control requiredToSubmit" placeholder="ادخل الاسم">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+                <button type="button" onclick="AddProductType()" class="btn btn-primary">اضافة</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Manufacturing Modal -->
+<div class="modal fade" id="AddManufacturingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="AddManufacturingModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">اضافة تصنيع</h5>
+                <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label asp-for="NewManufacturingValue" class="form-label w-100 arabic-direction"></label>
+                <input type="text" asp-for="NewManufacturingValue" class="form-control requiredToSubmit" placeholder="ادخل الاسم">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+                <button type="button" onclick="AddManufacturing()" class="btn btn-primary">اضافة</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Color Image Modal -->
+<div class="modal fade" id="ColorImageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ColorImageModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">اختر صورة االلون</h5>
+                <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body mx-auto">
+                @if (Model != null && Model.ProductImages != null)
+                {
+                    foreach (var image in Model.ProductImages)
+                    {
+                        <img class="colorImg" onclick="setColorImage(this)" src="@Url.Content($" /{ImagesPathes.Products}{image.ImageUrl}")" />
+                    }
+                }
+            </div>
+            @* <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+            <button type="button" onclick="AddManufacturing()" class="btn btn-primary">اضافة</button>
+            </div> *@
+        </div>
+    </div>
+</div>
+
+
+
+<form id="myForm" asp-action="Upsert" method="post" enctype="multipart/form-data">
+
+
+    <div asp-validation-summary="ModelOnly" class="text-danger arabic-direction"></div>
+
+    <input type="hidden" asp-for="RegDate" />
+    <input type="hidden" asp-for="MainImageUrl" />
+    <input type="hidden" asp-for="IconImageUrl" />
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-link fw-bolder active" id="nav-item-details-tab" data-bs-toggle="tab" href="#nav-item-details" role="tab" aria-controls="nav-item-details" aria-selected="true">بيانات المنتج</a>
+            <a class="nav-link fw-bolder" id="nav-item-images-tab" data-bs-toggle="tab" href="#nav-item-images" role="tab" aria-controls="nav-item-images" aria-selected="false">صور المنتج</a>
+            <a class="nav-link fw-bolder" id="nav-item-properties-tab" data-bs-toggle="tab" href="#nav-item-properties" role="tab" aria-controls="nav-item-properties" aria-selected="false">خصائص المنتج</a>
+            <a class="nav-link fw-bolder" id="nav-item-offers-tab" data-bs-toggle="tab" href="#nav-item-offers" role="tab" aria-controls="nav-item-offers" aria-selected="false">عروض القطع</a>
+            <a class="nav-link fw-bolder" id="nav-item-related-products-tab" data-bs-toggle="tab" href="#nav-item-related-products" role="tab" aria-controls="nav-item-related-products" aria-selected="false">المنتجات المتعلقة</a>
+            <a class="nav-link fw-bolder" id="nav-item-videos-tab" data-bs-toggle="tab" href="#nav-item-videos" role="tab" aria-controls="nav-item-videos" aria-selected="false">فيديوهات المنتج</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-item-details" role="tabpanel" aria-labelledby="nav-item-details-tab">
+
+
+            <div class="row mb-3 pt-1 px-2">
+                <div class="col-md-4">
+                    <label asp-for="ArbName" class="form-label w-100 arabic-direction"></label>
+                    <span asp-validation-for="ArbName" class="text-danger d-block arabic-direction"></span>
+                    <input type="text" asp-for="ArbName" class="form-control requiredToSubmit" placeholder="اضف اسم المنتج">
+                    <span class="text-danger d-none arabic-direction ArbNameSpan">هذا الحقل مطلوب</span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Price" class="form-label w-100 arabic-direction"></label>
+                    <span asp-validation-for="Price" class="text-danger d-block arabic-direction"></span>
+                    <input type="text" asp-for="Price" class="form-control requiredToSubmit" onchange="UpdateCountsOfferPrice()" autocomplete="off" placeholder="اضف سعر المنتج">
+                    <span class="text-danger d-none arabic-direction">هذا الحقل مطلوب</span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="DiscountPrice" class="form-label w-100 arabic-direction"></label>
+                    <span asp-validation-for="DiscountPrice" class="text-danger d-block arabic-direction"></span>
+                    <input type="text" asp-for="DiscountPrice" class="form-control requiredToSubmit" placeholder="اضف سعر المنتج بعد الخصم">
+                    <span class="text-danger d-none arabic-direction">هذا الحقل مطلوب</span>
+                </div>
+            </div>
+            <div class="row mb-3 pt-1 px-2">
+                <div class="col-md-4">
+                    <label asp-for="EngName" class="form-label w-100 arabic-direction"></label>
+                    <span asp-validation-for="EngName" class="text-danger d-block arabic-direction"></span>
+                    <input type="text" asp-for="EngName" class="form-control text-start requiredToSubmit onlyEnglish" placeholder="Place Your Product Name">
+                    <span class="text-danger d-none arabic-direction">هذا الحقل مطلوب</span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Categories" class="form-label w-100 arabic-direction"></label>
+                    <span asp-validation-for="Categories" class="text-danger d-block arabic-direction"></span>
+                    <select asp-for="SelectedCategories" asp-items="ViewBag.Categories" class="form-select select2" onchange="getSubCategories();saveSelectedOptions('SelectedCategories');" multiple>
+                        @* <option selected disabled>-- اختر --</option> *@
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="SubCategories" class="form-label w-100 arabic-direction"></label>
+                    <span asp-validation-for="SubCategories" class="text-danger d-block arabic-direction"></span>
+                    <select asp-for="SelectedSubCategories" asp-items="ViewBag.SubCategories" class="form-select select2" onchange="saveSelectedOptions('SelectedSubCategories')" multiple>
+                        @* <option selected disabled>-- اختر --</option> *@
+                    </select>
+                </div>
+
+                <table id="CategorisTable" class="table table-striped text-center d-none">
+                    <thead class="table-light">
+                        @await Html.PartialAsync("_CategorisHeaderPartial")
+                    </thead>
+                    <tbody>
+                        @if (Model?.Categories != null && Model.Categories.Count() > 0)
+                        {
+                            foreach (var category in Model.Categories)
+                            {
+
+                                @await Html.PartialAsync("_CategoriesFormPartial", category)
+                            }
+
+                        }
+                    </tbody>
+                </table>
+                <table id="SubCategorisTable" class="table table-striped text-center d-none">
+                    <thead class="table-light">
+                        @await Html.PartialAsync("_CategorisHeaderPartial")
+                    </thead>
+                    <tbody>
+                        @if (Model?.SubCategories != null && Model.SubCategories.Count() > 0)
+                        {
+                            foreach (var subCategory in Model.SubCategories)
+                            {
+
+                                @await Html.PartialAsync("_SubCategoriesFormPartial", subCategory)
+                            }
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="row mb-3 pt-1 px-2">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="d-flex my-2">
+                        <label asp-for="ProductTypeId" class="form-label w-100 arabic-direction d-inline-block"></label>
+                        <button type="button" class="btn btn-sm btn-primary d-inline-block" data-bs-toggle="modal" data-bs-target="#AddProductTypeModal"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <span asp-validation-for="ProductTypeId" class="text-danger d-block arabic-direction"></span>
+                    <select asp-for="ProductTypeId" asp-items="ViewBag.ProductTypes" class="form-select select2">
+                        @* <option selected disabled>-- اختر --</option> *@
+                    </select>
+                    <span class="text-danger d-none arabic-direction">هذا الحقل مطلوب</span>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="d-flex my-2">
+                        <label asp-for="MaterialId" class="form-label w-100 arabic-direction d-inline-block"></label>
+                        <button type="button" class="btn btn-sm btn-primary d-inline-block" data-bs-toggle="modal" data-bs-target="#AddMaterialModal"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <span asp-validation-for="MaterialId" class="text-danger d-block arabic-direction"></span>
+                    <select asp-for="MaterialId" asp-items="ViewBag.Materials" class="form-select select2">
+                        @* <option selected disabled>-- اختر --</option> *@
+                    </select>
+                    <span class="text-danger d-none arabic-direction">هذا الحقل مطلوب</span>
+                </div>
+                <div class="col-md-4 mb-2  mb-md-0">
+                    <div class="d-flex my-2">
+                        <label asp-for="BrandId" class="form-label w-100 arabic-direction d-inline-block"></label>
+                        <button type="button" class="btn btn-sm btn-primary d-inline-block" data-bs-toggle="modal" data-bs-target="#AddBrandModal"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <span asp-validation-for="BrandId" class="text-danger d-block arabic-direction"></span>
+                    <select asp-for="BrandId" asp-items="ViewBag.Brands" class="form-select select2">
+                        @* <option selected disabled>-- اختر --</option> *@
+                    </select>
+                    <span class="text-danger d-none arabic-direction">هذا الحقل مطلوب</span>
+                </div>
+            </div>
+            <div class="row mb-3 pt-1 px-2">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <div class="d-flex my-2">
+                        <label asp-for="ManufacturingId" class="form-label w-100 arabic-direction d-inline-block"></label>
+                        <button type="button" class="btn btn-sm btn-primary d-inline-block" data-bs-toggle="modal" data-bs-target="#AddManufacturingModal"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <span asp-validation-for="ManufacturingId" class="text-danger d-block arabic-direction"></span>
+                    <select asp-for="ManufacturingId" asp-items="ViewBag.Manufacturings" class="form-select select2">
+                        @* <option selected disabled>-- اختر --</option> *@
+                    </select>
+                    <span class="text-danger d-none arabic-direction">هذا الحقل مطلوب</span>
+                </div>
+            </div>
+            <div class="row mb-3 pt-1 px-2">
+                <div class="col">
+                    <label asp-for="ArbDescription" class="form-label w-100 arabic-direction"></label>
+                    <span asp-validation-for="ArbDescription" class="text-danger d-block arabic-direction"></span>
+                    @* <textarea asp-for="ArbDescription" class="texteditor"> *@
+                    @* </textarea> *@
+                    <input hidden asp-for="ArbDescription" />
+                    <div id="editor-container">
+                        <div id="editor"></div>
+                    </div>
+
+                    <span class="text-danger d-none arabic-direction" id="ArbDescriptionError">هذا الحقل مطلوب</span>
+                </div>
+            </div>
+            <div class="row mb-3 pt-1 px-2">
+                <div class="col">
+                    <label asp-for="EngDescription" class="form-label w-100 arabic-direction"></label>
+                    <span asp-validation-for="EngDescription" class="text-danger d-block arabic-direction"></span>
+                    <input hidden asp-for="EngDescription" /> 
+                    <div   id="editor2">
+                    </div>
+                    <span class="text-danger d-none arabic-direction" id="EngDescriptionError">هذا الحقل مطلوب</span>
+                </div>
+            </div>
+            
+            <a class="btn btn-primary" onclick="goToNextTab('nav-item-details')">التالي</a>
+        </div>
+        <div class="tab-pane fade" id="nav-item-images" role="tabpanel" aria-labelledby="nav-item-images-tab">
+            <div class="row mb-3">
+                <div class="col text-center">
+                    <label for="image-upload" class="form-label">رفع صور المنتج <br /> يمكنك رقع أكثر من ملف في نفس الوقت</label>
+                    <br>
+                    @* <input type="file" id="image-upload" name="files" class="form-control d-inline-block w-50" accept=".jpg, .jpeg, .png" onchange="handleProductImages(this.files)" multiple> *@
+                    <input type="file" id="image-upload" name="files" class="form-control d-none w-50" accept=".jpg, .jpeg, .png" onchange="handleProductImages(this.files); AddImagesToOrderTable(this.files); AddImagesToColorsImageModal(this.files)" multiple>
+                    <br>
+                    <button type="button" onclick="document.getElementById('image-upload').click();" class="btn btn-primary mt-2 w-50">رفع</button>
+                    <br>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <h4 class="arabic-direction fw-bold">تحديد الصورة الرئيسية للمنتج</h4>
+                <div id="mainImageSelector" class="my-2 d-flex flex-wrap justify-content-center mt-4">
+                    @if (Model?.ProductImages != null)
+                    {
+                        foreach (var image in Model?.ProductImages)
+                        {
+                            if (image.ImageUrl == Model?.MainImageUrl)
+                            {
+
+                                <div class="img-container selected-border" data-file-name="@image.ImageUrl">
+                                    <img src="@Url.Content($" /{ImagesPathes.Products}{image.ImageUrl}")" class="formImg img-thumbnail form-img-thumbnail d-block">
+                                    <button type="button" class="remove-btn btn btn-danger form-remove-btn w-100" onclick="removeImageFromDivs('@image.ImageUrl'); removeImageFromOrderTable('@image.ImageUrl'); removeImageFromColorImageModal('@image.ImageUrl')">حذف</button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="img-container" data-file-name="@image.ImageUrl">
+                                    <img src="@Url.Content($" /{ImagesPathes.Products}{image.ImageUrl}")" class="formImg img-thumbnail form-img-thumbnail d-block">
+                                    <button type="button" class="remove-btn btn btn-danger form-remove-btn w-100" onclick="removeImageFromDivs('@image.ImageUrl'); removeImageFromOrderTable('@image.ImageUrl'); removeImageFromColorImageModal('@image.ImageUrl')">حذف</button>
+                                </div>
+
+                            }
+                        }
+                    }
+                </div>
+
+                <table id="ImagesTable" class="table table-striped text-center d-none">
+                    <thead class="table-light">
+                        @await Html.PartialAsync("_ImagesHeaderPartial")
+                    </thead>
+                    <tbody>
+                        @if (Model?.ProductImages != null && Model.ProductImages.Count() > 0)
+                        {
+                            foreach (var image in Model.ProductImages)
+                            {
+
+                                @await Html.PartialAsync("_ImagesFormPartial", image)
+                            }
+
+                        }
+                    </tbody>
+                </table>
+
+                <table id="ImagesOrderTable" class="table table-striped text-center">
+                    <thead class="table-light">
+                        @await Html.PartialAsync("_ImagesHeaderPartial")
+                    </thead>
+                    <tbody>
+                        @if (Model?.ProductImagesOrder != null && Model.ProductImagesOrder.Count() > 0)
+                        {
+                            foreach (var image in Model.ProductImagesOrder)
+                            {
+
+                                @await Html.PartialAsync("_ImagesOrderFormPartial", image)
+                            }
+
+                        }
+                    </tbody>
+                </table>
+                @* <h4 class="arabic-direction fw-bold">تحديد ايقونة اللاندينج بيج</h4>
+                <div id="IconImageSelector" class="my-2 d-flex flex-wrap justify-content-center mt-4">
+                @if (Model?.ProductImages != null)
+                {
+                foreach (var image in Model?.ProductImages)
+                {
+                if (image.ImageUrl == Model?.IconImageUrl)
+                {
+
+                <div class="img-container selected-border" data-file-name="@image.ImageUrl">
+                <img src="@Url.Content($" /{ImagesPathes.Products}{image.ImageUrl}")" class="formImg img-thumbnail form-img-thumbnail d-block">
+                <button type="button" class="remove-btn btn btn-danger form-remove-btn w-100" onclick="removeImageFromDivs('@image.ImageUrl')">حذف</button>
+                </div>
+                }
+                else
+                {
+                <div class="img-container" data-file-name="@image.ImageUrl">
+                <img src="@Url.Content($" /{ImagesPathes.Products}{image.ImageUrl}")" class="formImg img-thumbnail form-img-thumbnail d-block">
+                <button type="button" class="remove-btn btn btn-danger form-remove-btn w-100" onclick="removeImageFromDivs('@image.ImageUrl')">حذف</button>
+                </div>
+
+                }
+                }
+                }
+                </div> *@
+            </div>
+
+            <a class="btn btn-primary back">رجوع</a>
+            <a class="btn btn-primary continue">التالي</a>
+        </div>
+        <div class="tab-pane fade" id="nav-item-properties" role="tabpanel" aria-labelledby="nav-item-properties-tab">
+
+            <div class="row mb-3 pt-1 px-2 bordered-div my-1">
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-9">
+                            <label asp-for="ReneweInWarehouse" class="arabic-direction w-100"></label>
+                        </div>
+                        <div class="col-3 arabic-direction">
+                            <label asp-for="ReneweInWarehouse" class="switch">
+                                <input asp-for="ReneweInWarehouse" type="checkbox" onchange="saveReneweInWarehouse()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-9">
+                            <label asp-for="CustomersReviews" class="arabic-direction w-100"></label>
+                        </div>
+                        <div class="col-3 arabic-direction">
+                            <label asp-for="CustomersReviews" class="switch">
+                                <input asp-for="CustomersReviews" type="checkbox" onchange="saveCustomersReviews()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-md-3">
+                            <label asp-for="VisitorsCount" class="form-label w-100 arabic-direction"></label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" asp-for="VisitorsCount" class="form-control text-start arabic-direction requiredToSubmit">
+                            <span class="text-danger d-none arabic-direction">هذا الحقل مطلوب</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row mb-3 pt-1 px-2 bordered-div my-1">
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-9">
+                            <label asp-for="HideCartButton" class="arabic-direction w-100"></label>
+                        </div>
+                        <div class="col-3 arabic-direction">
+                            <label asp-for="HideCartButton" class="switch">
+                                <input asp-for="HideCartButton" type="checkbox" onchange="saveHideCartButton()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-9">
+                            <label asp-for="Exchargeable" class="arabic-direction w-100"></label>
+                        </div>
+                        <div class="col-3 arabic-direction">
+                            <label asp-for="Exchargeable" class="switch">
+                                <input asp-for="Exchargeable" type="checkbox" onchange="saveExchargeable()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-md-3">
+                            <label asp-for="Duration" class="form-label w-100 arabic-direction"></label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" asp-for="Duration" class="form-control text-start arabic-direction onlyNumbers">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3 pt-1 px-2 bordered-div my-1">
+
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-9">
+                            <label asp-for="Returnable" class="arabic-direction w-100"></label>
+                        </div>
+                        <div class="col-3 arabic-direction">
+                            <label asp-for="Returnable" class="switch">
+                                <input asp-for="Returnable" type="checkbox" onchange="saveReturnable()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-9">
+                            <label asp-for="FreeShipping" class="arabic-direction w-100"></label>
+                        </div>
+                        <div class="col-3 arabic-direction">
+                            <label asp-for="FreeShipping" class="switch">
+                                <input asp-for="FreeShipping" type="checkbox" onchange="saveFreeShipping()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row mb-3 pt-1 px-2 bordered-div my-1">
+
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-9">
+                            <label asp-for="TrackStock" class="arabic-direction w-100"></label>
+                        </div>
+                        <div class="col-3 arabic-direction">
+                            <label asp-for="TrackStock" class="switch">
+                                <input asp-for="TrackStock" type="checkbox" onchange="saveTrackStock()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                @* <div class="col-md-4">
+                <div class="row my-1">
+                <div class="col-9">
+                <label asp-for="StopWhenNoStock" class="arabic-direction w-100"></label>
+                </div>
+                <div class="col-3 arabic-direction">
+                <label asp-for="StopWhenNoStock" class="switch">
+                <input asp-for="StopWhenNoStock" type="checkbox">
+                <span class="slider"></span>
+                </label>
+                </div>
+                </div>
+
+                </div> *@
+            </div>
+            <div class="row mb-3 pt-1 px-2 bordered-div my-1">
+
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-9">
+                            <label asp-for="Reviews" class="arabic-direction w-100"></label>
+                        </div>
+                        <div class="col-3 arabic-direction">
+                            <label asp-for="Reviews" class="switch">
+                                <input asp-for="Reviews" type="checkbox" onchange="saveReviews()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row mb-3 pt-1 px-2">
+                <h5 class="text-end my-3">المتغيرات</h5>
+                <div id="VariablesFormContainer" class="VariablesFormContainer my-2">
+                    <div class="row my-1">
+                        <div class="col-9">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label asp-for="VariableName" class="arabic-direction w-100"></label>
+
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="text" asp-for="VariableName" class="form-control text-start arabic-direction preventSubmit">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3 arabic-direction py-0 my-auto">
+                            <div class="row">
+                                <button type="button" class="btn btn-primary mt-4 mt-sm-0" onclick="AddVariable()">اضافة</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <table id="VariableTable" class="table table-striped text-center">
+                <thead class="table-light">
+                @await Html.PartialAsync("_VariablesHeaderPartial")
+                </thead>
+                <tbody>
+                @if (Model?.ProductVariables != null && Model.ProductVariables.Count() > 0)
+                {
+                foreach (var variable in Model.ProductVariables)
+                {
+
+                @await Html.PartialAsync("_VariablesFormPartial", variable)
+                }
+
+                }
+                </tbody>
+                </table> *@
+                @if (Model?.ProductVariables != null && Model.ProductVariables.Count() > 0)
+                {
+                    foreach (var variable in Model.ProductVariables)
+                    {
+                        <div class="bordered-div my-2">
+                            <div class="productVariable" data-variableName="@variable.Name">
+                        @await Html.PartialAsync("_VariablesFormPartial", variable)
+                                @if (variable != null && variable.VariableValues != null && variable.VariableValues.Any())
+                                {
+
+                                    @foreach (var variableValue in variable?.VariableValues)
+                                    {
+                                        @await Html.PartialAsync("_VariableValuesFormPartial", variableValue)
+                                    }
+                                }
+
+
+                                <div class="row mt-2 buttonsRow">
+                                    <button type="button" class="btn btn-primary mt-2" data-variableid="@Model.Id" data-variablename="@variable.Name" onclick="AddVariableValueRow(this)">اضافة عنصر للمتغير</button>
+                                    <button type="button" class="btn btn-primary mt-2" data-variableid="@Model.Id" data-variablename="@variable.Name" onclick="deleteVariableRow(this)">حذف للمتغير</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                }
+
+            </div>
+            <!-- Form for adding variable values -->
+            @* <div class="row mt-3">
+            <div class="row mt-3">
+
+            <!-- Table for storing the variable values -->
+            <table id="VariableValuesTable" class="table table-striped">
+            <thead>
+            @await Html.PartialAsync("_VariableValuesHeaderPartial")
+            </thead>
+            <tbody>
+            <!-- All variable values will be appended here -->
+            @if (Model?.ProductVariableValues != null && Model.ProductVariableValues.Count() > 0)
+            {
+            foreach (var VariableValue in Model.ProductVariableValues)
+            {
+
+            @await Html.PartialAsync("_VariableValuesFormPartial", VariableValue)
+            }
+
+            }
+            </tbody>
+            </table>
+            </div>
+            </div> *@
+
+            @* <h5 class="text-end my-3">القيم</h5> *@
+            <div id="CombinationsTableContainer">
+                @* <table id="CombinationsTable" class="table table-striped">
+                <thead>
+                @await Html.PartialAsync("_CombinationsHeaderPartial")
+                </thead>
+                <tbody>
+                <!-- Combinations will be added here dynamically -->
+                @if (Model?.VariableCombinations != null && Model.VariableCombinations.Count() > 0)
+                {
+                foreach (var combination in Model.VariableCombinations)
+                {
+
+                @await Html.PartialAsync("_VariableCombinationFormPartial", combination)
+                }
+
+                }
+                </tbody>
+                </table> *@
+                @if (Model?.VariableCombinations != null && Model.VariableCombinations.Count() > 0)
+                {
+                    foreach (var combination in Model.VariableCombinations)
+                    {
+
+                        @await Html.PartialAsync("_VariableCombinationFormPartial", combination)
+                    }
+
+                }
+            </div>
+
+            <a class="btn btn-primary back">رجوع</a>
+            <a class="btn btn-primary continue">التالي</a>
+        </div>
+        <div class="tab-pane fade" id="nav-item-offers" role="tabpanel" aria-labelledby="nav-item-offers-tab">
+
+            <div class="row mb-3 pt-1 px-2">
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-9">
+                            <label asp-for="EnableProductCountsOffers" class="arabic-direction w-100"></label>
+                        </div>
+                        <div class="col-3 arabic-direction">
+                            <label asp-for="EnableProductCountsOffers" class="switch">
+                                <input asp-for="EnableProductCountsOffers" type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label asp-for="OfferCount" class="arabic-direction w-100"></label>
+
+                        </div>
+                        <div class="col-md-10">
+                            <input type="text" asp-for="OfferCount" class="form-control text-start onlyNumbers arabic-direction preventSubmit">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label asp-for="OfferPrice" class="arabic-direction w-100"></label>
+
+                        </div>
+                        <div class="col-md-10">
+                            <input type="text" asp-for="OfferPrice" class="form-control text-start onlyNumbers arabic-direction preventSubmit">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 arabic-direction">
+                    <div class="row">
+                        <button type="button" class="btn btn-primary" onclick="AddCountsOfferRow()">اضافة</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3 pt-1 px-2">
+                <div class="table-responsive">
+                    <table id="CountOffersTable" class="table table-striped text-center">
+                        <thead class="table-light">
+                            @await Html.PartialAsync("_ProductOffersHeaderPartial")
+                        </thead>
+                        <tbody>
+                            @if (Model?.ProductCountsOffers != null && Model.ProductCountsOffers.Count() > 0)
+                            {
+                                foreach (var offer in Model.ProductCountsOffers)
+                                {
+
+                                    @await Html.PartialAsync("_ProductOffersFormPartial", offer)
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <a class="btn btn-primary back">رجوع</a>
+            <a class="btn btn-primary continue">التالي</a>
+        </div>
+        <div class="tab-pane fade" id="nav-item-related-products" role="tabpanel" aria-labelledby="nav-item-related-products-tab">
+
+            <div class="row mb-3 pt-1 px-2">
+                <div class="col-md-4">
+                    <div class="row my-1">
+                        <div class="col-9">
+                            <label asp-for="EnableRelatedProducts" class="arabic-direction w-100"></label>
+                        </div>
+                        <div class="col-3 arabic-direction">
+                            <label asp-for="EnableRelatedProducts" class="switch">
+                                <input asp-for="EnableRelatedProducts" type="checkbox" onchange="saveEnableRelatedProducts()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row mb-5 pt-1 px-2">
+                <div class="col-md-4">
+                    <label asp-for="RelatedProductId" class="form-label w-100 arabic-direction"></label>
+                    @* <select asp-for="RelatedProductId" asp-items="ViewBag.Products" class="form-select select2" onchange="AddRelatedProduct()"> *@
+                    <select asp-for="RelatedProductId" asp-items="ViewBag.Products" class="form-select select2" onchange="saveRelatedProductId()">
+                        <option value="" selected>-- اختر --</option>
+                    </select>
+                </div>
+            </div>
+            @* <div class="row mb-3 pt-1 px-2">
+
+            <div class="table-responsive">
+            <table id="RelatedProductsTable" class="table table-striped text-center">
+            <thead class="table-light">
+            @await Html.PartialAsync("_RelatedProductsHeaderPartial")
+            </thead>
+            <tbody>
+            @if (Model?.RelatedProducts != null && Model.RelatedProducts.Count() > 0)
+            {
+            foreach (var product in Model.RelatedProducts)
+            {
+
+            @await Html.PartialAsync("_RelatedProductsFormPartial", product)
+            }
+
+            }
+            </tbody>
+            </table>
+            </div>
+            </div>
+            *@
+
+            <a class="btn btn-primary back">رجوع</a>
+            <a class="btn btn-primary continue">التالي</a>
+        </div>
+        <div class="tab-pane fade" id="nav-item-videos" role="tabpanel" aria-labelledby="nav-item-videos-tab">
+
+            @* <div class="row mb-3 pt-1 px-2">
+            <div class="col-md-4">
+            <div class="row my-1">
+            <div class="col-9">
+            <label asp-for="EnableProductVideos" class="arabic-direction w-100"></label>
+            </div>
+            <div class="col-3 arabic-direction">
+            <label asp-for="EnableProductVideos" class="switch">
+            <input asp-for="EnableProductVideos" type="checkbox">
+            <span class="slider"></span>
+            </label>
+            </div>
+            </div>
+
+            </div>
+            </div> *@
+
+            <div class="VideosFormContainer my-2">
+                <div class="row my-1">
+                    <div class="col-9">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label asp-for="VideoUrl" class="arabic-direction w-100"></label>
+
+                            </div>
+                            <div class="col-md-10">
+                                <input type="url" asp-for="VideoUrl" class="form-control text-start arabic-direction preventSubmit">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 arabic-direction">
+                        <div class="row">
+                            <button type="button" class="btn btn-primary" onclick="AddVideo()">اضافة</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="videosTable" class="table table-striped text-center">
+                    <thead class="table-light">
+                        @await Html.PartialAsync("_VideosHeaderPartial")
+                    </thead>
+                    <tbody>
+                        @if (Model?.ProductVideos != null && Model.ProductVideos.Count() > 0)
+                        {
+                            foreach (var video in Model.ProductVideos)
+                            {
+
+                                @await Html.PartialAsync("_VideosFormPartial", video)
+                            }
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <a class="btn btn-primary back">رجوع</a>
+            <button type="button" onclick="validateForm()" class="btn btn-primary savebtn">حفظ</button>
+        </div>
+    </div>
+</form>
+
+<script>
+ 
+    function printBarcode(button,text) {
+        var productName = $("#ArbName").val();
+
+        // Construct the URL with query parameters dynamically
+        var printUrl = '@Url.Action("PrintBarcode")' +
+            '?Text=' + encodeURIComponent(text) +
+            '&ProductName=' + encodeURIComponent(productName);
+
+        // Set the new URL for the print button
+        $(button).attr("href", printUrl);
+    }
+
+    function getSubCategories() {
+        // Get the selected category IDs
+        // var selectedCategoryIds = $('#Categories').val();
+        var selectedCategoryIds = $('#SelectedCategories').val();
+
+        // Make an AJAX request to get subcategories for the selected categories
+        $.ajax({
+            url: '@Url.Action("GetSubCategories")', // Controller action to fetch subcategories
+            type: 'GET',
+            data: { categoryIds: selectedCategoryIds }, // Send categoryIds as an array of ints
+            traditional: true, // Ensure that jQuery sends the array as multiple parameters
+            success: function (response) {
+                updateSubCategoryList(response, selectedCategoryIds);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching subcategories:", error);
+            }
+        });
+    }
+
+    // Function to save selected options to localStorage
+    function saveSelectedOptions(selectId) {
+        const selectElement = document.getElementById(selectId);
+        const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value);
+        localStorage.setItem(selectId, JSON.stringify(selectedValues));
+    }
+    // Function to load selected options from localStorage
+    function loadSelectedOptions(selectId) {
+        const selectElement = document.getElementById(selectId);
+        const savedValues = JSON.parse(localStorage.getItem(selectId));
+
+        // If there are saved values, set them as selected
+        if (savedValues && Array.isArray(savedValues)) {
+            for (let option of selectElement.options) {
+                option.selected = savedValues.includes(option.value);
+            }
+        }
+    }
+
+    // Function to save the checkbox state to localStorage
+    function saveEnableRelatedProducts() {
+        const checkbox = document.getElementById('EnableRelatedProducts');
+        const isChecked = checkbox.checked;
+
+        // Save the checkbox state (checked or unchecked) to localStorage
+        localStorage.setItem('EnableRelatedProducts', isChecked);
+    }
+
+    function saveReneweInWarehouse() {
+        const checkbox = document.getElementById('ReneweInWarehouse');
+        const isChecked = checkbox.checked;
+
+        // Save the checkbox state (checked or unchecked) to localStorage
+        localStorage.setItem('ReneweInWarehouse', isChecked);
+    }
+
+    // Function to save the checkbox state to localStorage for CustomersReviews
+    function saveCustomersReviews() {
+        const checkbox = document.getElementById('CustomersReviews');
+        const isChecked = checkbox.checked;
+
+        // Save the checkbox state (checked or unchecked) to localStorage
+        localStorage.setItem('CustomersReviews', isChecked);
+    }
+
+    // Save each checkbox state to localStorage
+    function saveHideCartButton() {
+        const checkbox = document.getElementById('HideCartButton');
+        const isChecked = checkbox.checked;
+        localStorage.setItem('HideCartButton', isChecked);
+    }
+
+    function saveExchargeable() {
+        const checkbox = document.getElementById('Exchargeable');
+        const isChecked = checkbox.checked;
+        localStorage.setItem('Exchargeable', isChecked);
+    }
+
+    function saveReturnable() {
+        const checkbox = document.getElementById('Returnable');
+        const isChecked = checkbox.checked;
+        localStorage.setItem('Returnable', isChecked);
+    }
+
+    function saveFreeShipping() {
+        const checkbox = document.getElementById('FreeShipping');
+        const isChecked = checkbox.checked;
+        localStorage.setItem('FreeShipping', isChecked);
+    }
+
+    function saveTrackStock() {
+        const checkbox = document.getElementById('TrackStock');
+        const isChecked = checkbox.checked;
+        localStorage.setItem('TrackStock', isChecked);
+    }
+
+    function saveReviews() {
+        const checkbox = document.getElementById('Reviews');
+        const isChecked = checkbox.checked;
+        localStorage.setItem('Reviews', isChecked);
+    }
+
+    function updateSubCategoryList(subcategories, selectedCategoryIds) {
+        var subCategorySelect = $('#SelectedSubCategories'); // Subcategory dropdown selector
+
+        // Log the subcategories to ensure the data structure is correct
+        console.log(subcategories); // It should be an array of objects with properties 'id' and 'name'
+
+        // Loop through the subcategories and add them to the select dropdown if not already present
+        subcategories.forEach(function (subcategory) {
+            // Check if the subcategory is already in the list
+            if (!subCategorySelect.find('option[value="' + subcategory.id + '"]').length) {
+                // If not, create a new option and append it
+                var newOption = new Option(subcategory.name, subcategory.id);
+                subCategorySelect.append(newOption);
+            }
+        });
+
+        // Now remove any options that are no longer part of the selected categories
+        subCategorySelect.find('option').each(function () {
+            var subcategoryId = $(this).val();
+            var shouldRemove = true;
+
+            // Check if this subcategory should remain based on the selected categories
+            for (var i = 0; i < subcategories.length; i++) {
+                if (subcategoryId == subcategories[i].id) {
+                    shouldRemove = false;
+                    break;
+                }
+            }
+
+            // Remove the subcategory if it's not in the current selection
+            if (shouldRemove) {
+                $(this).remove();
+            }
+        });
+
+        // After making changes, re-initialize Select2 to ensure it reflects the new options
+        subCategorySelect.trigger('change'); // Trigger the change event for Select2
+        subCategorySelect.select2(); // Re-initialize Select2 on the select element
+
+        // Alternatively, you can just trigger the change event to refresh Select2:
+        // subCategorySelect.trigger('change.select2');
+    }
+
+    // function AddVariable() {
+    //     var VariableName = $("#VariableName");
+    //     var VariableNameValue = VariableName.val().trim(); // Trim to avoid leading/trailing spaces
+
+    //     if (VariableNameValue !== "") {
+    //         // Check if the variable already exists in the VariablesFormContainer
+    //         var VariableExists = false;
+
+    //         // Check if the VariableNameValue exists in any of the input fields in the VariablesFormContainer
+    //         $('#VariablesFormContainer .productVariable').each(function () {
+    //             var existingVariableName = $(this).data('variablename'); // Get the variable name from the data attribute
+    //             if (existingVariableName === VariableNameValue) {
+    //                 VariableExists = true;
+    //                 return false; // Exit the loop once the variable is found
+    //             }
+    //         });
+
+    //         // If variable doesn't exist, make an AJAX request
+    //         if (!VariableExists) {
+    //             $.ajax({
+    //                 url: '@Url.Action("GetVariableRow")',
+    //                 type: 'GET',
+    //                 data: {
+    //                     VariableName: VariableNameValue
+    //                 },
+    //                 success: function (result) {
+    //                     // Append the new row for the variable to the VariableTable
+    //                     $('#VariablesFormContainer').append(result);
+
+    //                     $("#VariableName").val('');
+    //                     rowCalc(); // Call the row calculation function (if any)
+    //                 },
+    //                 error: function (xhr, status, error) {
+    //                     console.error("Error loading Get Variable Row: " + error);
+    //                 }
+    //             });
+    //         } else {
+    //             alert("لا يمكن تكرار نفس المتغير");
+    //             $("#VariableName").val('');
+    //         }
+    //     }
+    // }
+
+    // Function to add a variable and save it to localStorage
+    function AddVariable() {
+        var VariableName = $("#VariableName");
+        var VariableNameValue = VariableName.val().trim(); // Trim to avoid leading/trailing spaces
+
+        if (VariableNameValue !== "") {
+            // Check if the variable already exists in the VariablesFormContainer
+            var VariableExists = false;
+
+            // Check if the VariableNameValue exists in any of the input fields in the VariablesFormContainer
+            $('#VariablesFormContainer .productVariable').each(function () {
+                var existingVariableName = $(this).data('variablename'); // Get the variable name from the data attribute
+                if (existingVariableName === VariableNameValue) {
+                    VariableExists = true;
+                    return false; // Exit the loop once the variable is found
+                }
+            });
+
+            // If variable doesn't exist, make an AJAX request
+            if (!VariableExists) {
+                $.ajax({
+                    url: '@Url.Action("GetVariableRow")',
+                    type: 'GET',
+                    data: {
+                        VariableName: VariableNameValue
+                    },
+                    success: function (result) {
+                        // Append the new row for the variable to the VariableTable
+                        $('#VariablesFormContainer').append(result);
+
+                        // Save this variable to localStorage
+                        saveVariableToLocalStorage(VariableNameValue);
+
+                        $("#VariableName").val('');
+                        rowCalc(); // Call the row calculation function (if any)
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error loading Get Variable Row: " + error);
+                    }
+                });
+            } else {
+                alert("لا يمكن تكرار نفس المتغير");
+                $("#VariableName").val('');
+            }
+        }
+    }
+
+    // Function to save the variables to localStorage
+    function saveVariableToLocalStorage(variableName) {
+        let savedVariables = JSON.parse(localStorage.getItem('Variables')) || [];
+
+        // Add new variable to the array
+        savedVariables.push(variableName);
+
+        // Save the updated list back to localStorage
+        localStorage.setItem('Variables', JSON.stringify(savedVariables));
+    }
+
+    // Function to load saved variables from localStorage
+    function loadVariablesFromLocalStorage() {
+        let savedVariables = JSON.parse(localStorage.getItem('Variables')) || [];
+
+        // Append saved variables to the form container
+        savedVariables.forEach(function (variableName) {
+            // Make an AJAX request to get the row for each saved variable
+            $.ajax({
+                url: '@Url.Action("GetVariableRow")',
+                type: 'GET',
+                data: {
+                    VariableName: variableName
+                },
+                success: function (result) {
+                    // Append the row for the variable to the VariablesFormContainer
+                    $('#VariablesFormContainer').append(result);
+                    rowCalc(); // Call the row calculation function (if any)
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading Get Variable Row: " + error);
+                }
+            });
+        });
+    }
+
+
+
+    let selectedVariables = {};  // Object to store selected variables and their values
+    function updateSelectVariableName(input) {
+        // Store the original value before any change
+        var originalValue = $(input).data('originalvalue') || $(input).val().trim(); // Get or store the original value
+        var variableName = $(input).val().trim();  // Get the new value from the input
+        var previousVariableName = $(input).data('originalvalue');  // Retrieve the stored original value
+
+        if (variableName === "" || variableName === null) {
+            // If input is empty, restore the original value
+            $(input).val(originalValue);
+            return;  // Exit as there's nothing to process
+        }
+
+        // Check if the new value already exists in selectedVariables
+        if (selectedVariables[variableName] && selectedVariables[variableName].length > 0) {
+            alert("لا يمكن تكرار نفس القيمة للمتغير");
+            $(input).val(originalValue);  // Restore the original value if duplicate
+            return;  // Exit the function to prevent further processing
+        }
+
+        // If the variable name changed, we need to transfer the values
+        if (previousVariableName && previousVariableName !== variableName) {
+            // Ensure the values from the previous variable name are transferred to the new name
+            if (selectedVariables[previousVariableName]) {
+                // Check if the variable has values, if so, transfer them to the new name
+                selectedVariables[variableName] = selectedVariables[variableName] || [];  // Initialize the new variable name if not already present
+
+                // Transfer all values from the previous name to the new name
+                selectedVariables[variableName] = selectedVariables[variableName].concat(selectedVariables[previousVariableName]);
+
+                // Remove the old variable name from selectedVariables
+                delete selectedVariables[previousVariableName];
+            }
+        }
+
+        // Store the updated variable name in selectedVariables
+        if (!selectedVariables[variableName]) {
+            selectedVariables[variableName] = [];  // Initialize array if not already
+        }
+
+        // Update the original value for future reference
+        $(input).data('originalvalue', variableName);
+
+        // Optionally, regenerate combinations or update other parts of the application
+        generateCombinations();
+    }
+
+
+    function updateSelectedVariables(input) {
+        // Store the original value before any change
+        var originalValue = $(input).data('originalValue') || $(input).val();  // Get the stored original value or current value
+
+        var variableName = $(input).data('variablename');
+        var variableValue = $(input).val().trim();
+
+        // If the input value is empty or null, restore the previous value
+        if (variableValue === null || variableValue === '') {
+            $(input).val(originalValue);  // Restore the original value
+            return;  // Exit the function as there's nothing to process
+        }
+
+        // Check if the value already exists in the selectedVariables for this variable
+        if (selectedVariables[variableName] && selectedVariables[variableName].includes(variableValue)) {
+            alert("لا يمكن تكرار نفس القيمة للمتغير");
+            $(input).val(originalValue);  // Restore the original value if duplicate
+            return;  // Exit if the value is a duplicate
+        }
+
+        // If the value already exists in selectedVariables, update it with the new value
+        if (selectedVariables[variableName]) {
+            // Find the index of the existing value and update it with the new value
+            var index = selectedVariables[variableName].indexOf(originalValue);
+            if (index !== -1) {
+                selectedVariables[variableName][index] = variableValue;  // Update the existing value
+                $(input).val(variableValue);  // Set the input value to the updated value
+            }
+        } else {
+            // If the variable name does not exist in selectedVariables, initialize an empty array
+            selectedVariables[variableName] = [];
+        }
+
+        // If it's a new value, add it to the selectedVariables
+        if (!selectedVariables[variableName].includes(variableValue)) {
+            selectedVariables[variableName].push(variableValue);  // Add the new value to the list
+        }
+
+        // Regenerate combinations after the value change
+        generateCombinations();
+
+        // Update the original value for future reference
+        $(input).data('originalValue', $(input).val());
+    }
+
+
+
+
+    function AddVariableValueRow(button) {
+        var variableId = $(button).data('variableid');  // Get selected variable ID
+        var variableName = $(button).data('variablename');  // Get selected variable name
+        var productVariableDiv = $(button).closest('.productVariable');  // Get closest productVariable div
+
+        // Check if the last input field in this productVariable div is empty
+        var lastInputValue = productVariableDiv.find('input[type="text"]').last().val().trim();
+
+        // If the last input field is empty or null, do not add another row
+        if (lastInputValue === "" || lastInputValue === null) {
+            //alert("Please fill the previous value before adding a new one.");
+            return;  // Exit the function
+        }
+
+        // Proceed with the AJAX request to add the new variable value row
+        $.ajax({
+            url: '@Url.Action("GetVariableValueRow")',
+            type: 'GET',
+            data: {
+                variableId: variableId,
+                variableName: variableName
+            },
+            success: function (result) {
+                // Append the new row for the variable to the productVariable div
+                // productVariableDiv.append(result);
+                productVariableDiv.find('.buttonsRow').before(result);
+
+            },
+            error: function (xhr, status, error) {
+                console.error("Error loading Get Variable value Row: " + error);
+            }
+        });
+    }
+
+
+    function AddVariableValue() {
+        var variableId = $("#SelectVariable").val();  // Get selected variable ID
+        var variableName = $("#SelectVariable option:selected").text();  // Get selected variable name
+        var variableValue = $("#VariableValue").val().trim();  // Get the value inputted by the user
+
+        // Check if both variable and value are valid
+        if (variableId && variableValue) {
+            // Check if the value already exists for the selected variable
+            if (selectedVariables[variableName] && selectedVariables[variableName].includes(variableValue)) {
+                alert("This value has already been added for the selected variable.");
+                return;  // Exit if the value is a duplicate
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetVariableValueRow")',
+                type: 'GET',
+                data: {
+                    variableId: variableId,
+                    variableName: variableName,
+                    variableValue: variableValue
+                },
+                success: function (result) {
+                    // Append the new row for the variable to the VariableTable
+                    $('#VariableValuesTable tbody').append(result);
+
+                    // Optionally, clear the value input field
+                    $("#VariableValue").val('');
+
+                    // Store the selected variable value
+                    if (!selectedVariables[variableName]) {
+                        selectedVariables[variableName] = [];  // Initialize array if not already
+                    }
+                    selectedVariables[variableName].push(variableValue);  // Add the new value to the list
+
+                    // Debug log to verify the selected variables
+                    console.log(selectedVariables);
+
+                    // Update combinations after adding a new variable value
+                    generateCombinations();
+
+                    // Optionally, append the variable and its value to a hidden input for form submission
+                    var existingValues = $("#ProductVariableValues").val();
+                    var newVariableValue = JSON.stringify({
+                        Value: variableValue,
+                        ProductVariableId: variableId
+                    });
+
+                    // If there are already values, append the new one; otherwise, start the list
+                    if (existingValues) {
+                        existingValues = JSON.parse(existingValues);
+                        existingValues.push(JSON.parse(newVariableValue));
+                    } else {
+                        existingValues = [JSON.parse(newVariableValue)];
+                    }
+
+                    // Update the hidden input with the updated list of variable values
+                    $("#ProductVariableValues").val(JSON.stringify(existingValues));
+                    rowCalc();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading Get Variable value Row: " + error);
+                }
+            });
+
+
+        } else {
+            alert("Please select a variable and enter a value.");
+        }
+    }
+
+
+    // Function to delete a variable value row
+    // Function to delete a variable value row
+    // function deleteVariableRow(button) {
+    //     // Get the variable name to be deleted
+    //     var variableName = $(button).closest('.productVariable').data('variablename'); // Assuming the .productVariable div has data-variablename attribute
+
+    //     console.log('Deleting variable:', variableName);
+
+    //     // 1. Remove the variable and its values from selectedVariables
+    //     if (selectedVariables[variableName]) {
+    //         delete selectedVariables[variableName]; // Delete the entire variable entry from selectedVariables
+    //     }
+
+    //     // 2. Remove the variable row from the VariablesTable
+    //     $(button).closest('.productVariable').remove(); // Remove the row in the VariablesTable (productVariable div)
+
+    //     // 5. Regenerate combinations after the deletion
+    //     generateCombinations();
+
+    //     // 6. Optionally, also check if the selectedVariables object is empty and clear combinations
+    //     if (Object.keys(selectedVariables).length === 0) {
+    //         $("#CombinationsTableContainer").html('');  // Clear combinations if no variables are left
+    //     }
+    // }
+    //
+    function deleteVariableRow(button) {
+            // Get the variable name to be deleted
+        var variableName = $(button).closest('.productVariable').data('variablename'); // Assuming the .productVariable div has data-variablename attribute
+
+        console.log('Deleting variable:', variableName);
+
+        // 1. Remove the variable and its values from selectedVariables
+        if (selectedVariables[variableName]) {
+            delete selectedVariables[variableName]; // Delete the entire variable entry from selectedVariables
+        }
+
+        // 2. Remove the variable row from the VariablesTable
+        // $(button).closest('.productVariable').remove(); // Remove the row in the VariablesTable (productVariable div)
+        $(button).closest('.bordered-div').remove(); // Remove the row in the VariablesTable (productVariable div)
+
+        // 5. Regenerate combinations after the deletion
+        generateCombinations();
+
+        // 6. Optionally, also check if the selectedVariables object is empty and clear combinations
+        if (Object.keys(selectedVariables).length === 0) {
+            $("#CombinationsTableContainer").html('');  // Clear combinations if no variables are left
+        }
+
+
+        // Remove the variable from localStorage
+        removeVariableFromLocalStorage(variableName);
+    }
+
+
+    // Function to remove a variable from localStorage
+    function removeVariableFromLocalStorage(variableName) {
+        // Retrieve the saved variables from localStorage
+        let savedVariables = JSON.parse(localStorage.getItem('Variables')) || [];
+
+        // Filter out the variable to be removed
+        savedVariables = savedVariables.filter(function (variable) {
+            return variable !== variableName;
+        });
+
+        // Save the updated list back to localStorage
+        localStorage.setItem('Variables', JSON.stringify(savedVariables));
+    }
+
+
+
+
+
+
+    // Function to generate combinations of selected variable values
+    function generateCombinations() {
+        let variables = Object.keys(selectedVariables);  // Get all variable names (like Color, Size)
+        let values = Object.values(selectedVariables);   // Get all values for each variable
+        var itemPrice = parseFloat($("#Price").val()) || 0;
+
+        // If no variables have been selected, exit early
+        if (variables.length === 0) return;
+
+        // Generate combinations (Cartesian product of variable values)
+        let combinations = getCombinations(values);
+
+        // Empty the combinations table before adding new combinations
+        $("#CombinationsTableContainer").html('');
+
+        // Loop through each combination and add to the table
+        combinations.forEach((combination, index) => {
+            // Store the row data for the combination (variable name and value) in a variable
+            let combinationText = variables.map((varName, index) => {
+                return `${varName}: ${combination[index]}`;
+            }).join(', ');  // This will store the string like "Color: Red, Size: Small"
+
+
+            $.ajax({
+                url: '@Url.Action("GetVariableCombinationRow")',
+                type: 'GET',
+                data: {
+                    CombinationText: combinationText,
+                    price: itemPrice.toFixed(2)
+                },
+                success: function (result) {
+                    // Append the new row for the variable to the VariableTable
+                    $('#CombinationsTableContainer').append(result);
+
+
+                    rowCalc();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading Get Variable value Row: " + error);
+                }
+            });
+        });
+    }
+
+
+    // Function to generate Cartesian product (all combinations of variable values)
+    function getCombinations(arrays) {
+        return arrays.reduce(function (a, b) {
+            return a.flatMap(function (d) {
+                return b.map(function (e) {
+                    return d.concat([e]);
+                });
+            });
+        }, [[]]);
+    }
+
+    // Function to delete a combination row
+    function deleteCombinationRow(button) {
+        $(button).closest('tr').remove();  // Remove the row when the delete button is clicked
+    }
+
+    function deleteVariableValueRow(button) {
+        // Get the variable name and value from the row to be deleted
+        var variableName = $(button).data('variablename');
+        var variableValue = $(button).closest('.row').find('input[type="text"]').val().trim(); // Get the variable value from the input
+
+        console.log('Before deletion, selectedVariables:', JSON.stringify(selectedVariables));
+
+        // Check if the variable exists in selectedVariables and remove the value
+        if (selectedVariables[variableName]) {
+            // Make sure variableValue and selectedValues are of the same type (string, number, etc.)
+            selectedVariables[variableName] = selectedVariables[variableName].filter(value => value.toString().trim() !== variableValue.toString().trim());
+
+            // If no values are left for this variable, delete the variable entry
+            if (selectedVariables[variableName].length === 0) {
+                delete selectedVariables[variableName];
+            }
+        }
+
+        console.log('After deletion, selectedVariables:', JSON.stringify(selectedVariables));  // Check if it's updated correctly
+
+        // Remove the row from the DOM
+        $(button).closest('.row').remove();  // Remove the parent .row element which contains the variable value row
+
+        // Regenerate combinations after the deletion
+        generateCombinations();  // Regenerate combinations
+
+        // Optionally, clear combinations if selectedVariables is empty
+        if (Object.keys(selectedVariables).length === 0) {
+            $("#CombinationsTableContainer").html('');  // Clear combinations if no variables are left
+        }
+    }
+
+
+
+    // function AddCountsOfferRow() {
+    //     // Parse values to float or set to 0 if invalid
+    //     var price = parseFloat($("#OfferPrice").val()) || 0;
+    //     var count = parseFloat($("#OfferCount").val()) || 0;
+    //     var itemPrice = parseFloat($("#Price").val()) || 0;
+
+    //     // Format both values to two decimal places
+    //     price = price.toFixed(2);
+    //     itemPrice = itemPrice.toFixed(2);
+
+    //     // Ensure that price and count are not null or empty
+    //     if (!price || !count) {
+    //         // alert("Please provide both price and count values.");
+    //         return;  // Exit the function if either is empty or invalid
+    //     }
+
+    //     // Check if price is a valid number and not less than 0
+    //     if (price < 0) {
+    //         alert("Price must be a valid number and cannot be less than 0.");
+    //         return; // Exit the function if price is invalid
+    //     }
+
+    //     // Check if the count already exists in the table
+    //     var countExists = false;
+    //     $('#CountOffersTable tbody tr').each(function () {
+    //         var existingCount = $(this).find('input.count').val().trim();
+    //         if (existingCount === count) {
+    //             countExists = true;
+    //             return false; // Exit loop early if count is found
+    //         }
+    //     });
+
+    //     if (countExists) {
+    //         alert("This count already exists in the table.");
+    //         return; // Exit the function if the count already exists
+    //     }
+
+    //     // Proceed with the AJAX call if validations pass
+    //     $.ajax({
+    //         url: '@Url.Action("GetCountsOfferRow")',
+    //         type: 'GET',
+    //         data: {
+    //             count: count,
+    //             price: price,
+    //         },
+    //         success: function (result) {
+    //             // Append the new row for the count offer to the table
+    //             $('#CountOffersTable tbody').append(result);
+
+    //             // Calculate the discount
+    //             var discount = (count * itemPrice) - price;
+
+    //             // If the discount is less than 0, set it to 0
+    //             if (discount < 0) {
+    //                 discount = 0;
+    //             }
+
+    //             // Find the last input with class "discount" and set its value to the calculated discount, formatted to 2 decimal places
+    //             $('#CountOffersTable tbody tr:last').find('input.discount').val(discount.toFixed(2));
+    //             $('#OfferCount').val('');
+    //             $('#OfferPrice').val('');
+
+    //             // Call the rowCalc function after appending the row
+    //             rowCalc();
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error("Error loading Get Counts Offer Row: " + error);
+    //         }
+    //     });
+    // }
+
+    function AddCountsOfferRow() {
+        // Parse values to float or set to 0 if invalid
+        var price = parseFloat($("#OfferPrice").val()) || 0;
+        var count = parseFloat($("#OfferCount").val()) || 0;
+        var itemPrice = parseFloat($("#Price").val()) || 0;
+
+        // Format both values to two decimal places
+        price = price.toFixed(2);
+        itemPrice = itemPrice.toFixed(2);
+
+        // Ensure that price and count are not null or empty
+        if (!price || !count) {
+            return;  // Exit the function if either is empty or invalid
+        }
+
+        // Check if price is a valid number and not less than 0
+        if (price < 0) {
+            alert("Price must be a valid number and cannot be less than 0.");
+            return; // Exit the function if price is invalid
+        }
+
+        // Check if the count already exists in the table
+        var countExists = false;
+        $('#CountOffersTable tbody tr').each(function () {
+            var existingCount = $(this).find('input.count').val().trim();
+            if (existingCount === count) {
+                countExists = true;
+                return false; // Exit loop early if count is found
+            }
+        });
+
+        if (countExists) {
+            alert("This count already exists in the table.");
+            return; // Exit the function if the count already exists
+        }
+
+        // Proceed with the AJAX call if validations pass
+        $.ajax({
+            url: '@Url.Action("GetCountsOfferRow")',
+            type: 'GET',
+            data: {
+                count: count,
+                price: price,
+            },
+            success: function (result) {
+                // Append the new row for the count offer to the table
+                $('#CountOffersTable tbody').append(result);
+
+                // Calculate the discount
+                var discount = (count * itemPrice) - price;
+
+                // If the discount is less than 0, set it to 0
+                if (discount < 0) {
+                    discount = 0;
+                }
+
+                // Find the last input with class "discount" and set its value to the calculated discount, formatted to 2 decimal places
+                $('#CountOffersTable tbody tr:last').find('input.discount').val(discount.toFixed(2));
+                $('#OfferCount').val('');
+                $('#OfferPrice').val('');
+
+                // Store the new offer in localStorage
+                storeCountOfferInLocalStorage(count, price, discount);
+
+                // Call the rowCalc function after appending the row
+                rowCalc();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error loading Get Counts Offer Row: " + error);
+            }
+        });
+    }
+
+    // Store the added count offer in localStorage
+    function storeCountOfferInLocalStorage(count, price, discount) {
+        let offers = JSON.parse(localStorage.getItem('countOffers')) || [];
+        offers.push({ count: count, price: price, discount: discount });
+        localStorage.setItem('countOffers', JSON.stringify(offers));
+    }
+
+    // Load count offers from localStorage and add them to the table
+    function loadCountOffersFromLocalStorage() {
+        let offers = JSON.parse(localStorage.getItem('countOffers')) || [];
+
+        offers.forEach(function (offer) {
+            $.ajax({
+                url: '@Url.Action("GetCountsOfferRow")',
+                type: 'GET',
+                data: {
+                    count: offer.count,
+                    price: offer.price,
+                },
+                success: function (result) {
+                    // Append the new row for the count offer to the table
+                    $('#CountOffersTable tbody').append(result);
+
+                    // Set the discount value
+                    $('#CountOffersTable tbody tr:last').find('input.discount').val(offer.discount.toFixed(2));
+
+                    // Call the rowCalc function after appending the row
+                    rowCalc();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading Get Counts Offer Row: " + error);
+                }
+            });
+        });
+    }
+
+    // Remove the count offer from localStorage
+    function removeCountOfferFromLocalStorage(count) {
+        // Get the existing offers array from localStorage
+        let offers = JSON.parse(localStorage.getItem('countOffers')) || [];
+
+        // Filter out the offer that matches the one being removed
+        offers = offers.filter(function (offer) {
+            return offer.count !== count;
+        });
+
+        // Save the updated array back to localStorage
+        localStorage.setItem('countOffers', JSON.stringify(offers));
+    }
+
+
+    // Function to save the selected value to localStorage
+    function saveRelatedProductId() {
+        const selectElement = document.getElementById('RelatedProductId');
+        const selectedValue = selectElement.value;
+
+        // Save the selected value to localStorage
+        localStorage.setItem('RelatedProductId', selectedValue);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Load saved data for the RelatedProductId dropdown
+        const relatedProductId = 'RelatedProductId';
+
+        // Load the saved value from localStorage (if it exists)
+        if (localStorage.getItem(relatedProductId)) {
+            const savedValue = localStorage.getItem(relatedProductId);
+            const selectElement = document.getElementById(relatedProductId);
+
+            // Set the saved value as selected in the dropdown
+            selectElement.value = savedValue;
+        }
+    });
+
+
+    function AddRelatedProduct() {
+        var productId = $("#RelatedProductId").val();
+
+        if (!productId) {
+            return;  // Exit the function if either is empty or invalid
+        }
+
+        $.ajax({
+            url: '@Url.Action("GetRelatedProductRow")',
+            type: 'GET',
+            data: {
+                productId: productId
+            },
+            success: function (result) {
+                // Append the new row for the count offer to the table
+                $('#RelatedProductsTable tbody').append(result);
+
+                getRelatedProducts();
+
+
+                // Call the rowCalc function after appending the row
+                rowCalc();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error loading Get Counts Offer Row: " + error);
+            }
+        });
+    }
+
+    function AddVideo() {
+        var videoUrl = $("#VideoUrl").val();
+
+        // Check if the videoUrl is not empty
+        if (!videoUrl) {
+            alert("Please provide a valid video URL.");
+            return;  // Exit the function if the URL is empty
+        }
+
+        // Regular expression to validate the URL format
+        var urlPattern = /^(https?:\/\/)?([a-z0-9]+[.-])*[a-z0-9]+\.[a-z]{2,6}(\/.*)?$/i;
+
+        // Test if the URL matches the pattern
+        if (!urlPattern.test(videoUrl)) {
+            alert("Please provide a valid video URL.");
+            $("#VideoUrl").val('');
+            return;  // Exit the function if the URL is invalid
+        }
+
+        // Check if the video URL is already in the table to prevent duplicates
+        var isUrlAlreadyAdded = false;
+        $('#videosTable tbody tr').each(function () {
+            var existingUrl = $(this).find('td.videoUrl').text().trim()
+            if (existingUrl === videoUrl) {
+                isUrlAlreadyAdded = true;
+                return false; // Exit the loop if the URL is found
+            }
+        });
+
+        if (isUrlAlreadyAdded) {
+            alert("This video URL has already been added.");
+            $("#VideoUrl").val('');
+            return; // Exit the function if the URL is already in the table
+        }
+
+        // If valid and not duplicate, proceed with the AJAX request
+        $.ajax({
+            url: '@Url.Action("GetvideoUrlRow")',
+            type: 'GET',
+            data: {
+                videoUrl: videoUrl
+            },
+            success: function (result) {
+                // Append the new row for the video to the table
+                $('#videosTable tbody').append(result);
+                // Store the added video URL in localStorage
+                storeVideoInLocalStorage(videoUrl);
+                // Call the rowCalc function after appending the row
+                rowCalc();
+                $("#VideoUrl").val('');
+            },
+            error: function (xhr, status, error) {
+                console.error("Error loading Get video Row: " + error);
+            }
+        });
+    }
+
+
+    // Store the added video URL in localStorage
+    function storeVideoInLocalStorage(videoUrl) {
+        let videos = JSON.parse(localStorage.getItem('videoUrls')) || [];
+        videos.push(videoUrl);
+        localStorage.setItem('videoUrls', JSON.stringify(videos));
+    }
+
+    // Load videos from localStorage and add them to the table
+    function loadVideosFromLocalStorage() {
+        let videos = JSON.parse(localStorage.getItem('videoUrls')) || [];
+
+        videos.forEach(function (videoUrl) {
+            $.ajax({
+                url: '@Url.Action("GetvideoUrlRow")',
+                type: 'GET',
+                data: {
+                    videoUrl: videoUrl
+                },
+                success: function (result) {
+                    // Append the new row for the video to the table
+                    $('#videosTable tbody').append(result);
+
+                    // Call the rowCalc function after appending the row
+                    rowCalc();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading Get video Row: " + error);
+                }
+            });
+        });
+    }
+
+    function removeVideoFromLocalStorage(videoUrl) {
+       
+        let videos = JSON.parse(localStorage.getItem('videoUrls')) || [];
+
+       
+        videos = videos.filter(function (url) {
+            return url !== videoUrl;
+        });
+
+       
+        localStorage.setItem('videoUrls', JSON.stringify(videos));
+    }
+
+
+
+
+    function getRelatedProducts() {
+        // Collect all productId values from the table rows
+        var selectedProductIds = [];
+        $('#RelatedProductsTable tbody tr').each(function () {
+            var productId = $(this).find('input.RelatedProductId').val();
+            if (productId) {
+                selectedProductIds.push(productId); // Add the productId to the array if it's not empty
+            }
+        });
+
+        // If no productIds are selected, do nothing (optional check)
+        if (selectedProductIds.length === 0) {
+           // console.log('No products selected');
+            return; // Exit the function if no productIds are found
+        }
+        //console.log(selectedProductIds);
+        // Make an AJAX request to get related products
+        $.ajax({
+            url: '@Url.Action("GetRelatedProducts")',
+            type: 'GET',
+            data: { productIds: selectedProductIds },
+            traditional: true, // Ensure that jQuery sends the array as multiple parameters
+            success: function (response) {
+                updateRelatedProductsList(response, selectedProductIds);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching related products:", error);
+            }
+        });
+    }
+
+
+
+    function updateRelatedProductsList(relatedProducts, selectedProductIds) {
+        var RelatedProductsSelect = $('#-----------------------------------');
+
+        // Clear the existing options first to update the select values
+        RelatedProductsSelect.empty();
+
+        var defaultOption = new Option('--اختر--', 0);
+        defaultOption.disabled = true;  // Disable the default option
+        defaultOption.selected = true;  // Make the default option selected
+        RelatedProductsSelect.append(defaultOption)
+
+        if (Array.isArray(relatedProducts) && relatedProducts.length > 0) {
+            // Loop through the related products and add them to the select dropdown
+            relatedProducts.forEach(function (product) {
+                // Create a new option and append it
+                var newOption = new Option(product.arbName, product.id);
+                RelatedProductsSelect.append(newOption);
+            });
+        }
+
+
+        // After making changes, re-initialize Select2 to ensure it reflects the new options
+        updateSelect2();
+
+    }
+
+
+
+
+
+    function UpdateCountsOfferPrice() {
+        // Get the item price and ensure it's a valid number
+        var itemPrice = parseFloat($("#Price").val()) || 0;
+
+        // Loop through each row in the table
+        $('#CountOffersTable tbody tr').each(function () {
+            // Get the count and price values for this row
+            var count = parseFloat($(this).find('input.count').val()) || 0;
+            var price = parseFloat($(this).find('input.price').val()) || 0;
+
+            // Calculate the discount
+            var discount = (count * itemPrice) - price;
+
+            // If the discount is less than 0, set it to 0
+            if (discount < 0) {
+                discount = 0;
+            }
+
+            // Set the discount value to the input with class "discount" and ensure it's formatted to 2 decimal places
+            $(this).find('input.discount').val(discount.toFixed(2));
+        });
+    }
+
+
+    // function initializeSelectedVariables() {
+    //     // Initialize an empty object to store selected variables and their values
+    //     selectedVariables = {};
+
+    //     // Loop through the rows in the VariableValuesTable and populate selectedVariables
+    //     $('#VariableValuesTable tbody tr').each(function () {
+    //         var variableName = $(this).find('.Name').val().trim(); // Assuming Name is an input field containing the variable name
+    //         var variableValue = $(this).find('.value').val().trim(); // Assuming value is the class of the value input field
+
+    //         // Check if the variable name exists in selectedVariables
+    //         if (variableName && variableValue) {
+    //             // If it does, push the value to the existing array for that variable
+    //             if (!selectedVariables[variableName]) {
+    //                 selectedVariables[variableName] = [];  // Initialize array if not already present
+    //             }
+    //             selectedVariables[variableName].push(variableValue);  // Add the value
+    //         }
+    //     });
+
+    //     // Log the initialized selectedVariables object to check if it's correct
+    //     console.log("Initialized selectedVariables: ", selectedVariables);
+
+    //     // Regenerate combinations after initializing selectedVariables
+    //     //generateCombinations();
+    // }
+
+    function initializeSelectedVariables() {
+        // Initialize an empty object to store selected variables and their values
+        // let selectedVariables = {};
+
+        // Loop through each productVariable div
+        $('.productVariable').each(function () {
+            var variableName = $(this).find('.variableName').val().trim(); // Variable name (input field with class 'variableName')
+
+            // If variable name is not empty
+            if (variableName) {
+                // Initialize an empty array to hold the values for this variable
+                selectedVariables[variableName] = [];
+
+                // Loop through each variable value row for this variable
+                $(this).find('.variableValueRow').each(function () {
+                    var variableValue = $(this).find('.variableValue').val().trim(); // The value input field for the variable
+
+                    // If the value is not empty, push it to the selectedVariables object
+                    if (variableValue) {
+                        selectedVariables[variableName].push(variableValue);
+                    }
+                });
+            }
+        });
+
+        // Log the initialized selectedVariables object to check if it's correct
+        console.log("Initialized selectedVariables: ", selectedVariables);
+
+        // Regenerate combinations after initializing selectedVariables (optional)
+        // generateCombinations();
+    }
+
+
+    function initializeView() {
+        // getRelatedProducts();
+        rowCalc();
+        initializeSelectedVariables();
+        UpdateCountsOfferPrice();
+        handleProductImages(document.getElementById('image-upload').files);
+        updateDisplayOrder();
+    }
+
+
+
+
+
+    // function validateForm() {
+    //     var isValid = true;
+
+    //     // Get all productVariable divs
+    //     var productVariableDivs = document.querySelectorAll('.productVariable');
+
+    //     productVariableDivs.forEach(function (productVariableDiv) {
+    //         // Find all inputs with class 'variableValue' within this productVariable div
+    //         var variableValueInputs = productVariableDiv.querySelectorAll('.variableValue');
+
+    //         // Get the last input of the variableValue class
+    //         var lastVariableValueInput = variableValueInputs[variableValueInputs.length - 1];
+
+    //         // Check if the input exists and if its value is empty
+    //         if (lastVariableValueInput && !lastVariableValueInput.value.trim()) {
+    //             // Find the row that contains this input field
+    //             var rowToRemove = lastVariableValueInput.closest('.variableValueRow');
+
+    //             // Remove the row from the DOM
+    //             if (rowToRemove) {
+    //                 rowToRemove.remove();
+    //             }
+    //         }
+    //     });
+
+    //     // Continue with the validation of other form inputs
+    //     var inputs = document.querySelectorAll('#myForm .requiredToSubmit');
+    //     inputs.forEach(function (input) {
+    //         var span = input.nextElementSibling; // Get the <span> next to the input
+
+    //         if (!input.value.trim()) {  // Check if the field is empty
+    //             isValid = false;
+    //             input.style.border = '1px solid red'; // Highlight invalid field
+    //             if (span && span.classList.contains('text-danger')) {
+    //                 span.classList.remove('d-none');  // Show the error message
+    //                 span.classList.add('d-block');  // Show the error message
+    //             }
+    //         } else {
+    //             input.style.border = ''; // Reset valid fields
+    //             if (span && span.classList.contains('text-danger')) {
+    //                 span.classList.remove('d-block');  // Hide the error message
+    //                 span.classList.add('d-none');  // Hide the error message
+    //             }
+    //         }
+    //     });
+
+    //     // Validate TinyMCE textareas (assuming they are part of the form)
+    //     var ArbisValid = validateTinyMCETextarea("ArbDescription", "ArbDescriptionError");
+    //     var EngisValid = validateTinyMCETextarea("EngDescription", "EngDescriptionError");
+
+    //     // Final check before form submission
+    //     if (isValid && ArbisValid && EngisValid) {
+    //         // Submit the form
+    //         $("#myForm").submit();
+    //         localStorage.clear();
+    //     } else {
+    //         // Prevent form submission if validation fails
+    //         return false;
+    //     }
+    // }
+    function validateForm() {
+        debugger;
+        var isValid = true;
+        var firstInvalidInput = null; // To store the first invalid input field
+
+        // Get all productVariable divs
+        var productVariableDivs = document.querySelectorAll('.productVariable');
+        console.log(productVariableDivs);
+        productVariableDivs.forEach(function (productVariableDiv) {
+            // Find all inputs with class 'variableValue' within this productVariable div
+            var variableValueInputs = productVariableDiv.querySelectorAll('.variableValue');
+
+            // Get the last input of the variableValue class
+            var lastVariableValueInput = variableValueInputs[variableValueInputs.length - 1];
+
+            // Check if the input exists and if its value is empty
+            if (lastVariableValueInput && !lastVariableValueInput.value.trim()) {
+                // Find the row that contains this input field
+                var rowToRemove = lastVariableValueInput.closest('.variableValueRow');
+
+                // Remove the row from the DOM
+                if (rowToRemove) {
+                    rowToRemove.remove();
+                }
+            }
+        });
+
+        // Continue with the validation of other form inputs
+        var inputs = document.querySelectorAll('#myForm .requiredToSubmit');
+        inputs.forEach(function (input) {
+            var span = input.nextElementSibling; // Get the <span> next to the input
+
+            if (!input.value.trim()) {  // Check if the field is empty
+                isValid = false;
+                input.style.border = '1px solid red'; // Highlight invalid field
+                if (span && span.classList.contains('text-danger')) {
+                    span.classList.remove('d-none');  // Show the error message
+                    span.classList.add('d-block');  // Show the error message
+                }
+
+                // If this is the first invalid input, store it and break the loop
+                if (!firstInvalidInput) {
+                    firstInvalidInput = input;
+                }
+            } else {
+                input.style.border = ''; // Reset valid fields
+                if (span && span.classList.contains('text-danger')) {
+                    span.classList.remove('d-block');  // Hide the error message
+                    span.classList.add('d-none');  // Hide the error message
+                }
+            }
+        });
+
+        // Validate TinyMCE textareas (assuming they are part of the form)
+        var ArbisValid = validateQuilly("editor", "ArbDescriptionError");
+        var EngisValid = validateQuilly("editor2", "EngDescriptionError");
+
+        // Final check before form submission
+        if (isValid && ArbisValid && EngisValid) {
+            // Submit the form
+            $("#myForm").submit();
+            localStorage.clear();
+        } 
+        else {
+            // Prevent form submission if validation fails
+            // If there is a first invalid input, set its tab to active
+            if (firstInvalidInput) {
+                // Find the closest tab-pane for the invalid input
+                var tabPane = firstInvalidInput.closest('.tab-pane');
+                if (tabPane) {
+                    // Get the tab link related to this tab-pane
+                    var tabLink = document.querySelector(`a[href="#${tabPane.id}"]`);
+
+                    // Remove 'active' class from all tabs and tab links
+                    var allTabs = document.querySelectorAll('.nav-link');
+                    var allTabPanes = document.querySelectorAll('.tab-pane');
+                    allTabs.forEach(function (tab) {
+                        tab.classList.remove('active');
+                    });
+                    allTabPanes.forEach(function (tabPane) {
+                        tabPane.classList.remove('active', 'show');
+                    });
+
+                    // Set the first invalid input's tab to active
+                    if (tabLink) {
+                        tabLink.classList.add('active'); // Set tab link to active
+                        tabPane.classList.add('active', 'show'); // Set tab pane to active
+                        updateSelect2();
+                    }
+                }
+            }
+            return false; // Prevent form submission
+        }
+    }
+
+
+
+    // Function to validate TinyMCE textarea
+    function validateQuilly(fieldId, spanId) {
+        debugger;
+        var field = document.getElementById(fieldId); // Get the textarea by its ID
+        var span = document.getElementById(spanId); // Get the <span> next to the textarea
+        
+        var editorContent = fieldId == "editor"  ?   (quill.root.innerText.trim() != "" ? quill.root.innerHTML.trim() : null ) :  (quill2.root.innerText.trim() != "" ) ?  quill2.root.innerHTML.trim() : null; // Get the content of the editor
+        document.getElementById(fieldId == "editor"?  "ArbDescription" : "EngDescription").value = editorContent;
+        if (!editorContent) {
+            if (span && span.classList.contains('text-danger')) {
+                span.classList.remove('d-none'); // Show the error message
+                span.classList.add('d-block');  // Show the error message
+            }
+            return false; // Return false if validation fails
+        } else {
+            if (span && span.classList.contains('text-danger')) {
+                span.classList.remove('d-block');  // Hide the error message
+                span.classList.add('d-none'); // Hide the error message
+            }
+            return true; // Return true if validation succeeds
+        }
+    }
+
+
+
+    // document.getElementById('myForm').addEventListener('submit', function (event) {
+    //     if (!validateForm()) {
+    //         event.preventDefault(); // Prevent form submission if validation fails
+    //     }
+    // });
+
+
+    function AddBrand() {
+        // Get the value from the input field
+        var newValue = $('#NewBrandValue').val();
+
+        // Check if the value is not null or empty
+        if (newValue.trim() === '') {
+            return;
+        }
+
+        // Make the AJAX call to the server
+        $.ajax({
+            url: '@Url.Action("AddNewBrand")',  // Ensure the correct controller and action are specified
+            type: 'POST',
+            data: { newValue: newValue }, // Sending the new value as data
+            success: function (response) {
+                if (response.success) {
+                    // On success, close the modal
+                    $('#AddBrandModal').modal('hide');
+
+                    // Update the select list with the new brands
+                    updateBrandSelectList(response.brands);
+                } else {
+                    // Handle failure case (e.g., display an error message)
+                    alert(response.message || "حدث خطأ");
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle AJAX error
+                alert("حدث خطأ");
+            }
+        });
+    }
+
+    // Function to update the select list with the new list of brands
+    function updateBrandSelectList(brands) {
+        // Get the select element
+        var select = $('#BrandId');
+
+        // Clear the existing options
+        select.empty();
+
+        // Add new options for each brand
+        brands.forEach(function (brand) {
+            var option = $('<option>', {
+                value: brand.id,
+                text: brand.name
+            });
+            select.append(option);
+        });
+
+        // Optionally, select the last brand in the list
+        select.val(brands[brands.length - 1].id);
+        updateSelect2();
+    }
+
+    function AddMaterial() {
+        // Get the value from the input field
+        var newValue = $('#NewMaterialValue').val();
+
+        // Check if the value is not null or empty
+        if (newValue.trim() === '') {
+            alert("الرجاء إدخال اسم الخامة");
+            return;
+        }
+
+        // Make the AJAX call to the server
+        $.ajax({
+            url: '@Url.Action("AddNewMaterial")',  // Ensure this is the correct controller and action
+            type: 'POST',
+            data: { newValue: newValue }, // Sending the new value as data
+            success: function (response) {
+                if (response.success) {
+                    // On success, close the modal
+                    $('#AddMaterialModal').modal('hide');
+
+                    // Update the select list with the new materials
+                    updateMaterialSelectList(response.materials);
+                } else {
+                    // Handle failure case (e.g., display an error message)
+                    alert(response.message || "حدث خطأ");
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle AJAX error
+                alert("حدث خطأ");
+            }
+        });
+    }
+
+    // Function to update the select list with the new list of materials
+    function updateMaterialSelectList(materials) {
+        // Get the select element
+        var select = $('#MaterialId');
+
+        // Clear the existing options
+        select.empty();
+
+        // Add new options for each material
+        materials.forEach(function (material) {
+            var option = $('<option>', {
+                value: material.id,
+                text: material.name
+            });
+            select.append(option);
+        });
+
+        // Optionally, select the last material in the list
+        select.val(materials[materials.length - 1].id);
+
+        updateSelect2();
+    }
+
+    function AddProductType() {
+        // Get the value from the input field
+        var newProductTypeValue = $('#NewProductTypeValue').val();
+
+        // Check if the value is not null or empty
+        if (newProductTypeValue.trim() === '') {
+            alert("الرجاء إدخال اسم النوع");
+            return;
+        }
+
+        // Make the AJAX call to the server
+        $.ajax({
+            url: '@Url.Action("AddNewProductType")',  // Ensure this is the correct controller and action
+            type: 'POST',
+            data: { newValue: newProductTypeValue }, // Sending the new value as data
+            success: function (response) {
+                if (response.success) {
+                    // On success, close the modal
+                    $('#AddProductTypeModal').modal('hide');
+
+                    // Update the select list with the new product types
+                    updateProductTypeSelectList(response.productTypes);
+                } else {
+                    // Handle failure case (e.g., display an error message)
+                    alert(response.message || "حدث خطأ");
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle AJAX error
+                alert("حدث خطأ");
+            }
+        });
+    }
+
+    // Function to update the select list with the new list of product types
+    function updateProductTypeSelectList(productTypes) {
+        // Get the select element
+        var select = $('#ProductTypeId');
+
+        // Clear the existing options
+        select.empty();
+
+        // Add new options for each product type
+        productTypes.forEach(function (productType) {
+            var option = $('<option>', {
+                value: productType.id,
+                text: productType.name
+            });
+            select.append(option);
+        });
+
+        // Optionally, select the last product type in the list
+        select.val(productTypes[productTypes.length - 1].id);
+        updateSelect2();
+    }
+
+
+    function AddManufacturing() {
+        // Get the value from the input field
+        var newManufacturingValue = $('#NewManufacturingValue').val();
+
+        // Check if the value is not null or empty
+        if (newManufacturingValue.trim() === '') {
+            alert("الرجاء إدخال اسم النوع");
+            return;
+        }
+
+        // Make the AJAX call to the server
+        $.ajax({
+            url: '@Url.Action("AddNewManufacturing")',  // Ensure this is the correct controller and action
+            type: 'POST',
+            data: { newValue: newManufacturingValue }, // Sending the new value as data
+            success: function (response) {
+                if (response.success) {
+                    // On success, close the modal
+                    $('#AddManufacturingModal').modal('hide');
+
+                    // Update the select list with the new manufacturing types
+                    updateManufacturingSelectList(response.manufacturings);
+                } else {
+                    // Handle failure case (e.g., display an error message)
+                    alert(response.message || "حدث خطأ");
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle AJAX error
+                alert("حدث خطأ");
+            }
+        });
+    }
+
+    // Function to update the select list with the new list of manufacturing types
+    function updateManufacturingSelectList(manufacturings) {
+        // Get the select element
+        var select = $('#ManufacturingId');
+
+        // Clear the existing options
+        select.empty();
+
+        // Add new options for each manufacturing type
+        manufacturings.forEach(function (manufacturing) {
+            var option = $('<option>', {
+                value: manufacturing.id,
+                text: manufacturing.name
+            });
+            select.append(option);
+        });
+
+        // Optionally, select the last manufacturing type in the list
+        select.val(manufacturings[manufacturings.length - 1].id);
+        updateSelect2();
+    }
+
+
+        
+
+
+
+</script>
+
+<script>    
+    debugger;
+    let currentPartialValue = null;
+    let isTabValid =  (query)=>{
+        var firstInvalidInput = null;
+        var isValid = true;
+        var inputs = document.querySelectorAll(query);
+        inputs.forEach(function (input) {
+            @* console.log(input);  *@
+            var span = input.nextElementSibling;
+            @* console.log(span); *@
+
+            if (!input.value.trim()) {
+                isValid = false;
+                input.style.border = '1px solid red';
+                if (span && span.classList.contains('text-danger')) {
+                    span.classList.remove('d-none');
+                    span.classList.add('d-block');
+                }
+
+
+                if (!firstInvalidInput) {
+                    firstInvalidInput = input;
+                }
+            } else {
+                input.style.border = ''; // Reset valid fields
+                if (span && span.classList.contains('text-danger')) {
+                    span.classList.remove('d-block');  // Hide the error message
+                    span.classList.add('d-none');  // Hide the error message
+                }
+            }
+        });
+        if(!isValid)
+        {
+            $('html, body').animate({
+                scrollTop: document.findElementById("content").offset().top
+            }, 500);
+            return false;
+        }
+        return true;
+    }
+  
+       function goToNextTab(tabId) {
+       
+        
+        var query = `#${tabId} .requiredToSubmit`; 
+        if(!isTabValid(query)) return;
+        var currentTab = $('.nav-tabs .active');
+
+        var currentIndex = $('.nav-tabs .nav-link').index(currentTab);
+
+        var nextTab = $('.nav-tabs .nav-link').eq(currentIndex + 1);
+
+        if (nextTab.length) {
+            currentTab.removeClass('active');
+            $('.tab-pane').removeClass('show active');
+
+            nextTab.addClass('active');
+            $('#' + nextTab.attr('href').substring(1)).addClass('show active');
+        }
+    }
+
+    
+    document.addEventListener("DOMContentLoaded", (event) => {
+        initializeView();
+
+        
+        $('#ColorImageModal').on('show.bs.modal', function (event) {
+           
+            const button = $(event.relatedTarget);
+           
+            currentPartialValue = button.data('partial-value');
+        });
+
+        const mainImageSelector = document.getElementById("mainImageSelector");
+        document.querySelectorAll('#mainImageSelector .img-container').forEach(function (imgContainer) {
+            imgContainer.addEventListener("click", function () {
+
+                // Get the file name from the data-file-name attribute
+                var fileName = imgContainer.getAttribute('data-file-name');
+
+                setMainImage(fileName);
+
+                // Set the selected border for the clicked image
+                setSelectedBorder(imgContainer, mainImageSelector);
+            });
+        });
+        $('#nav-tab a').on('show.bs.tab', function (e) {
+            e.preventDefault(); 
+            debugger;
+            var query = `#${e.relatedTarget.getAttribute("aria-controls")} .requiredToSubmit`;
+            var currentTab = $(`#${e.relatedTarget.id}`);
+            var newCurrentTab = $(`#${e.target.id}`);
+            var currentIndex = $('.nav-tabs .nav-link').index(currentTab);
+            var newActiveTabIndex = $('.nav-tabs .nav-link').index(newCurrentTab);
+
+         
+            if (currentIndex === newActiveTabIndex) {
+                return;
+            }
+
+            var isValid = true;
+            var firstInvalidInput = null;
+            var inputs = document.querySelectorAll(query);
+            console.log(inputs);
+         
+            inputs.forEach(function (input) {
+                var span = input.nextElementSibling;
+
+            
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.style.border = '1px solid red';  
+
+                    
+                    if (span && span.classList.contains('text-danger')) {
+                        span.classList.remove('d-none');
+                        span.classList.add('d-block');
+                    }
+
+                    
+                    if (!firstInvalidInput) {
+                        firstInvalidInput = input;
+                    }
+                } else {
+                    input.style.border = '';  
+
+                   
+                    if (span && span.classList.contains('text-danger')) {
+                        span.classList.remove('d-block');
+                        span.classList.add('d-none');
+                    }
+                }
+            });
+
+          
+            if ((newActiveTabIndex > currentIndex) && !isValid) {
+                return;
+            }
+
+          
+            $(this).off('show.bs.tab');
+
+          
+            $(e.target).tab('show');
+
+          
+            $(this).on('show.bs.tab', arguments.callee);
+        });
+
+ 
+       
+    });
+
+
+
+    function setColorImage(clickedImage) {
+        if (currentPartialValue === null) {
+            return;
+        }
+
+
+        const parentPartial = $(".colorImageContainer").filter(function () {
+            return $(this).find('.btn').data('partial-value') === currentPartialValue;
+        }).first();
+
+        // Update the image inside the corresponding partial
+        const colorImg = parentPartial.find('.colorImg');
+        const imageUrl = $(clickedImage).attr('src');  // Get the full image URL
+        colorImg.attr('src', imageUrl);  // Set the image source
+
+        // Extract the image name from the URL (after the last '/')
+        const imageName = imageUrl.replace(/\\/g, '/').split('/').pop();  // Replace backslashes and get the image name
+
+        // Update the value of the hidden input with the image name only
+        const colorImageUrlInput = parentPartial.find('.colorImageUrl');
+        colorImageUrlInput.val(imageName); // Set the value of the hidden input to the image name
+
+
+        // Hide the modal
+        $('#ColorImageModal').modal('hide');
+    }
+
+    function moveRowUp(row) {
+        var previousRow = row.prev();  // Get the previous row
+        if (previousRow.length) {
+            row.insertBefore(previousRow);  // Move the current row up
+            rowCalc();  // Update row numbers after movement
+            updateDisplayOrder(); // Update DisplayOrder after movement
+        }
+    }
+    function moveRowDown(row) {
+        var nextRow = row.next();  // Get the next row
+        if (nextRow.length) {
+            row.insertAfter(nextRow);  // Move the current row down
+            rowCalc();  // Update row numbers after movement
+            updateDisplayOrder(); // Update DisplayOrder after movement
+        }
+    }
+    function updateDisplayOrder() {
+        $('#ImagesOrderTable tbody tr').each(function (index) {
+            // Update the DisplayOrder input value to match the row number
+            $(this).find('.displayOrder').val(index + 1);
+        });
+    }
+    function AddImagesToOrderTable(files) {
+        $.each(files, function (i, file) {
+            $.ajax({
+                url: '@Url.Action("AddImagesToTable")',  // Controller action that will handle the image names
+                type: 'POST',
+                data: { imageName: file.name },  // Send the file name as a list
+                traditional: true,  // This ensures the array is sent correctly
+                success: function (response) {
+                    // Append the returned row to the table and store the reference to the row
+                    var newRow = $('#ImagesOrderTable tbody').append(response).find('tr:last');
+
+                    // Create a FileReader to preview the uploaded image
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        // After the file is read, set the src of the image in the newly added row
+                        newRow.find('.orderImg').attr('src', e.target.result);
+                    };
+
+                    // Read the selected file as a Data URL for preview
+                    reader.readAsDataURL(file);
+
+                    updateDisplayOrder();
+                    rowCalc();
+                },
+                error: function () {
+                    alert("An error occurred while uploading the images.");
+                }
+            });
+        });
+    }
+
+  
+    function AddImagesToColorsImageModal(files) {
+        $.each(files, function (i, file) {
+            
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+
+                var imgElement = $('<img />', {
+                    class: 'colorImg', // Add the class for styling
+                    src: e.target.result, // Set the source as the file preview
+                    onclick: 'setColorImage(this)' // Set the onclick function to set the image
+                });
+
+                // Append the image to the modal's body
+                $('#ColorImageModal .modal-body').append(imgElement);
+            };
+
+            // Read the selected file as a Data URL for preview
+            reader.readAsDataURL(file);
+        });
+    }
+
+
+    function removeImageFromOrderTable(fileName) {
+        
+        $('#ImagesOrderTable tbody tr').each(function () {
+            var imageName = $(this).find('input.imageName').val();  
+
+        
+            if (imageName === fileName) {
+                $(this).remove();  
+            }
+        });
+    }
+
+    function removeImageFromColorImageModal(fileName) {
+        // Iterate over each image in the modal's body
+        $('#ColorImageModal .modal-body img').each(function () {
+            var imageSrc = $(this).attr('src');  // Get the src of the current image
+
+            // If the image's src matches the passed fileName (which should be the image URL or part of it)
+            if (imageSrc.indexOf(fileName) !== -1) {
+                $(this).remove();  // Remove the image element from the modal body
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+</script>
+
+
+
+@if (isModelStateInvalid)
+{
+
+    <script>
+        initializeView();
+    </script>
+}
+
+@if (Model == null || Model.Id == 0 || Model.Id == null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputIds = ['ArbName','ArbDescription', 'EngDescription', 'EngName', 'Price', 'DiscountPrice', 'Duration', 'VisitorsCount', 'VariableName', 'OfferCount', 'OfferPrice', 'VideoUrl'];
+            const editors = ['ArbDescription', 'EngDescription'];
+
+
+
+
+            // Handle regular input fields
+            inputIds.forEach(function (id) {
+                let inputElement = document.getElementById(id);
+
+                // Load saved data from localStorage when the page is refreshed
+                if (localStorage.getItem(id)) {
+                    inputElement.value = localStorage.getItem(id);
+                }
+
+                // Save data to localStorage when the user types in the input field
+                inputElement.addEventListener('input', function () {
+                    localStorage.setItem(id, inputElement.value);
+                });
+            });
+
+    
+            // Load saved video URLs from localStorage
+            loadVideosFromLocalStorage();
+
+
+            // Load saved data for the RelatedProductId dropdown
+            const relatedProductId = 'RelatedProductId';
+
+            // Load the saved value from localStorage (if it exists)
+            if (localStorage.getItem(relatedProductId)) {
+                const savedValue = localStorage.getItem(relatedProductId);
+                const selectElement = document.getElementById(relatedProductId);
+
+                // Set the saved value as selected in the dropdown
+                selectElement.value = savedValue;
+
+                updateSelect2();
+            }
+
+            
+            const enableRelatedProducts = 'EnableRelatedProducts';
+
+           
+            if (localStorage.getItem(enableRelatedProducts)) {
+                const savedState = localStorage.getItem(enableRelatedProducts) === 'true';
+                const checkbox = document.getElementById(enableRelatedProducts);
+
+             
+                checkbox.checked = savedState;
+            }
+
+         
+            const reneweInWarehouse = 'ReneweInWarehouse';
+
+          
+            if (localStorage.getItem(reneweInWarehouse)) {
+                const savedState = localStorage.getItem(reneweInWarehouse) === 'true';
+                const checkbox = document.getElementById(reneweInWarehouse);
+
+               
+                checkbox.checked = savedState;
+            }
+
+            // Load saved data for the CustomersReviews checkbox
+            const customersReviews = 'CustomersReviews';
+
+            // Load the saved state from localStorage (if it exists)
+            if (localStorage.getItem(customersReviews)) {
+                const savedState = localStorage.getItem(customersReviews) === 'true';
+                const checkbox = document.getElementById(customersReviews);
+
+                // Set the checkbox state to the saved state (checked or unchecked)
+                checkbox.checked = savedState;
+            }
+
+            const checkboxes = [
+                'HideCartButton',
+                'Exchargeable',
+                'Returnable',
+                'FreeShipping',
+                'TrackStock',
+                'Reviews'
+            ];
+
+            checkboxes.forEach(function (checkboxId) {
+                const savedState = localStorage.getItem(checkboxId);
+
+                if (savedState !== null) {
+                    const checkbox = document.getElementById(checkboxId);
+                    checkbox.checked = savedState === 'true';  // Convert string to boolean
+                }
+            });
+
+            loadSelectedOptions('SelectedCategories');
+            getSubCategories();
+            loadSelectedOptions('SelectedSubCategories');
+
+            loadVariablesFromLocalStorage();
+
+            loadCountOffersFromLocalStorage();
+
+        });
+
+
+    </script>
+
+
+}
+@* @section Scripts {
+    @{
+        <script src="~/lib/quill/quill.js"></script>
+    }
+} *@
+ @section Scripts {
+    @{
+        <script>
+
+
+            var quill = new Quill('#editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3 ,4 ,5 , 6 , false] }],
+                        [{ 'font': [] }],
+                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'script': 'sub' }, { 'script': 'super' }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'align': [] }],
+                        ['link', 'image', 'video'],
+                        ['clean'] // Remove formatting
+                    ]
+                }
+            });
+            var quill2 = new Quill('#editor2', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3 ,4 ,5 , 6, false] }],
+                        [{ 'font': [] }],
+                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'script': 'sub' }, { 'script': 'super' }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'align': [] }],
+                        ['link', 'image', 'video'],
+                        ['clean'] // Remove formatting
+                    ]
+                }
+            });
+            
+            
+            quill.root.innerHTML = document.getElementById("ArbDescription").value;
+            quill2.root.innerHTML = document.getElementById("EngDescription").value;
+            </script>
+    }
+}

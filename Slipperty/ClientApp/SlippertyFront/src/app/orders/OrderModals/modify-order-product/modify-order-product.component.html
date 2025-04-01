@@ -1,0 +1,3 @@
+<div id="selectedProduct" *ngIf="this.productId">
+  <app-order-detail-product (GetOrderProductData)="UpdateOrderProduct($event)"  [selectProductId]="this.productId" ></app-order-detail-product>
+</div>

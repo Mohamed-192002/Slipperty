@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model LinkDTO
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "حذف الرابط";
+}
+
+<h2 class="text-end mb-3">حذف الرابط</h2>
+<form asp-action="Delete" method="post" enctype="multipart/form-data">
+
+
+    <div asp-validation-summary="ModelOnly" class="text-danger arabic-direction"></div>
+    <span asp-validation-for="Url" class="text-danger d-block arabic-direction"></span>
+    <span asp-validation-for="LinkTypeId" class="text-danger d-block arabic-direction"></span>
+
+    <input type="hidden" asp-for="RegDate" />
+    <!-- Second row: Labels and inputs -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label asp-for="Url" class="form-label w-100 arabic-direction"></label>
+            <input type="text" asp-for="Url" class="form-control" placeholder="ادخل اسم التصنيف" readonly>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="LinkTypeId" class="form-label w-100 arabic-direction"></label>
+            <select asp-for="LinkTypeId" asp-items="ViewBag.LinkTypes" class="form-select" disabled>
+                @* <option selected disabled>-- اختر --</option> *@
+            </select>
+        </div>
+    </div>
+
+    <!-- Last row: Save button -->
+    <div class="row">
+        <div class="col text-start">
+            <button type="submit" class="btn btn-danger savebtn">حذف</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

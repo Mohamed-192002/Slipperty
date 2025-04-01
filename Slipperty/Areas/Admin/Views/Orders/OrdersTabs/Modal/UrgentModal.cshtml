@@ -1,0 +1,48 @@
+﻿<div class="modal fade" id="UrgentModal" tabindex="-1" role="dialog"  aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered justify-content-center " role="document">
+        <div class="modal-content ActionsModal">
+            @* remove the rounded from the list-group in the Order.css and set padding on the model-body *@
+            <div class="modal-body" style="padding-top:10px !important;">
+                <ul class="list-group rounded-0">
+                    <li class="list-group-item border-0 border-bottom date-option " data-days="0" >انهارده</li>
+                    <li class="list-group-item border-0 border-bottom date-option " data-days="1" >بكرا</li>
+                    <li class="list-group-item border-0 border-bottom date-option " data-days="2" >بعد بكرا</li>
+
+                </ul>
+                <div id="model-urgent-data-id">
+                    <li class="list-group-item d-flex align-items-center gap-2 border-0 border-bottom">تاريخ : <input id="datepicker" class="datepickerInput" width="149"/>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center gap-2 border-0">
+                        مصاريف شحن
+                        <input type="text" class="ShipmentInput" pattern="^[0-9]*$" title="Please enter a valid number" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+                    </li>
+
+                </div>
+                <div class="d-flex justify-content-center align-items-start p-2">
+                    <a class="btn btn-primary order-btn" modal-id="UrgentModal" modal-data-container-id="model-urgent-data-id" ActionType="@Convert.ToInt32(ActionType.Urgent)">تأكيد</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#datepicker').datepicker();
+
+        $(".date-option").on("click", function () {
+            let daysToAdd = $(this).data("days");
+            let currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() + (daysToAdd ) );
+            const formattedDate = currentDate
+                .toISOString()
+                .split('T')[0]
+                .split('-')
+                .reverse()
+                .join('/');
+            $("#datepicker").val(formattedDate);
+        });
+    });
+</script>

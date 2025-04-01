@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model UserAddressDTO
+
+<form asp-action="AddNewAddress">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="UserId" />
+    <input type="hidden" asp-for="oldAddress" />
+    <div class="mb-3 mt-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input type="text" asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Address" class="form-label"></label>
+            <input type="text" asp-for="Address" class="form-control">
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="AddressTypeId" class="form-label"></label>
+            <select asp-for="AddressTypeId" asp-items="ViewBag.AddressTypes" class="form-select select2">
+                <option selected disabled>-- اختر --</option>
+            </select>
+            <span asp-validation-for="AddressTypeId" class="text-danger d-inline-block mt-3"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="mb-2 text-primary fw-bold" asp-for="GovernmentId"></label>
+            <select asp-for="GovernmentId" asp-items="ViewBag.Governments" class="form-select select2" onchange="getRegions()">
+                <option selected disabled>-- اختر --</option>
+                <option value="-1">-- اخرى --</option>
+            </select>
+            <span asp-validation-for="GovernmentId" class="text-danger d-inline-block mt-3"></span>
+        </div>
+        <div class="col-md-6">
+            <label class="mb-2 text-primary fw-bold" asp-for="RegionId"></label>
+            <select asp-for="RegionId" asp-items="ViewBag.Regions" class="form-select select2 mt-2" onchange="checkRegion()">
+                <option selected disabled>-- اختر --</option>
+                <option value="-1">-- اخرى --</option>
+            </select>
+            <span asp-validation-for="RegionId" class="text-danger d-inline-block mt-3"></span>
+        </div>
+    </div>
+    <div class="row d-none" id="newArea">
+        <div class="col-md-6 mb-3">
+            <input asp-for="GovernmentName" class="form-control mt-2  py-3 d-none" type="text" placeholder="ادخل المحافظة">
+            <span id="GovernmentError" class="text-danger arabic-direction d-none">ادخل المحافظة</span>
+            
+        </div>
+        <div class="col-md-6">
+            <input asp-for="RegionName" class="form-control mt-2  py-3 d-none" type="text" placeholder="ادخل المنطقة">
+            <span id="RegionError" class="text-danger arabic-direction d-none">ادخل المنطقة</span>
+        </div>
+    </div>
+    <div class="form-footer">
+        <button type="submit" class="btn-save savebtn">حفظ</button>
+    </div>
+</form>

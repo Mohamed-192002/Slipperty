@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model UserPaymentMethodDTO
+
+
+<form asp-action="AddNewPaymentMethod">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="userId" />
+    <input type="hidden" asp-for="PaymentMethodId" />
+    <div class="mb-3 mt-3">
+        <label asp-for="CardNumber" class="form-label">رقم البطاقة (14 رقم في وجه البطاقة)</label>
+        <input type="text" asp-for="CardNumber" class="form-control onlyNumbers"
+               placeholder="XXXX XXXX XXXX XXXX">
+        <span asp-validation-for="CardNumber" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="CardHolderName" class="form-label">اسم صاحب البطاقة</label>
+        <input type="text" asp-for="CardHolderName" class="form-control">
+        <span asp-validation-for="CardHolderName" class="text-danger"></span>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="ExpiryDate" class="form-label">تاريخ الانتهاء</label>
+            <input type="text" asp-for="ExpiryDate" class="form-control" placeholder="MM/YY" maxlength="5" oninput="formatExpiryDate(this)">
+            <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="CVV" class="form-label">الرقم السري</label>
+            <input type="text" asp-for="CVV" class="form-control onlyNumbers" placeholder="XXX">
+            <span asp-validation-for="CVV" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-footer">
+        <div>
+            <input asp-for="isDefault" class="form-check-input" type="checkbox" />
+            <label asp-for="isDefault" class="form-check-label"></label>
+        </div>
+        <button type="submit" class="btn-save">حفظ</button>
+    </div>
+</form>

@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Marhey:wght@300..700&family=Oi&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+body {
+    font-family: "Cairo", serif !important;
+    font-weight: 400 !important;
+    font-optical-sizing: auto !important;
+}
+
+.cairo-main {
+    font-family: "Cairo", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}
+
+.cairo-light {
+    font-weight: 200;
+}
+
+.cairo-bold {
+    font-weight: 600;
+}
+
+.cairo-extra-bold {
+    font-weight: 800;
+}
+.bg-purple {
+    background: rgba(104, 14, 231, 0.25);
+}
+    .bg-purple:focus {
+        background: rgba(104, 14, 231, 0.25); /* Keep the same background when focused */
+        outline: none; /* Optional: remove default focus outline */
+    }
+
+.form-section {
+    background-color: #ffffff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    max-width: 400px;
+    margin: -100px auto 0;
+    padding: 20px;
+    z-index: 10;
+    position: relative;
+}
+
+.icon-container {
+    text-align: center;
+}
+
+.icon {
+    width: 120px;
+    height: auto;
+}
+
+.form-title {
+    font-size: 24px;
+    color: #6700ea;
+    font-weight: 800;
+}
+
+.input-container {
+    text-align: right;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #6700ea;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dropdown-container {
+    position: relative;
+}
+
+.selected-flag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid #6700ea;
+    border-radius: 8px 0 0 8px;
+    cursor: pointer;
+    background-color: #f8f9fa;
+}
+
+.flag-img {
+    width: 20px;
+    height: 14px;
+}
+
+
+
+.form-control {
+    border: none;
+    padding: 10px 12px;
+    font-size: 14px;
+    flex: 1;
+    border-radius: 0 8px 8px 0;
+}

@@ -1,0 +1,133 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<LinkDTO>
+@{
+    ViewData["Title"] = "الروابط";
+    Layout = "_AdminLayout";
+}
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">تأكيد الحذف</h5>
+                <button type="button" class="btn-close mx-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body arabic-direction">
+                <p>هل أنت متأكد أنك تريد الحذف؟</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">لا</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">نعم</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row align-items-center mb-3">
+    <!-- Title and Description -->
+    <div class="col text-end">
+        <h2 class="mb-0">الروابط</h2>
+        @*<p class="text-muted mb-0">من خلال هذه الصفحة بإمكانك عرض كل التصنيفات</p>*@
+    </div>
+    <div class="col-auto text-start">
+        <a asp-action="Upsert" class="btn btn-primary">إضافة</a>
+    </div>
+</div>
+
+<!-- Responsive Table -->
+<div class="table-responsive">
+    <table class="table table-striped text-center">
+        <thead class="table-light">
+            @await Html.PartialAsync("_LinksHeaderPartial")
+        </thead>
+        <tbody>
+            @if (Model?.Count() > 0)
+            {
+                @foreach (var item in Model)
+                {
+                    @await Html.PartialAsync("_LinksDetailsPartial", item)
+                }
+            }
+            else
+            {
+                @await Html.PartialAsync("_EmptyDataPartial")
+            }
+        </tbody>
+    </table>
+    
+                @await Html.PartialAsync("_PaginationPartial", new PaginationDTO
+           {
+               IsPreviousLinkVisible = ViewBag.IsPreviousLinkVisible,
+               IsNextLinkVisible = ViewBag.IsNextLinkVisible,
+               PageNumber = ViewBag.PageNumber,
+               TotalPages = ViewBag.TotalPages,
+               DisplayedItemsCount = ViewBag.DisplayedItemsCount
+           })
+</div>
+@* 
+<div class="row mt-3">
+    <div class="col text-start">
+        <p class="text-muted">عدد العناصر المعروضة: 25 عنصر</p>
+    </div>
+    <div class="col-auto text-end">
+        <nav>
+            <ul class="pagination pagination-sm">
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item active">
+                    <span class="page-link btn btn-primary text-white">3</span>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">10</a></li>
+            </ul>
+        </nav>
+    </div>
+</div> *@
+
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+        rowCalc();
+        $(".deleteBtn").on("click", function () {
+            var categoryId = $(this).data("id");
+            // Store the category ID in the hidden button for later use
+            $("#confirmDeleteBtn").data("id", categoryId);
+            // Show the confirmation modal
+            $('#deleteModal').modal('show');
+        });
+
+        $("#confirmDeleteBtn").on("click", function () {
+            var categoryId = $(this).data("id");
+
+            // Send the AJAX request to delete the category
+            $.ajax({
+                url: '@Url.Action("Delete")', // Replace with your controller and action
+                type: 'POST',
+                data: { Id: categoryId },
+                success: function (response) {
+                    if (response.success) {
+                        // If the deletion is successful, reload the page to reflect changes
+                        // toastr.success("Category deleted successfully!");
+                        location.reload();
+                    } else {
+                        // If there is an error, show the error message
+                        // toastr.error(response.message || "An error occurred while deleting the category.");
+                    }
+                },
+                error: function () {
+                    toastr.error("حدث خطأ.");
+                }
+            });
+
+            // Close the modal
+            $('#deleteModal').modal('hide');
+        });
+    });
+</script>

@@ -1,0 +1,105 @@
+﻿@page
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model LoginModel
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <link rel="stylesheet" href="~/css/login.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- FontAwesome CSS -->
+    <!-- Website Icon -->
+    <link rel="icon" href="~/img/WebsiteIcon.jpeg" type="image/x-icon">
+
+    <style>
+        .text-danger {
+            color: red;
+        }
+
+        .arabic-direction {
+            text-align: right !important;
+        }
+
+        .d-none {
+            display: none !important;
+        }
+
+        /* Styling for the eye icon */
+        .eye-icon {
+            cursor: pointer;
+            position: absolute;
+            left: 10px;
+            top: 63%;
+            transform: translateY(-50%);
+            color: #7734c1;
+            font-size: 18px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+            .form-group input {
+                width: 100%;
+                padding-left: 35px; /* Space for the icon inside the input field */
+            }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="~/img/Logo_Purple.png" alt="Logo">
+        <h1>تسجيل الدخول</h1>
+        <form id="account" method="post">
+            <img src="~/img/login-lock.png" />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-group">
+                <label asp-for="Input.Email">رقم التلفيون</label>
+                <input asp-for="Input.Email" type="text" placeholder="رقم التليفون" required>
+                <span asp-validation-for="Input.Email" class="text-danger arabic-direction"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Password">كلمة المرور</label>
+                <input asp-for="Input.Password" type="password" placeholder="كلمة المرور" required id="passwordInput">
+                <span asp-validation-for="Input.Password" class="text-danger arabic-direction"></span>
+                <!-- Eye Icon for toggling password visibility -->
+                <i id="togglePassword" class="fa-regular fa-eye eye-icon"></i>
+            </div>
+
+            <div class="options-row">
+                <a href="#" class="forgot-password"><span class="text-muted ms-3">نسيت كلمة المرور؟</span>استعادة كلمة المرور</a>
+                <a asp-area="User" asp-controller="UserManagement" asp-action="RegisterPhoneNumber" class="forgot-password"><span class="text-muted ms-3">ليس لديك حساب ؟</span>انشاء حساب</a>
+                <div class="remember d-none">
+                    <label asp-for="Input.RememberMe">احفظ تسجيل الدخول</label>
+                    <input asp-for="Input.RememberMe" type="checkbox" checked disabled>
+                </div>
+            </div>
+
+            <button type="submit">دخول</button>
+        </form>
+    </div>
+
+    <script>
+        // Toggle the password visibility when clicking on the eye icon
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordField = document.getElementById('passwordInput');
+            const icon = this;
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";  // Show the password
+                icon.classList.remove("fa-eye");  // Remove closed eye icon
+                icon.classList.add("fa-eye-slash");  // Add open eye icon
+            } else {
+                passwordField.type = "password";  // Hide the password
+                icon.classList.remove("fa-eye-slash");  // Remove open eye icon
+                icon.classList.add("fa-eye");  // Add closed eye icon
+            }
+        });
+    </script>
+</body>
+</html>

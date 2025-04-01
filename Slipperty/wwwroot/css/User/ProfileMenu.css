@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Marhey:wght@300..700&family=Oi&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+body {
+    font-family: "Cairo", serif !important;
+    /*font-weight: 400 !important;*/
+    font-optical-sizing: auto !important;
+}
+
+.cairo-main {
+    font-family: "Cairo", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}
+
+.cairo-light {
+    font-weight: 200;
+}
+
+.cairo-bold {
+    font-weight: 600;
+}
+
+.cairo-extra-bold {
+    font-weight: 800;
+}
+
+
+a.text-muted {
+    text-decoration: none !important;
+}
+
+    a.text-muted:hover {
+        text-decoration: underline;
+    }
+
+.profile-card {
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    border-radius: 50px !important; /* Force the border-radius */
+}
+
+
+    .profile-card:hover {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Slightly bigger shadow on hover */
+        transform: translateY(-5px); /* Slightly raise the card on hover */
+    }
+
+    /* Profile Image */
+    .profile-card img {
+        border: 5px solid #fff; /* White border around image for a clean look */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow around the image */
+    }
+
+    /* Profile Title and Subtitle */
+    .profile-card h6 {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .profile-card .text-muted {
+        font-size: 0.9rem;
+        color: #999;
+    }
+
+    /* Links inside the profile */
+    .profile-card a.text-muted {
+        font-size: 1rem;
+        color: #555;
+        transition: color 0.3s ease-in-out;
+    }
+
+        .profile-card a.text-muted:hover {
+            color: #6700EA; /* Purple hover color */
+        }
+
+    /* Divider */
+    .profile-card hr {
+        border-color: #f0f0f0;
+        margin: 15px 0;
+    }
+
+/* Media Query for Responsiveness */
+@media (max-width: 767px) {
+    .profile-card {
+        padding: 15px; /* Adjust padding for smaller screens */
+    }
+
+        .profile-card img {
+            width: 120px; /* Smaller image on mobile */
+            height: 120px;
+        }
+}
+
+/* Links Container for Profile */
+.profile-card .d-flex a {
+    display: block;
+    width: 100%;
+    padding: 8px 0;
+    font-size: 1rem;
+    color: #555;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+    .profile-card .d-flex a:hover {
+        color: #6700EA; /* Purple hover color */
+    }
+
+/* Styling for each icon link */
+.profile-card i {
+    margin-right: 10px;
+}

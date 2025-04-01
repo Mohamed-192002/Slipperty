@@ -1,0 +1,84 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model PaginationDTO
+
+<div class="row mt-3 w-100">
+    <div class="col text-start">
+        <p class="text-muted">عدد العناصر المعروضة: @Model.DisplayedItemsCount عنصر</p>
+    </div>
+    <div class="col-auto text-end">
+        <ul class="pagination">
+            @if (Model.IsPreviousLinkVisible)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber - 1)">السابق</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">السابق</a>
+                </li>
+            }
+
+            @* Display page numbers dynamically with a limit of 5 and ellipses *@
+            @{
+                int startPage = Math.Max(1, Model.PageNumber - 2); // 2 pages before the current page
+                int endPage = Math.Min(Model.TotalPages, Model.PageNumber + 2); // 2 pages after the current page
+
+                // Display the "..." if there are pages before the start or after the end of the range
+                bool displayEllipsisBefore = startPage > 1;
+                bool displayEllipsisAfter = endPage < Model.TotalPages;
+            }
+
+            @* Display the first page number if necessary *@
+            @if (displayEllipsisBefore)
+            {
+                <li class="page-item"><a class="page-link" href="#">...</a></li>
+            }
+
+            @for (int i = startPage; i <= endPage; i++)
+            {
+                if (Model.PageNumber == i)
+                {
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" asp-route-page="@i">@i <span class="sr-only">(current)</span></a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link" asp-route-page="@i">@i</a></li>
+                }
+            }
+
+            @* Display the "..." after the page numbers if necessary *@
+            @if (displayEllipsisAfter)
+            {
+                <li class="page-item"><a class="page-link" href="#">...</a></li>
+            }
+
+            @* Display the last page link *@
+            @if (Model.TotalPages > 1 && endPage < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-route-page="@Model.TotalPages">@Model.TotalPages</a>
+                </li>
+            }
+
+            @if (Model.IsNextLinkVisible)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber + 1)">التالي</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">التالي</a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+
+@* صفحة @Model.PageNumber من @Model.TotalPages *@

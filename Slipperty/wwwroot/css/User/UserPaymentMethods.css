@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Marhey:wght@300..700&family=Oi&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+body {
+    font-family: "Cairo", serif !important;
+    /*font-weight: 400 !important;*/
+    font-optical-sizing: auto !important;
+}
+
+.cairo-main {
+    font-family: "Cairo", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}
+
+.cairo-light {
+    font-weight: 200;
+}
+
+.cairo-bold {
+    font-weight: 600;
+}
+
+.cairo-extra-bold {
+    font-weight: 800;
+}
+
+/* Payment Section */
+.payment-container {
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.payment-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.payment-options {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+    .payment-option img {
+        width: 50px;
+    }
+
+    /* Styling the radio buttons as rectangles */
+    .payment-option input[type="radio"] {
+        appearance: none; /* Removes default radio button */
+        width: 25px;
+        height: 20px; /* Adjust height to make it more rectangular */
+        border: 2px solid #ccc;
+        border-radius: 2px; /* Rounded corners */
+        margin-right: 10px;
+        position: relative;
+        cursor: pointer;
+        outline: none;
+        transition: border-color 0.3s, background-color 0.3s;
+    }
+
+        /* When the radio button is selected */
+        .payment-option input[type="radio"]:checked {
+            border-color: #680ee7; /* Active border color */
+            background-color: #680ee7; /* Active background color */
+        }
+
+            /* Show check icon when selected */
+            .payment-option input[type="radio"]:checked::after {
+                content: "\2713"; /* Unicode check mark */
+                font-size: 14px;
+                color: white;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%); /* Center the check mark */
+            }
+
+/* Add New Card Section */
+.add-new-card {
+    margin-top: 20px;
+}
+
+.add-card-link {
+    display: block;
+    text-align: start;
+    color: #6700EA;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+    .add-card-link:hover {
+        text-decoration: underline;
+    }
+
+/* Form Footer */
+.form-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-save {
+    background-color: #680ee7;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+    .btn-save:hover {
+        background-color: #680ee7;
+    }
+
+/* Title with line styles */
+.title-with-line {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+    .title-with-line::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 0;
+        width: 100px;
+        height: 4px;
+        background-color: #6700EA;
+    }
+
+.form-control {
+    border-color: #680ee7 ;
+}
+.form-check-input:checked {
+    background-color: #680ee7;
+    background-color: #680ee7;
+    border-color: #680ee7;
+}
+@media (max-width: 767px) {
+    .title-with-line::after {
+        width: 70px;
+    }
+}

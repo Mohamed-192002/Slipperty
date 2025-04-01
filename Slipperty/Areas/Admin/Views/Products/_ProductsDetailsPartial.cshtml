@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProductDTO
+
+<tr>
+    <td class="rowNumber text-center" colspan="1">1</td>
+    <td class="search-content text-center" colspan="2">
+        <img src="@((Model?.MainImageUrl != null && Model.MainImageUrl != "") ? Url.Content($"~/{ImagesPathes.Products}{Model.MainImageUrl}") : Url.Content($"~{ImagesPathes.DefaultImage}"))" alt="Category Image" class="img-thumbnail">
+    </td>
+    <td class="text-center" colspan="4">@Model?.ArbName</td>
+    <td class="text-center" colspan="2">@Model?.Price</td>
+    <td class="text-center" colspan="1">@Model?.RegDate?.ToShortDateString()</td>
+    <td class="text-center" colspan="1">
+        @if(Model?.StockCount > 0)
+        {
+            <div class="alert alert-primary fw-bold" role="alert">
+                متوفر
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger fw-bold" role="alert">
+                غير متوفر
+            </div>
+        }
+    </td>
+    <td class="text-center" colspan="1">
+        <a asp-action="Upsert" asp-route-id="@Model?.Id" class="btn btn-primary btn-sm mb-1 w-100">تعديل</a>
+        @* <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-danger btn-sm w-100">حذف</a> *@
+        <a href="javascript:void(0);" class="d-block btn btn-danger btn-sm deleteBtn" data-id="@Model?.Id">حذف</a>
+    </td>
+</tr>

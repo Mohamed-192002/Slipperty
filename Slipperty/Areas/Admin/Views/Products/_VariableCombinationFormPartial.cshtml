@@ -1,0 +1,45 @@
+﻿@using HtmlHelpers.BeginCollectionItemCore
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model VariableCombinationDTO
+
+@* <tr>
+    using (Html.BeginCollectionItem("VariableCombinations"))
+    {
+        <input type="hidden" asp-for="Id" />
+        <td class="rowNumber text-center" colspan="1">1</td>
+        <td colspan="6"><input type="text" asp-for="Text" class="form-control text-center" readonly /></td>
+        <td colspan="2"><input type="text" asp-for="StockCount" class="form-control text-center onlyNumbers" /></td>
+        <td colspan="2" class="text-center">
+            <input type="text" asp-for="Price" class="form-control text-center onlyNumbers" />
+        </td>
+    }
+</tr> *@
+@using (Html.BeginCollectionItem("VariableCombinations"))
+{
+    <div class="bordered-div my-2">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Text" />
+        <div class="row">
+        <h5 class="arabic-direction">@Model.Text</h5>
+            <a asp-action="printBarcode" target="_blank" onclick="printBarcode(this, '@Model.Text')" class="btn btn-primary">طباعة</a>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col">
+                    <label asp-for="Price" class="arabic-direction w-100"></label>
+                </div>
+                <div class="col">
+                    <input type="text" asp-for="Price" class="form-control onlyNumbers" placeholder="0" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col">
+                    <label asp-for="StockCount" class="arabic-direction w-100"></label>
+                </div>
+                <div class="col">
+                    <input type="text" asp-for="StockCount" class="form-control onlyNumbers" placeholder="0" />
+                </div>
+            </div>
+        </div>
+    </div>
+}

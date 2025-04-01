@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<CategoryDTO>
+
+<li style="list-style: none;"><a class="dropdown-item text-end" asp-route-categoryid="0" asp-action="Index" asp-controller="Products" asp-area="User">الكل</a></li>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var category in Model)
+    {
+        <li style="list-style: none;"><a class="dropdown-item text-end " asp-route-categoryid="@category.Id" asp-action="Index" asp-controller="Products" asp-area="User">@category.Name</a></li>
+    }
+}

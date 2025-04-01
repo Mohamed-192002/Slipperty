@@ -1,0 +1,147 @@
+﻿@model PaginationDTO
+
+<div class="row mt-3 w-100" id="table-pagintation">
+    <div class="col text-start">
+        <p class="text-muted">عدد العناصر المعروضة: @Model.DisplayedItemsCount عنصر</p>
+    </div>
+    <div class="col-auto text-end">
+        <ul class="pagination" id="pagination">
+            @if (Model.IsPreviousLinkVisible)
+            {
+                <li class="page-item">
+                    <a class="page-link"  data-shahed="vla" data-page="@(Model.PageNumber - 1)">السابق</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link"  tabindex="-1" aria-disabled="true">السابق</a>
+                </li>
+            }
+
+            @{
+                int startPage = Math.Max(1, Model.PageNumber - 2);
+                int endPage = Math.Min(Model.TotalPages, Model.PageNumber + 2);
+
+                bool displayEllipsisBefore = startPage > 1;
+                bool displayEllipsisAfter = endPage < Model.TotalPages;
+            }
+
+            @if (displayEllipsisBefore)
+            {
+                <li class="page-item"><a class="page-link" >...</a></li>
+            }
+
+            @for (int i = startPage; i <= endPage; i++)
+            {
+                if (Model.PageNumber == i)
+                {
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link"  data-page="@i">@i <span class="sr-only">(current)</span></a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link"  data-page="@i">@i</a></li>
+                }
+            }
+
+            @if (displayEllipsisAfter)
+            {
+                <li class="page-item"><a class="page-link" >...</a></li>
+            }
+
+            @if (Model.TotalPages > 1 && endPage < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link"  data-page="@Model.TotalPages">@Model.TotalPages</a>
+                </li>
+            }
+
+            @if (Model.IsNextLinkVisible)
+            {
+                <li class="page-item">
+                    <a class="page-link" data-page="@(Model.PageNumber + 1)">التالي</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link"  tabindex="-1" aria-disabled="true">التالي</a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<script>
+
+
+        let paginationObj = {
+            status: "",
+            page: 1,
+            queryString: ""
+        };
+        
+    
+        function paginate (e) {
+            e.preventDefault();
+            let obj =  {}; 
+               $(`#${e.target.id}`).serializeArray().forEach(_ => {
+               obj[_.name] = _.value; 
+              });
+               paginationObj.queryString =  JSON.stringify(obj);
+               getServerData();
+        }
+        $(document).on('click', '.pagination a', function (e) {
+            e.preventDefault();
+            let page = $(this).data('page');
+            if (page) {
+                paginationObj.page = page;
+                getServerData();
+              
+            }
+        });
+        
+        function getServerData()
+        {
+            
+            let tabId = $(".tab-active-color").attr("id");
+            let status = getTabStatus(tabId);
+            paginationObj.status = status;
+            $("#loader").removeClass("d-none")
+            $.ajax({
+                url: '@Url.Action(Model.Action, Model.Controller)',
+                data: paginationObj,
+                type: 'GET',
+                success: function (response) {
+                    $('#partial-container').html(response);
+                    $("#loader").addClass("d-none")
+                },
+                error: function () {
+                    $("#loader").addClass("d-none")
+                    toastr.options = {
+                        positionClass: 'toast-top-right'
+                    };
+                    toastr.error("حاول مرة اخري");
+                    
+                }
+            });
+        }
+
+
+</script>
+
+
+@* $.ajax({ *@
+@* url: '@Url.Action(Model.Action, Model.Controller)',  *@
+@* data: { pageNumber: page , Filter : filterObj},  *@
+@* type: 'GET', *@
+@* success: function (response) { *@
+@* console.log(response); *@
+@* $('#partial-container').html(response);  *@
+@* }, *@
+@* error: function () { *@
+@* alert('Error loading the data.'); *@
+@* } *@
+@* }); *@

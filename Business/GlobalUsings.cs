@@ -1,0 +1,11 @@
+﻿global using System.ComponentModel.DataAnnotations;
+global using System.ComponentModel.DataAnnotations.Schema;
+global using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+global using Business.DTO;
+global using Infrastructure.Models;
+global using AutoMapper;
+global using AutoMapper.QueryableExtensions;
+global using Infrastructure.Repositories.IRepositories;
+global using Infrastructure.Contracts;
+global using Microsoft.EntityFrameworkCore;
+global using Infrastructure.Helpers;

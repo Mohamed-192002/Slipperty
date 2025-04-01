@@ -1,0 +1,497 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProductViewDTO
+@{
+    ViewData["Title"] = "المنتجات";
+}
+
+<link rel="stylesheet" href="~/css/User/Products.css" />
+
+<div class="bg-light">
+
+    @* <section class="new-arrivals py-5"> *@
+    <section class="new-arrivals pt-5 pb-3">
+        <div class="container mt-4">
+            <nav class="navbar navbar-expand-lg modern-navbar cairo-extra-bold">
+                <div class="container-fluid">
+                    <button class="navbar-toggler category-navbar-toggler mb-1 bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#categoryNavbarNav"
+                            aria-controls="categoryNavbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-center productFilter" id="categoryNavbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item" data-categoryid="0" onclick="updateSelectedCategory(0); closeNavbar();"><a class="nav-link active px-2">الكل</a></li>
+                            @if (Model != null && Model.Categories != null && Model.Categories.Any())
+                            {
+                                foreach (var category in Model.Categories)
+                                {
+                                    <li class="nav-item" data-categoryid="@category.Id" onclick="updateSelectedCategory(@category.Id); closeNavbar();"><a class="nav-link px-2">@category.Name</a></li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <h1 class="text-center d-inline-block d-lg-none text-white fw-bold nav-centered-title">الاقسام</h1>
+            </nav>
+        </div>
+    </section>
+    @* <section class="pagination-section pt-3 pb-2 bg-light">
+    <h4 class="text-center">اختار عشان تشوف المنتجات اللي علي مقاسك</h4>
+    <div class="container text-center">
+    <div class="row justify-content-center">
+    <div class="col-12 col-md-8">
+    <ul class="pagination flex-wrap justify-content-center">
+    <li class="page-item active">
+    <a class="page-link bg-primary text-white" href="#" aria-label="Previous">
+    <span aria-hidden="true">&laquo;</span>
+    </a>
+    </li>
+    @if (Model != null && Model.Sizes != null && Model.Sizes.Any())
+    {
+    foreach (var size in Model.Sizes)
+    {
+    <li class="page-item"><a class="page-link" onclick="setActiveSize(this)">@size</a></li>
+    }
+    }
+    <li class="page-item active">
+    <a class="page-link bg-primary text-white" href="#" aria-label="Next">
+    <span aria-hidden="true">&raquo;</span>
+    </a>
+    </li>
+    </ul>
+    <h4>أنت الأن تشاهد جميع المنتجات <span id="sizeNo"></span> </h4>
+    </div>
+    </div>
+    </div>
+    </section> *@
+
+    @* <section class="pagination-section py-5 bg-light">
+    <div class="container text-center">
+    <h2 class="mb-4">اختار عشان تشوف المنتجات الي علي مقاسك</h2>
+    <div class="row justify-content-center">
+    <div class="col-12">
+    <div class="pagination-container position-relative">
+    <!-- Left Arrow -->
+    <a id="prev" class="arrow page-link" href="#" aria-label="Previous">
+    &raquo;
+
+    </a>
+
+    <!-- Pagination Numbers -->
+    <ul id="pagination" class="pagination flex-wrap justify-content-center mx-auto">
+    @if (Model != null && Model.Sizes != null && Model.Sizes.Any())
+    {
+    foreach (var size in Model.Sizes)
+    {
+    <li class="page-item"><a class="page-link" onclick="setActiveSize(this)">@size</a></li>
+    }
+    }
+    </ul>
+
+    <!-- Right Arrow -->
+    <a id="next" class="arrow page-link" href="#" aria-label="Next">
+    &laquo;
+    </a>
+    </div>
+    <h4>أنت الأن تشاهد جميع المنتجات <span id="sizeNo"></span> </h4>
+    </div>
+    </div>
+    </div>
+    </section> *@
+
+    <section class="pagination-section py-5 mt-4 mx-auto mb-5">
+        <div class="row w-100 d-flex justify-content-center">
+            <div class="col-12 d-flex justify-content-center">
+                <button class="btn btn-primary mb-2" style="width: 50%;" data-bs-toggle="offcanvas" data-bs-target="#filtersOffcanvas" aria-controls="filtersOffcanvas">
+                    <i class="fa-solid fa-filter"></i> فلتر
+                </button>
+            </div>
+        </div>
+
+        <div class="container text-center">
+            <h4 class="mb-4 inner-text">اختار عشان تشوف المنتجات الي علي مقاسك</h4>
+
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="pagination-container position-relative">
+                        <!-- Left Arrow (Previous) -->
+                        <a id="prev" class="arrow page-link ms-1" href="#" aria-label="Previous">
+                            &raquo;
+                        </a>
+
+                        <!-- Pagination Scrollable Container -->
+                        <div class="pagination-scroll-container mx-5">
+                            <!-- Pagination Numbers -->
+                            <ul id="pagination" class="pagination d-flex justify-content-center mx-auto">
+                                @if (Model != null && Model.Sizes != null && Model.Sizes.Any())
+                                {
+                                    foreach (var size in Model.Sizes)
+                                    {
+                                        <li class="page-item"><a class="page-link" onclick="setActiveSize(this)">@size</a></li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+
+                        <!-- Right Arrow (Next) -->
+                        <a id="next" class="arrow page-link me-1" href="#" aria-label="Next">
+                            &laquo;
+                        </a>
+                    </div>
+
+                    <!-- Reset Button -->
+                    <button class="btn btn-primary mt-4" onclick="resetSize()">إعادة تعيين</button>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Button to open the offcanvas filters -->
+    @* <div class="container text-center mb-4">
+    <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#filtersOffcanvas" aria-controls="filtersOffcanvas"><i class="fa-solid fa-filter"></i> فلتر</button>
+    </div> *@
+
+    <!-- Offcanvas for filters -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="filtersOffcanvas" aria-labelledby="filtersOffcanvasLabel">
+        <div class="offcanvas-header bg-primary text-white">
+            <h5 class="offcanvas-title" id="filtersOffcanvasLabel">الفلاتر</h5>
+            <button id="filterCloseBtn" type="button" class="btn text-white" data-bs-dismiss="offcanvas" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="container">
+                <div class="row">
+                    <!-- خامه Dropdown -->
+                    <div class="col-md-12 mb-4">
+                        <label class="form-label fw-bold" asp-for="MaterialId"></label>
+                        <select class="form-select select2" asp-for="MaterialId" asp-items="ViewBag.Materials" multiple>
+                            @* <option value="0" selected>الكل</option> *@
+                        </select>
+                    </div>
+
+                    <!-- الوان Dropdown -->
+                    <div class="col-md-12 mb-4">
+                        <label class="form-label fw-bold" asp-for="ColorId"></label>
+                        <select class="form-select select2" asp-for="ColorId" asp-items="ViewBag.Colors" multiple>
+                            @* <option value="0" selected>الكل</option> *@
+                        </select>
+                    </div>
+
+                    <!-- Brand Dropdown -->
+                    <div class="col-md-12 mb-4">
+                        <label class="form-label fw-bold" asp-for="BrandId"></label>
+                        <select class="form-select select2" asp-for="BrandId" asp-items="ViewBag.Brands" multiple>
+                            @* <option value="0" selected>الكل</option> *@
+                        </select>
+                    </div>
+
+                    <!-- السعر Dropdown -->
+                    <div class="col-md-12 mb-4">
+                        <label for="السعر" class="form-label fw-bold">السعر</label>
+                        <div class="d-flex gap-2">
+                            <input type="number" asp-for="priceFrom" onblur="checkPriceRange()" class="form-control" placeholder="من" min="0" value="">
+                            <span class="fw-bold">-</span>
+                            <input type="number" asp-for="priceTo" onblur="checkPriceRange()" class="form-control" placeholder="إلى" min="0" value="">
+                        </div>
+                    </div>
+
+                    <!-- نوع Dropdown -->
+                    <div class="col-md-12 mb-4">
+                        <label class="form-label fw-bold" asp-for="ProductTypeId"></label>
+                        <select class="form-select select2" asp-for="ProductTypeId" asp-items="ViewBag.ProductTypes" multiple>
+                            @* <option value="0" selected>الكل</option> *@
+                        </select>
+                    </div>
+
+                    <!-- التصنيع Dropdown -->
+                    <div class="col-md-12 mb-4">
+                        <label class="form-label fw-bold" asp-for="ManufacturingId"></label>
+                        <select class="form-select select2" asp-for="ManufacturingId" asp-items="ViewBag.Manufacturing" multiple>
+                            @* <option value="0" selected>الكل</option> *@
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Reset Button -->
+                <div class="row">
+                    <div class="col-md-12 text-center mb-3">
+                        <button class="btn btn-primary" id="resetBtn" onclick="resetFilter()">إعادة تعيين</button>
+                        <button class="btn btn-primary" id="resetBtn" onclick="filterProducts()">تطبيق</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container text-end">
+        <div class="new-arrivals row" id="filteredProducts">
+            @if (Model != null && Model.Products != null && Model.Products.Any())
+            {
+                foreach (var product in Model.Products)
+                {
+                    @await Html.PartialAsync("_ProductPartial", product)
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateSelectedCategory(categoryId) {
+        $(".productFilter .nav-item a").removeClass("active");
+        $(".productFilter .nav-item[data-categoryid='" + categoryId + "'] a").addClass("active");
+        filterProducts();
+    }
+
+    // function filterProducts() {
+    //     var activeCategoryLink = $(".productFilter .nav-item a.active");
+    //     var categoryId = activeCategoryLink.closest(".nav-item").data("categoryid");
+    //     var selectedSize = $(".pagination .page-item.active a").text().trim();
+    //     var materialId = $('#MaterialId').val();
+    //     var color = $('#ColorId').val();
+    //     var productTypeId = $('#ProductTypeId').val();
+    //     var priceFrom = $('#priceFrom').val();
+    //     var priceTo = $('#priceTo').val();
+    //     var brandId = $('#BrandId').val();
+    //     var manufacturingId = $('#ManufacturingId').val();
+
+    //     $.ajax({
+    //         url: '@Url.Action("GetFilteredProducts")',
+    //         type: 'GET',
+    //         data: {
+    //             categoryId: categoryId,
+    //             selectedSize: selectedSize,
+    //             materialId: materialId,
+    //             color: color,
+    //             productTypeId: productTypeId,
+    //             priceFrom: priceFrom,
+    //             priceTo: priceTo,
+    //             brandId: brandId,
+    //             manufacturingId: manufacturingId
+    //         },
+    //         success: function (response) {
+    //             $("#filteredProducts").html(response);
+
+    //             //close offcanvas
+    //             $('#filterCloseBtn').trigger('click');
+
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error("Error loading filtered products:", error);
+    //         }
+    //     });
+    // }
+    function filterProducts() {
+        var activeCategoryLink = $(".productFilter .nav-item a.active");
+        var categoryId = activeCategoryLink.closest(".nav-item").data("categoryid");
+
+        // Get selected size (assuming single size selection)
+        var selectedSize = $(".pagination .page-item.active a").text().trim();
+
+        // Get selected values for multi-selects and exclude "0"
+        var materialIds = $('#MaterialId').val().filter(val => val !== "0");
+        var colors = $('#ColorId').val().filter(val => val !== "0");
+        var productTypeIds = $('#ProductTypeId').val().filter(val => val !== "0");
+        var priceFrom = $('#priceFrom').val();
+        var priceTo = $('#priceTo').val();
+        var brandIds = $('#BrandId').val().filter(val => val !== "0");
+        var manufacturingIds = $('#ManufacturingId').val().filter(val => val !== "0");
+
+        $.ajax({
+            url: '@Url.Action("GetFilteredProducts")',
+            type: 'GET',
+            data: {
+                categoryId: categoryId,
+                selectedSize: selectedSize,
+                materialId: materialIds ? materialIds.join(",") : "",
+                color: colors ? colors.join(",") : "",
+                productTypeId: productTypeIds ? productTypeIds.join(",") : "",
+                priceFrom: priceFrom,
+                priceTo: priceTo,
+                brandId: brandIds ? brandIds.join(",") : "",
+                manufacturingId: manufacturingIds ? manufacturingIds.join(",") : ""
+            },
+            success: function (response) {
+                $("#filteredProducts").html(response); // Update the filtered product list
+
+                // Close the offcanvas after filtering
+                $('#filterCloseBtn').trigger('click');
+            },
+            error: function (xhr, status, error) {
+                console.error("Error loading filtered products:", error);
+            }
+        });
+    }
+
+    function closeNavbar() {
+        // Close the navbar by triggering the collapse
+        const navbarCollapse = document.getElementById('categoryNavbarNav');
+        const navbarToggle = document.querySelector('.category-navbar-toggler');
+
+        if (navbarCollapse.classList.contains('show')) {
+            navbarToggle.click(); // Simulate a click to close the navbar
+        }
+    }
+
+    function resetSize() {
+        $(".pagination .page-item").removeClass("active");
+        filterProducts();
+    }
+
+    function resetFilter() {
+        $("select.form-select").val("0");
+        $("input[type='number']").val("");
+        $(".pagination .page-item").removeClass("active");
+        $(".productFilter .nav-link").removeClass("active");
+        $(".productFilter .nav-link:first").addClass("active");
+        // $(".pagination .page-item").removeClass("active");
+        // $("#sizeNo").text("");
+        // Optionally, reset the active class from size pagination items
+        updateSelect2();
+        filterProducts();
+    }
+
+    function checkPriceRange() {
+        const priceFrom = parseFloat(document.getElementById('priceFrom').value);
+        const priceTo = parseFloat(document.getElementById('priceTo').value);
+
+        if (isNaN(priceFrom) && !isNaN(priceTo)) {
+            document.getElementById('priceFrom').value = 0;
+        }
+
+        if (!isNaN(priceFrom) && !isNaN(priceTo)) {
+            if (priceTo < priceFrom) {
+                document.getElementById('priceTo').value = priceFrom;
+            }
+        }
+        // filterProducts();
+    }
+    function setActiveSize(clickedItem) {
+        // Remove 'active' class from all other list items
+        var items = document.querySelectorAll('.pagination .page-item');
+        items.forEach(function (item) {
+            item.classList.remove('active');
+        });
+
+        // Add 'active' class to the clicked list item
+        clickedItem.parentElement.classList.add('active');
+
+        // Get the text from the <a> tag, not the <li> element
+        // $("#sizeNo").text("مقاس " + clickedItem.textContent);
+
+        // Call filterProducts function
+        filterProducts();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var selectedCategoryId = '@ViewBag.SelectedCategoryId';
+
+        if (selectedCategoryId && selectedCategoryId > 0) {
+            var selectedNavItem = document.querySelector('.productFilter .nav-item[data-categoryid="' + selectedCategoryId + '"]');
+            if (selectedNavItem) {
+                var navItems = document.querySelectorAll('.productFilter .nav-item');
+                navItems.forEach(function (item) {
+                    item.querySelector('a').classList.remove('active');
+                });
+                selectedNavItem.querySelector('a').classList.add('active');
+            }
+        } else {
+            var allCategoriesItem = document.querySelector('.productFilter .nav-item[data-categoryid="0"]');
+            if (allCategoriesItem) {
+                allCategoriesItem.querySelector('a').classList.add('active');
+            }
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const pagination = document.getElementById("pagination");
+        const scrollContainer = document.querySelector(".pagination-scroll-container");
+        const visibleNumbers = 5; // Static number of visible items (5)
+        let currentStartIndex = 0; // Index of the first visible number
+        let activeIndex = -1; // Initially no active number
+        const numbers = [...pagination.querySelectorAll(".page-item")]; // Select all numbers
+
+        // Function to render pagination based on the current start index
+        function renderPagination() {
+            numbers.forEach((item, index) => {
+                if (index >= currentStartIndex && index < currentStartIndex + visibleNumbers) {
+                    item.style.display = "inline-block"; // Show visible numbers
+
+                    // Calculate middle range (3 middle numbers will have opacity 1)
+                    const middleStartIndex = currentStartIndex + 1; // The first visible number
+                    const middleEndIndex = currentStartIndex + 3; // The last middle number
+
+                    if (index >= middleStartIndex && index <= middleEndIndex) {
+                        item.style.opacity = "1"; // Middle 3 numbers have opacity 1
+                    } else {
+                        item.style.opacity = "0.5"; // Left and right numbers have opacity 0.5
+                    }
+
+                    // If this number is active, mark it as active
+                    if (index === activeIndex) {
+                        item.classList.add("active");
+                    } else {
+                        item.classList.remove("active");
+                    }
+                } else {
+                    item.style.display = "none"; // Hide numbers outside visible range
+                }
+            });
+
+            // Scroll to the active page number
+            if (activeIndex >= 0 && numbers[activeIndex]) {
+                numbers[activeIndex].scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "center", // Ensures it scrolls horizontally to center the item
+                });
+            }
+        }
+
+        // Move to the previous page (shift start index to left)
+        document.getElementById("prev").addEventListener("click", (event) => {
+            event.preventDefault();
+            if (activeIndex > 0) {
+                activeIndex--;
+                if (activeIndex < currentStartIndex) {
+                    currentStartIndex--;
+                }
+                renderPagination();
+            }
+        });
+
+        // Move to the next page (shift start index to right)
+        document.getElementById("next").addEventListener("click", (event) => {
+            event.preventDefault();
+            if (activeIndex < numbers.length - 1) {
+                activeIndex++;
+                if (activeIndex >= currentStartIndex + visibleNumbers) {
+                    currentStartIndex++;
+                }
+                renderPagination();
+            }
+        });
+
+        // Handle page number click to activate a specific number
+        numbers.forEach((number, index) => {
+            const link = number.querySelector(".page-link");
+            if (link) {
+                link.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    activeIndex = index;
+
+                    if (activeIndex < currentStartIndex) {
+                        currentStartIndex = activeIndex;
+                    } else if (activeIndex >= currentStartIndex + visibleNumbers) {
+                        currentStartIndex = activeIndex - visibleNumbers + 1;
+                    }
+
+                    renderPagination();
+                });
+            }
+        });
+
+        // Initial render (no active page initially)
+        renderPagination();
+    });
+
+</script>

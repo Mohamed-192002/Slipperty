@@ -1,0 +1,47 @@
+﻿@model IEnumerable<FAQDTO>
+@{
+    ViewData["Title"] = "الاسئلة الشائعة";
+}
+
+<link rel="stylesheet" href="~/css/User/FAQs.css" />
+
+<section class="promo-section bg-primary py-5 px-5">
+    <div class="container-fluid text-end ">
+        <h2 class="promo-title cairo-extra-bold mb-3 mt-4">الأسئلة الشائعة</h2>
+    </div>
+</section>
+<section class="faq-section py-5">
+    <div class="container faq-container">
+
+        @if (Model != null && Model.Count() > 0)
+        {
+            int i = 0;
+            foreach (var question in Model)
+            {
+                i++;
+                var headingId = "flush-heading" + i;
+                var collapseId = "flush-collapse" + i;
+                var targetId = "#" + collapseId;
+
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="@headingId">
+                            <button class="accordion-button text-end collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="@targetId" aria-expanded="false" aria-controls="@collapseId">
+                                <span class="accordion-number">@String.Format("{0:D2}", i).</span> @question.Question
+                                <!-- Adjusted icon: add 'collapsed' class to handle initial state -->
+                                <i class="fa-solid fa-plus accordion-icon"></i>
+                            </button>
+                        </h2>
+                        <div id="@collapseId" class="accordion-collapse collapse" aria-labelledby="@headingId" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                @question.Answer
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</section>

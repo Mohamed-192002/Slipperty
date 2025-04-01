@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model BannerDTO
+@{
+    Layout = "_AdminLayout";
+}
+@if (Model?.Id > 0)
+{
+    ViewData["Title"] = "تعديل البانر";
+    <h2 class="text-end mb-3">تعديل البانر</h2>
+
+}
+else
+{
+    ViewData["Title"] = "اضافة بانر";
+    <h2 class="text-end mb-3">إضافة بانر</h2>
+}
+<form asp-action="Upsert" method="post" enctype="multipart/form-data">
+
+
+    <div asp-validation-summary="ModelOnly" class="text-danger arabic-direction"></div>
+    <span asp-validation-for="ImageUrl" class="text-danger d-block arabic-direction"></span>
+
+    <input type="hidden" asp-for="ImageUrl" />
+    <input type="hidden" asp-for="RegDate" />
+
+    <!-- Third row: Attach button -->
+    <div class="row mb-3">
+        <div class="col text-center">
+            <label for="image-upload" class="form-label">رفع صورة البانر</label>
+            <br>
+            @* <input type="file" id="image-upload" name="file" class="form-control d-inline-block w-auto" accept=".jpg, .jpeg, .png" onchange="previewImage('image-upload', 'ImagePreview')"> *@
+            <input type="file" id="image-upload" name="file" class="form-control d-none w-auto" accept=".jpg, .jpeg, .png" onchange="previewImage('image-upload', 'ImagePreview')">
+            @* <br> *@
+            <button type="button" onclick="document.getElementById('image-upload').click();" class="btn btn-primary mt-2 w-30">رفع</button>
+            <br>
+            <img id="ImagePreview" src="@((Model?.ImageUrl != null && Model.ImageUrl != "") ? Url.Content($"~/{ImagesPathes.Banners}{Model.ImageUrl}") : Url.Content($"~{ImagesPathes.DefaultImage}"))" alt="Image Preview" class="mt-5 formImg bannerImg">
+        </div>
+    </div>
+
+    <!-- Last row: Save button -->
+    <div class="row">
+        <div class="col text-start">
+            <button type="submit" class="btn btn-primary savebtn">حفظ</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

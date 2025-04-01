@@ -1,0 +1,68 @@
+﻿
+@model IEnumerable<Slipperty.Areas.Admin.Controllers.OrdersController.ProductVm>?
+<div class="modal fade" id="OrderDetailModifyProductModal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-dialog-centered justify-content-center " role="document">
+        <div class="modal-content" style="background-color: #fafafa">
+            <div class="modal-body table-responsive" style="padding-top:10px !important;">
+                <div id="allProductContainer">
+                    <div class="mb-3">
+                        <input type="text" id="productSearch" class="form-control" placeholder="ابحث عن المنتج..." onkeyup="filterProducts()">
+                    </div>
+
+                    <table class="table text-center">
+                        <thead class="table-light">
+                        <tr>
+                            <th class="text-center" colspan="2"></th>
+                            <th class="text-center" colspan="4">الصورة</th>
+                            <th class="text-center" colspan="2">اسم المنتج</th>
+                            <th class="text-center" colspan="1">السعر</th>
+                            <th class="text-center" colspan="1">المخزن</th>
+                        </tr>
+                        </thead>
+                        <tbody id="productTable">
+                        @if (Model?.Count() > 0)
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr class="product-row">
+                                    <td class="text-center" colspan="1">
+                                        <a class="btn btn-primary btn-sm mb-1 w-100" onclick="openProduct(@item.Id, @item.OrderDetailId)"><i class="fa-solid fa-check"></i></a>
+                                    </td>
+                                    <td class="search-content text-center" colspan="2">
+                                        <img src="@((item?.MainImageUrl != null && item.MainImageUrl != "") ? Url.Content($"~/{ImagesPathes.Products}{item.MainImageUrl}") : Url.Content($"~{ImagesPathes.DefaultImage}"))" alt="Category Image" class="img-thumbnail">
+                                    </td>
+                                    <td class="text-center product-name" colspan="4">@item?.ArbName</td>
+                                    <td class="text-center" colspan="2">
+                                        <p class="d-none orderItemPrice">@item?.DiscountPrice</p>
+                                        <p class="mt-2 mt-md-0 mb-0 me-1 DiscountPrice purpleText fw-bold">@item?.DiscountPrice جنيه <del class="text-muted originalPrice fw-normal">@item?.Price جنيه</del></p>
+                                    </td>
+                                    <td class="text-center border-0 " colspan="1">
+                                        @if (item?.StockCount > 0)
+                                        {
+                                            <div class="alert alert-primary fw-bold" role="alert">
+                                                متوفر
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="alert alert-danger fw-bold" role="alert">
+                                                غير متوفر
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            @await Html.PartialAsync("_EmptyDataPartial")
+                        }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="selectedProduct"></div>
+            </div>
+        </div>
+    </div>
+</div>

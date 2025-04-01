@@ -1,0 +1,15 @@
+﻿<div class="modal fade" id="AddUserPhoneModal" tabindex="-1" role="dialog"  aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered justify-content-center " role="document">
+        <div class="modal-content ActionsModal">
+            @* remove the rounded from the list-group in the Order.css and set padding on the model-body *@
+            <div class="modal-body" style="padding-top:10px !important;">
+                <div id="add-user-phone-modal-data-container-id">
+                    <li class="list-group-item d-flex flex-column align-items-start gap-2 border-0 ">رقم الهاتف<input name="OrderUserPhone" type="text" class="w-100" maxlength="11" pattern="[0-9]+"/></li>
+                </div>
+                <div class="d-flex justify-content-center align-items-start p-2">
+                    <a class="btn btn-primary order-btn" modal-id="AddUserPhoneModal" modal-data-container-id="add-user-phone-modal-data-container-id" ActionType="@Convert.ToInt32(ActionType.Modified)">تأكيد</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
